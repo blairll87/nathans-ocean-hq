@@ -2357,27 +2357,25 @@ function renderRewardLog(){
 }
 function renderRewards(){
   if(!S.claimedRewards)S.claimedRewards={};
+  var stars=S.stars||0;
   document.getElementById('rewardsGrid').innerHTML=(S.rewards||DEFAULT_REWARDS).map(function(r){
-    var claimed=!!(S.claimedRewards&&S.claimedRewards[r.id]);
-    return '<div class="reward-card '+(claimed?'claimed':'')+'" onclick="claimReward(\''+r.id+'\','+r.cost+',\''+r.name.replace(/'/g,"\\'")+'\')">'
+    var canAfford=stars>=r.cost;
+    return '<div class="reward-card '+(canAfford?'':'cant-afford')+'" onclick="claimReward(\''+r.id+'\','+r.cost+',\''+r.name.replace(/'/g,"\\'")+'\')">'
       +'<div class="reward-icon">'+r.icon+'</div><div class="reward-name">'+r.name+'</div>'
       +'<div class="reward-desc">'+r.desc+'</div>'
-      +'<div class="reward-cost">'+(claimed?'✓ Claimed!':r.cost+' ⭐')+'</div>'
+      +'<div class="reward-cost">'+(canAfford?r.cost+' ⭐':'Need '+r.cost+' ⭐')+'</div>'
       +'</div>';
   }).join('');
   renderRewardLog();
   renderToyShop();
 }
 function claimReward(id,cost,name){
-  if(!S.claimedRewards)S.claimedRewards={};
-  if(S.claimedRewards[id])return;
-  if(S.stars<cost){showToast('Need '+cost+' ⭐ to unlock! Keep going!');return}
+  if((S.stars||0)<cost){showToast('Need '+cost+' ⭐ to unlock! Keep earning!');return;}
   S.stars-=cost;
-  S.claimedRewards[id]=true;
-  // Log to redemption history
-  if(!S.rewardLog) S.rewardLog=[];
+  // Log every claim — rewards can be claimed as many times as Nathan earns enough stars
+  if(!S.rewardLog)S.rewardLog=[];
   S.rewardLog.push({
-    id:id, name:name, cost:cost,
+    id:id,name:name,cost:cost,
     date:new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}),
     time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}),
     ts:Date.now()
