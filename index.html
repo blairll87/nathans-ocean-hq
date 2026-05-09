@@ -1155,8 +1155,14 @@ function showSyncStatus(msg, color) {
 // ── SAVE ──────────────────────────────────
 // Config saves instantly (debounced 800ms)
 // Progress saves debounced 3s (so rapid taps don't spam Firestore)
+var _cloudLoaded = false; // blocks Firebase writes until we've loaded cloud data first
+
 window.save = function() {
   try{ localStorage.setItem('nathanHQ_v3', JSON.stringify(S)); }catch(e){}
+
+  // Don't write to Firebase until we've loaded what's already there
+  // This prevents a fresh device from overwriting real data with empty defaults
+  if(!_cloudLoaded) return;
 
   // Config — instant sync
   var configData = {};
@@ -1223,7 +1229,15 @@ async function loadFromCloud() {
 
     showSyncStatus('☁️ Synced!','var(--green)');
 
+    // Cloud data is loaded — now safe to write back to Firebase
+    _cloudLoaded = true;
+
+    // Save cloud data to localStorage so it persists
+    try{ localStorage.setItem('nathanHQ_v3', JSON.stringify(S)); }catch(e){}
+
     // Re-render everything with cloud data
+    // Run initPods first so Splash and other pets from Firebase are properly loaded
+    try{initPods()}catch(e){}
     try{renderMorning()}catch(e){}
     try{renderNight()}catch(e){}
     try{renderAfternoon()}catch(e){}
@@ -1237,8 +1251,13 @@ async function loadFromCloud() {
     try{renderTrophies()}catch(e){}
     try{renderMoodStrip()}catch(e){}
     try{renderMoodHistory()}catch(e){}
+    try{renderPod()}catch(e){}
     try{updatePet()}catch(e){}
     try{updateStars()}catch(e){}
+    try{renderHomeStats()}catch(e){}
+    try{checkPetBirthdays()}catch(e){}
+    try{checkAxolotlUnlock()}catch(e){}
+    try{renderSplashChallenge()}catch(e){}
 
     // Listen for real-time config changes (Parent Mode edits from any device)
     onSnapshot(doc(db, CONFIG_DOC), function(snap) {
@@ -1288,15 +1307,18 @@ async function loadFromCloud() {
       try{updateStars()}catch(e){}
       try{renderAfternoon()}catch(e){}
       try{renderSplashChallenge()}catch(e){}
+      try{renderPod()}catch(e){}
+      try{renderHomeStats()}catch(e){}
     });
 
   } catch(e) {
     console.log('Firebase load error', e);
+    _cloudLoaded = true; // allow saves even if Firebase fails (offline mode)
     showSyncStatus('⚠️ Offline mode','var(--coral)');
   }
 }
 
-// Expose force push for the backup panel — pushes ALL data
+// Expose force push — always allowed regardless of _cloudLoaded flag
 window.forcePushToFirebase = async function(allData) {
   var configData = {}, progressData = {};
   CONFIG_KEYS.forEach(function(k){ if(allData[k]!==undefined) configData[k]=allData[k]; });
@@ -1314,7 +1336,9 @@ window.forcePushToFirebase = async function(allData) {
 };
 
 // Periodic progress sync every 2 minutes as a safety net
+// Only runs after cloud data has been loaded to avoid overwriting real data
 setInterval(function(){
+  if(!_cloudLoaded) return;
   var progressData = {};
   PROGRESS_KEYS.forEach(function(k){ if(S[k]!==undefined) progressData[k]=S[k]; });
   getDynamicKeys().forEach(function(k){ progressData[k]=S[k]; });
