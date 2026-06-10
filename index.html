@@ -217,6 +217,44 @@ body.birthday-mode .header{border-color:rgba(255,215,0,.6);background:linear-gra
 .task-timer-btn.running{background:rgba(255,112,67,.2);border-color:var(--coral);color:var(--coral);animation:pulse 1s infinite}
 .task-timer-btn.done{background:rgba(102,187,106,.2);border-color:var(--green);color:var(--green)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+/* ── SUMMER TABS ── */
+.spanish-hero{background:linear-gradient(135deg,rgba(171,71,188,.2),rgba(10,22,40,.95));border:2px solid rgba(171,71,188,.4);border-radius:20px;padding:16px;margin-bottom:12px;text-align:center}
+.spanish-word{font-family:'Fredoka One',cursive;font-size:2rem;color:#ce93d8;margin-bottom:2px}
+.spanish-pos{font-size:.7rem;color:var(--dim);margin-bottom:6px}
+.spanish-pronunciation{font-size:.85rem;color:var(--gold-b);font-weight:700;margin-bottom:6px}
+.spanish-definition{font-size:.82rem;color:var(--text);margin-bottom:10px;line-height:1.5}
+.spanish-sentence{background:rgba(171,71,188,.12);border-left:3px solid #ce93d8;border-radius:0 10px 10px 0;padding:8px 12px;margin-bottom:4px;font-size:.8rem;color:var(--text);font-style:italic;line-height:1.5}
+.spanish-translation{font-size:.72rem;color:var(--dim);margin-bottom:8px;padding:0 4px}
+.spanish-hook{font-size:.72rem;color:var(--gold-b);background:rgba(255,202,40,.08);border-radius:8px;padding:6px 10px;margin-bottom:10px}
+.spanish-task-item{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer}
+.spanish-task-item:last-child{border-bottom:none}
+.spanish-task-item.done{opacity:.6}
+.spanish-task-cb{width:22px;height:22px;border-radius:6px;border:2px solid rgba(171,71,188,.5);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .2s}
+.spanish-task-item.done .spanish-task-cb{background:#7b1fa2;border-color:#7b1fa2}
+.archive-word-card{background:rgba(171,71,188,.08);border:1px solid rgba(171,71,188,.2);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.archive-word{font-family:'Fredoka One',cursive;font-size:1rem;color:#ce93d8}
+.archive-def{font-size:.72rem;color:var(--dim);margin-top:2px}
+.voice-btn{display:flex;align-items:center;gap:8px;font-family:'Fredoka One',cursive;font-size:.8rem;padding:8px 14px;border-radius:12px;border:2px solid rgba(41,182,246,.4);background:rgba(41,182,246,.1);color:var(--glow);cursor:pointer;margin-bottom:8px;width:100%}
+.voice-btn.listening{background:rgba(239,83,80,.2);border-color:var(--red);color:var(--red);animation:pulse 1s infinite}
+.emoji-rating-btn{font-size:1.8rem;cursor:pointer;opacity:.4;transition:all .2s;background:none;border:none;padding:6px}
+.emoji-rating-btn.selected{opacity:1;transform:scale(1.2)}
+.self-eval-q{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.78rem;color:var(--text);gap:10px}
+.self-eval-q:last-child{border-bottom:none}
+.self-eval-btns{display:flex;gap:6px;flex-shrink:0}
+.self-eval-btn{font-size:.72rem;padding:4px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:var(--dim);cursor:pointer}
+.self-eval-btn.yes{background:rgba(102,187,106,.2);border-color:var(--green);color:var(--green)}
+.self-eval-btn.no{background:rgba(239,83,80,.15);border-color:var(--red);color:var(--red)}
+.reading-entry{background:rgba(255,255,255,.04);border:1px solid rgba(41,182,246,.15);border-radius:14px;padding:10px 12px;margin-bottom:8px;cursor:pointer}
+.reading-entry.expanded{border-color:rgba(41,182,246,.4)}
+.reading-entry-title{font-family:'Fredoka One',cursive;font-size:.88rem;color:var(--glow);flex:1}
+.reading-entry-summary{font-size:.75rem;color:var(--dim);margin-top:8px;line-height:1.5;font-style:italic}
+.reading-entry-feedback{font-size:.72rem;color:var(--gold-b);margin-top:6px;background:rgba(255,202,40,.08);border-radius:8px;padding:6px 8px}
+.chore-card{background:rgba(255,255,255,.04);border:2px solid rgba(102,187,106,.15);border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s}
+.chore-card:active{transform:scale(.97)}
+.chore-card.done{background:rgba(102,187,106,.12);border-color:rgba(102,187,106,.4);opacity:.75;cursor:default}
+.chore-emoji{font-size:1.6rem;flex-shrink:0}
+.chore-name{font-family:'Fredoka One',cursive;font-size:.88rem;color:var(--text);flex:1}
+.chore-stars-badge{font-size:.78rem;color:var(--gold-b);font-weight:700;flex-shrink:0}
 .toy-shop{background:linear-gradient(135deg,rgba(171,71,188,.15),rgba(10,22,40,.95));border:2px solid rgba(171,71,188,.35);border-radius:18px;padding:14px;margin-top:10px}
 .toy-shop-title{font-family:'Fredoka One',cursive;font-size:1.05rem;color:#ce93d8}
 .toy-shop-sub{font-size:.72rem;color:var(--dim);margin-top:2px;margin-bottom:10px}
@@ -715,12 +753,6 @@ select.admin-input{appearance:none}
   </div>
 </div>
 
-<!-- Weekend banner -->
-<div id="weekendBanner" style="display:none;background:linear-gradient(135deg,rgba(255,213,79,.15),rgba(10,22,40,.9));border:2px solid rgba(255,213,79,.4);border-radius:16px;padding:16px;margin-bottom:10px;text-align:center">
-  <div style="font-size:2.5rem;margin-bottom:6px">🌊</div>
-  <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--gold-b)" class="weekend-msg">Weekend time! Go have fun, Nathan!</div>
-  <div style="font-size:.75rem;color:var(--dim);margin-top:4px">No tasks today — Splash is chilling too 🐋</div>
-</div>
 
 <!-- Break timer popup -->
 <div class="modal-overlay" id="breakTimerPopup">
@@ -793,6 +825,16 @@ select.admin-input{appearance:none}
     <div class="routine-popup-msg" id="splashEventDesc"></div>
     <div style="font-family:'Fredoka One',cursive;font-size:.9rem;color:var(--gold-b);margin-bottom:14px" id="splashEventReward"></div>
     <button class="routine-popup-btn" onclick="claimSplashEvent()">Claim It! 🎉</button>
+  </div>
+</div>
+
+<!-- Orcalus welcome popup -->
+<div class="routine-popup" id="orcalusWelcomePopup">
+  <div class="routine-popup-box" style="border-color:rgba(41,182,246,.6);text-align:center">
+    <div id="orcalusWelcomeSvg" style="margin-bottom:10px"></div>
+    <div class="routine-popup-title" style="color:var(--glow)">Orcalus is here! 🐋</div>
+    <div class="routine-popup-msg">Your favorite orca from SeaWorld has swum all the way here to join the pod! Orcalus — patch and all — is ready to be your companion this summer!</div>
+    <button class="routine-popup-btn" style="background:linear-gradient(135deg,#1565c0,#29b6f6)" onclick="claimOrcalus()">Welcome to the pod, Orcalus! 💙</button>
   </div>
 </div>
 
@@ -936,18 +978,6 @@ select.admin-input{appearance:none}
     <div><div class="stars-wallet"><span>⭐</span><span class="stars-count" id="starsCount">0</span><span style="font-size:.7rem;color:var(--dim)">stars</span></div></div>
   </div>
 
-  <!-- Streak + Rank + Weekly Goal -->
-  <div id="homeStatsBar" style="margin-bottom:10px"></div>
-
-  <!-- Spotify Music -->
-  <div style="background:linear-gradient(135deg,rgba(29,185,84,.15),rgba(10,22,40,.9));border:2px solid rgba(29,185,84,.35);border-radius:14px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:12px">
-    <div style="font-size:2rem;flex-shrink:0">🎵</div>
-    <div style="flex:1">
-      <div style="font-family:'Fredoka One',cursive;font-size:.85rem;color:#1db954">Nathan's Study Playlist</div>
-      <div style="font-size:.7rem;color:var(--dim)">Opens Spotify — tap play and come back!</div>
-    </div>
-    <a href="https://open.spotify.com/playlist/0ZFg8EbfNpS9Y7kzBF17Zi?si=dARgf3FwSgSCNxldsFmfmA" target="_blank" style="font-family:'Fredoka One',cursive;font-size:.8rem;padding:8px 14px;border-radius:20px;background:#1db954;color:#000;text-decoration:none;flex-shrink:0;white-space:nowrap">▶ Play</a>
-  </div>
 
   <!-- Encourage -->
   <div id="encourage" class="encourage"></div>
@@ -963,11 +993,11 @@ select.admin-input{appearance:none}
 
   <!-- Tabs -->
   <div class="tabs">
-    <button class="tab active" onclick="showTab('morning',this)">☀️ Morning</button>
-    <button class="tab" onclick="showTab('afternoon',this)">🏠 After School</button>
-    <button class="tab" onclick="showTab('night',this)">🌙 Bedtime</button>
+    <button class="tab active" onclick="showTab('home',this)">🏠 Home</button>
+    <button class="tab" onclick="showTab('spanish',this)">🗓️ Spanish</button>
+    <button class="tab" onclick="showTab('reading',this)">📖 Reading</button>
+    <button class="tab" onclick="showTab('chores',this)">🧹 Chores</button>
     <button class="tab" onclick="showTab('pod',this)">🐋 My Pod</button>
-    <button class="tab" onclick="showTab('schedule',this)">📅 Schedule</button>
     <button class="tab" onclick="showTab('rewards',this)">🎁 Rewards</button>
     <button class="tab" onclick="showTab('dashboard',this)">📊 Dashboard</button>
   </div>
@@ -1010,39 +1040,163 @@ select.admin-input{appearance:none}
   </div>
 
   <!-- Morning -->
-  <div class="panel active" id="panel-morning">
-    <div class="sec-head">☀️ Morning Launch Checklist</div>
-    <div style="font-size:.75rem;color:var(--gold-b);margin-bottom:6px">⭐ Complete ALL items for a <strong>+5 bonus stars</strong>!</div>
-    <div class="prog-wrap"><div class="prog-lbl"><span>Morning Power!</span><span id="mPct">0%</span></div><div class="prog-track"><div class="prog-fill" id="mProg" style="width:0%"></div></div></div>
-    <div id="morningList"></div>
-  </div>
-
-  <!-- Afternoon -->
-  <div class="panel" id="panel-afternoon">
-    <div class="sec-head">🏠 After-School Mission</div>
-    <div class="prog-wrap"><div class="prog-lbl"><span>Mission Progress</span><span id="aPct">0%</span></div><div class="prog-track"><div class="prog-fill" id="aProg" style="width:0%"></div></div></div>
-    <div class="task-list" id="afternoonList"></div>
-  </div>
-
-  <!-- Night -->
-  <div class="panel" id="panel-night">
-    <div class="sec-head">🌙 Bedtime Checklist</div>
-    <div style="font-size:.75rem;color:var(--gold-b);margin-bottom:6px">⭐ Complete ALL items for a <strong>+5 bonus stars</strong>!</div>
-    <div style="font-size:.8rem;color:var(--dim);margin-bottom:8px">Get ready for an awesome tomorrow, Nathan! 🌟</div>
-    <div class="prog-wrap"><div class="prog-lbl"><span>Bedtime Power!</span><span id="nPct">0%</span></div><div class="prog-track"><div class="prog-fill" id="nProg" style="width:0%;background:linear-gradient(90deg,#7c4dff,#29b6f6)"></div></div></div>
-    <div id="nightList"></div>
-    <div style="background:linear-gradient(135deg,rgba(50,0,100,.5),rgba(13,59,110,.5));border-radius:14px;padding:12px;margin-top:10px;text-align:center;border:1px solid rgba(124,77,255,.3)">
-      <div style="font-size:1.5rem;margin-bottom:4px">🌊</div>
-      <div style="font-family:'Fredoka One',cursive;font-size:.9rem;color:#b39ddb">Splash says goodnight!</div>
-      <div style="font-size:.78rem;color:var(--dim);margin-top:3px">Great work today. Rest up for another ocean adventure tomorrow!</div>
+  <!-- Home panel (replaces morning as default active) -->
+  <div class="panel active" id="panel-home">
+    <div id="homeStatsBar" style="margin-bottom:10px"></div>
+    <div id="weekendBanner" style="display:none;background:linear-gradient(135deg,rgba(255,213,79,.15),rgba(10,22,40,.9));border:2px solid rgba(255,213,79,.4);border-radius:16px;padding:16px;margin-bottom:10px;text-align:center">
+      <div style="font-size:2.5rem;margin-bottom:6px">🌊</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--gold-b)" class="weekend-msg">Weekend time! Go have fun, Nathan!</div>
+      <div style="font-size:.75rem;color:var(--dim);margin-top:4px">No tasks today — Splash is chilling too 🐋</div>
+    </div>
+    <!-- Spotify -->
+    <div style="background:linear-gradient(135deg,rgba(29,185,84,.15),rgba(10,22,40,.9));border:2px solid rgba(29,185,84,.35);border-radius:14px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:12px">
+      <div style="font-size:2rem;flex-shrink:0">🎵</div>
+      <div style="flex:1">
+        <div style="font-family:'Fredoka One',cursive;font-size:.85rem;color:#1db954">Nathan's Summer Playlist</div>
+        <div style="font-size:.7rem;color:var(--dim)">Opens Spotify — tap play and come back!</div>
+      </div>
+      <a href="https://open.spotify.com/playlist/0ZFg8EbfNpS9Y7kzBF17Zi?si=dARgf3FwSgSCNxldsFmfmA" target="_blank" style="font-family:'Fredoka One',cursive;font-size:.8rem;padding:8px 14px;border-radius:20px;background:#1db954;color:#000;text-decoration:none;flex-shrink:0;white-space:nowrap">▶ Play</a>
     </div>
   </div>
 
-  <!-- Timer -->
-  <!-- Schedule -->
-  <div class="panel" id="panel-schedule">
-    <div class="sec-head">📅 Nathan's Weekly Schedule</div>
-    <div id="scheduleView"></div>
+  <!-- Spanish Tab -->
+  <div class="panel" id="panel-spanish">
+    <div class="spanish-hero">
+      <div id="spanishOrcaDisplay" style="margin-bottom:8px"></div>
+      <div style="font-size:.7rem;color:rgba(171,71,188,.8);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px" id="spanishMonthLabel">June · Ocean &amp; Its Secrets 🌊</div>
+      <div style="font-size:.68rem;color:var(--dim);margin-bottom:10px" id="spanishWordNum">Word 1 of 30</div>
+      <div class="spanish-word" id="spanishWord">la manada</div>
+      <div class="spanish-pos" id="spanishPos">noun (f)</div>
+      <div class="spanish-pronunciation" id="spanishPron">lah mah-NAH-dah</div>
+      <div class="spanish-definition" id="spanishDef">A group of animals that live and hunt together; a pod or pack</div>
+      <div class="spanish-sentence" id="spanishSentence"></div>
+      <div class="spanish-translation" id="spanishTranslation"></div>
+      <div class="spanish-hook" id="spanishHook" style="display:none"></div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button onclick="skipSpanishWord()" id="spanishSkipBtn" style="flex:1;font-family:'Fredoka One',cursive;font-size:.78rem;padding:8px;border-radius:12px;border:2px solid rgba(171,71,188,.4);background:rgba(171,71,188,.1);color:#ce93d8;cursor:pointer">🔄 I know this word!</button>
+        <button onclick="markWordPracticed()" style="flex:1;font-family:'Fredoka One',cursive;font-size:.78rem;padding:8px;border-radius:12px;border:none;background:linear-gradient(135deg,#7b1fa2,#ab47bc);color:#fff;cursor:pointer">✅ Got it!</button>
+      </div>
+      <div style="font-size:.65rem;color:var(--dim);margin-top:6px" id="spanishSkipsLeft">You can skip up to 5 words today</div>
+    </div>
+
+    <!-- Spanish Practice Tasks -->
+    <div style="background:rgba(13,59,110,.5);border-radius:16px;padding:12px;margin-bottom:12px">
+      <div class="sec-head" style="margin-top:0;font-size:.9rem">📋 Daily Spanish Practice</div>
+      <div style="font-size:.72rem;color:var(--dim);margin-bottom:8px">Check off what you practiced today!</div>
+      <div id="spanishTaskList"></div>
+    </div>
+
+    <!-- Word Archive -->
+    <div style="background:rgba(13,59,110,.4);border-radius:16px;padding:12px">
+      <div class="sec-head" style="margin-top:0;font-size:.9rem">📚 Words You've Learned</div>
+      <div style="font-size:.72rem;color:var(--dim);margin-bottom:8px" id="spanishArchiveCount">Keep practicing to build your collection!</div>
+      <div id="spanishArchive"></div>
+    </div>
+  </div>
+
+  <!-- Reading Tab -->
+  <div class="panel" id="panel-reading">
+    <!-- Splash hero -->
+    <div style="background:linear-gradient(135deg,rgba(41,182,246,.15),rgba(10,22,40,.95));border:2px solid rgba(41,182,246,.35);border-radius:20px;padding:16px;margin-bottom:12px;text-align:center">
+      <div id="readingOrcaDisplay" style="margin-bottom:8px"></div>
+      <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--glow)" id="readingSplashMsg">Splash loves story time! What are you reading?</div>
+      <!-- Goal -->
+      <div id="readingGoalSection" style="margin-top:10px"></div>
+      <!-- Book counter -->
+      <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--gold-b);margin-top:8px" id="bookCounter">📚 0 books this summer!</div>
+    </div>
+
+    <!-- Log session button -->
+    <button onclick="showReadingForm()" style="font-family:'Fredoka One',cursive;font-size:.9rem;padding:14px;border-radius:16px;border:none;background:linear-gradient(135deg,#1565c0,#29b6f6);color:#fff;cursor:pointer;width:100%;margin-bottom:12px">📖 Log a Reading Session!</button>
+
+    <!-- Reading form (hidden until tapped) -->
+    <div id="readingFormSection" style="display:none;background:rgba(13,59,110,.6);border:2px solid rgba(41,182,246,.3);border-radius:18px;padding:14px;margin-bottom:12px">
+      <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--glow);margin-bottom:12px">📖 What did you read?</div>
+
+      <!-- Book title input -->
+      <div style="font-size:.75rem;color:var(--dim);margin-bottom:4px">Book title:</div>
+      <div style="font-size:.7rem;color:rgba(41,182,246,.7);margin-bottom:6px">🎤 Tap the box, then tap the mic on your keyboard to talk!</div>
+      <textarea id="readingTitleDisplay" rows="2" placeholder="Tap here and speak or type your book title..." style="width:100%;background:rgba(255,255,255,.06);border:2px solid rgba(41,182,246,.25);border-radius:12px;padding:10px 12px;font-size:.85rem;color:var(--text);font-family:'Nunito',sans-serif;resize:none;margin-bottom:10px" oninput="updateReadingTitle(this.value)"></textarea>
+
+      <!-- New book or continuing -->
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button id="btnNewBook" onclick="setBookType('new')" style="flex:1;font-family:'Fredoka One',cursive;font-size:.75rem;padding:8px;border-radius:10px;border:2px solid rgba(41,182,246,.3);background:rgba(41,182,246,.1);color:var(--glow);cursor:pointer">📗 New Book</button>
+        <button id="btnSameBook" onclick="setBookType('same')" style="flex:1;font-family:'Fredoka One',cursive;font-size:.75rem;padding:8px;border-radius:10px;border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:var(--dim);cursor:pointer">📖 Continuing</button>
+        <button id="btnFinished" onclick="setBookType('finished')" style="flex:1;font-family:'Fredoka One',cursive;font-size:.75rem;padding:8px;border-radius:10px;border:2px solid rgba(102,187,106,.3);background:rgba(102,187,106,.1);color:var(--green);cursor:pointer">✅ Finished!</button>
+      </div>
+
+      <!-- Emoji rating -->
+      <div style="font-size:.75rem;color:var(--dim);margin-bottom:6px">How was it?</div>
+      <div style="display:flex;gap:10px;margin-bottom:12px;justify-content:center">
+        <button class="emoji-rating-btn" id="ratingLoved" onclick="setRating('loved')">❤️</button>
+        <button class="emoji-rating-btn" id="ratingOkay" onclick="setRating('okay')">😊</button>
+        <button class="emoji-rating-btn" id="ratingMeh" onclick="setRating('meh')">😕</button>
+      </div>
+
+      <!-- Summary voice input -->
+      <div style="background:rgba(41,182,246,.08);border:2px solid rgba(41,182,246,.2);border-radius:14px;padding:12px;margin-bottom:10px;text-align:center">
+        <div style="font-size:1.5rem;margin-bottom:4px">🐋</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:.85rem;color:var(--glow);margin-bottom:2px">Splash wants to know!</div>
+        <div style="font-size:.78rem;color:var(--dim);margin-bottom:8px">Tell Splash what happened in your book today — just the big stuff, 3 to 5 sentences!</div>
+        <div style="font-size:.7rem;color:rgba(41,182,246,.7);margin-bottom:6px">🎤 Tap the box, then tap the mic on your keyboard to talk!</div>
+        <textarea id="readingSummaryDisplay" rows="5" placeholder="Tap here and speak or type your summary..." style="width:100%;background:rgba(255,255,255,.06);border:2px solid rgba(41,182,246,.2);border-radius:12px;padding:10px 12px;font-size:.82rem;color:var(--text);font-family:'Nunito',sans-serif;resize:none;line-height:1.5;margin-bottom:6px" oninput="updateReadingSummary(this.value)"></textarea>
+      </div>
+
+      <!-- Self evaluation -->
+      <div style="background:rgba(255,255,255,.04);border-radius:12px;padding:10px;margin-bottom:12px">
+        <div style="font-family:'Fredoka One',cursive;font-size:.82rem;color:var(--gold-b);margin-bottom:8px">🤔 Check yourself:</div>
+        <div class="self-eval-q">
+          <span>Did I say the most important thing that happened?</span>
+          <div class="self-eval-btns">
+            <button class="self-eval-btn" id="evalQ1yes" onclick="setSelfEval(1,true)">Yes</button>
+            <button class="self-eval-btn" id="evalQ1no" onclick="setSelfEval(1,false)">No</button>
+          </div>
+        </div>
+        <div class="self-eval-q">
+          <span>Did I keep it short and not ramble?</span>
+          <div class="self-eval-btns">
+            <button class="self-eval-btn" id="evalQ2yes" onclick="setSelfEval(2,true)">Yes</button>
+            <button class="self-eval-btn" id="evalQ2no" onclick="setSelfEval(2,false)">No</button>
+          </div>
+        </div>
+        <div class="self-eval-q">
+          <span>Could someone who never read it understand?</span>
+          <div class="self-eval-btns">
+            <button class="self-eval-btn" id="evalQ3yes" onclick="setSelfEval(3,true)">Yes</button>
+            <button class="self-eval-btn" id="evalQ3no" onclick="setSelfEval(3,false)">No</button>
+          </div>
+        </div>
+      </div>
+
+      <button onclick="submitReadingLog()" style="font-family:'Fredoka One',cursive;font-size:.9rem;padding:12px;border-radius:14px;border:none;background:linear-gradient(135deg,#1565c0,#29b6f6);color:#fff;cursor:pointer;width:100%;margin-bottom:6px">Submit &amp; Get Splash's Feedback! 🐋</button>
+      <button onclick="cancelReadingForm()" style="font-family:'Fredoka One',cursive;font-size:.78rem;padding:8px;border-radius:10px;border:none;background:rgba(255,255,255,.05);color:var(--dim);cursor:pointer;width:100%">Cancel</button>
+    </div>
+
+    <!-- AI Feedback display -->
+    <div id="readingFeedbackSection" style="display:none;background:linear-gradient(135deg,rgba(41,182,246,.15),rgba(10,22,40,.9));border:2px solid rgba(41,182,246,.4);border-radius:18px;padding:14px;margin-bottom:12px;text-align:center">
+      <div style="font-size:2rem;margin-bottom:6px">🐋</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:.95rem;color:var(--glow);margin-bottom:6px">Splash's Feedback</div>
+      <div style="font-size:.82rem;color:var(--text);line-height:1.6" id="readingFeedbackText">Splash is thinking...</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--gold-b);margin-top:8px" id="readingStarsAwarded"></div>
+      <button onclick="dismissReadingFeedback()" style="margin-top:10px;font-family:'Fredoka One',cursive;font-size:.8rem;padding:8px 16px;border-radius:12px;border:none;background:rgba(41,182,246,.2);color:var(--glow);cursor:pointer">Thanks Splash! 🌊</button>
+    </div>
+
+    <!-- Reading History -->
+    <div style="background:rgba(13,59,110,.4);border-radius:16px;padding:12px">
+      <div class="sec-head" style="margin-top:0;font-size:.9rem">📚 Reading History</div>
+      <div id="readingHistory"></div>
+    </div>
+  </div>
+
+  <!-- Chores Tab -->
+  <div class="panel" id="panel-chores">
+    <div style="background:linear-gradient(135deg,rgba(102,187,106,.15),rgba(10,22,40,.95));border:2px solid rgba(102,187,106,.35);border-radius:20px;padding:14px;margin-bottom:12px;text-align:center">
+      <div style="font-size:2.2rem;margin-bottom:6px">🧹</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--green)">Chore Menu</div>
+      <div style="font-size:.75rem;color:var(--dim);margin-top:4px">Pick whatever you want to do today — each one earns stars!</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--gold-b);margin-top:8px" id="choresTodayStars">⭐ 0 stars earned from chores today</div>
+    </div>
+    <div id="choreList"></div>
   </div>
 
   <!-- Rewards + Food Store -->
@@ -1565,6 +1719,10 @@ function startup(){
   try{renderFoodStore()}catch(e){console.log('food store error',e)}
   try{renderPod()}catch(e){console.log('pod error',e)}
   try{renderHomeStats()}catch(e){}
+  try{renderSpanishTab()}catch(e){}
+  try{renderChoresTab()}catch(e){}
+  try{renderReadingTab()}catch(e){}
+  try{checkOrcalusWelcome()}catch(e){}
   try{checkWeekendMode()}catch(e){}
   try{checkFridayRecap()}catch(e){}
   try{checkPetBirthdays()}catch(e){}
@@ -1622,7 +1780,8 @@ function startup(){
             pet.lastPlayed='';
             pet.lastWashed='';
             pet.lastTucked='';
-            // Note: lastFed intentionally NOT reset — feeding costs stars so no daily limit
+            // Note: choreDone, spanishTasks reset naturally since they're date-keyed
+        // They just won't match today's date so they appear unchecked automatically
           });
         }
 
@@ -1644,6 +1803,9 @@ function startup(){
         try{renderEggNursery()}catch(ex){}
         try{renderPodGrid()}catch(ex){}
         try{renderHomeStats()}catch(ex){}
+        try{renderSpanishTab()}catch(ex){}
+        try{renderChoresTab()}catch(ex){}
+        try{renderReadingTab()}catch(ex){}
         try{checkPetBirthdays()}catch(ex){}
         try{checkFridayRecap()}catch(ex){}
         try{checkWeekendMode()}catch(ex){}
@@ -1875,7 +2037,8 @@ function updateStars(){
 // MORNING
 // ═══════════════════════════════════════════
 function renderMorning(){
-  var list=document.getElementById('morningList');list.innerHTML='';
+  var list=document.getElementById('morningList');if(!list)return;
+  list.innerHTML='';
   var done=0;
   (S.morningTasks||DEFAULT_MORNING).forEach(function(t){
     var isDone=!!S.morning[t.id];if(isDone)done++;
@@ -2066,32 +2229,594 @@ function checkTrophy(){
   }
   renderTrophies();
 }
-function renderTrophies(){
-  const weekEl=document.getElementById('trophyWeek');
-  const streakEl=document.getElementById('trophyStreak');
-  const chartEl=document.getElementById('weekStarsChart');
-  const labelsEl=document.getElementById('weekStarsLabels');
-  if(!weekEl)return;
-  S.weekStars[new Date().toDateString()]=S.stars||0;
-  const now=new Date();let tHTML='',streak=0,maxS=1;
-  const starsByDay=[],labelsByDay=[];
-  for(let i=6;i>=0;i--){
-    const d=new Date(now);d.setDate(d.getDate()-i);
-    const key=d.toDateString(),dayName=DAY_NAMES[d.getDay()];
-    const hasTrophy=!!S.trophies[key],stars=S.weekStars[key]||0;
-    if(stars>maxS)maxS=stars;starsByDay.push(stars);labelsByDay.push(dayName);
-    if(hasTrophy)streak++;else if(i<6)streak=0;
-    const icon=hasTrophy?TROPHY_ICONS[Math.min(streak-1,TROPHY_ICONS.length-1)]:'⬜';
-    tHTML+=`<div class="trophy-day"><div class="trophy-day-name">${dayName}</div><div class="trophy-icon ${hasTrophy?'earned':''}">${icon}</div><div class="trophy-stars">${stars}⭐</div></div>`;
-  }
-  weekEl.innerHTML=tHTML;
-  streakEl.textContent=streak>=2?`🔥 ${streak}-day streak!`:streak===1?'⭐ Great start!':'';
-  chartEl.innerHTML=starsByDay.map((s,i)=>{
-    const h=Math.max(8,Math.round((s/maxS)*48));const isToday=i===6;
-    return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px"><div style="font-size:.6rem;color:var(--gold-b);font-weight:700">${s||''}</div><div style="width:100%;height:${h}px;background:${isToday?'linear-gradient(180deg,var(--gold-b),var(--coral))':'linear-gradient(180deg,var(--glow),var(--bright))'};border-radius:4px 4px 2px 2px;opacity:${isToday?1:.65}"></div></div>`;
-  }).join('');
-  labelsEl.innerHTML=labelsByDay.map((l,i)=>`<div style="flex:1;text-align:center;font-size:.6rem;color:${i===6?'var(--gold-b)':'var(--dim)'};font-weight:700">${l}</div>`).join('');
+// Old trophy chart removed for summer mode
+
+// ═══════════════════════════════════════════
+// SUMMER: SPANISH WORD BANK
+// ═══════════════════════════════════════════
+var SPANISH_WORDS={
+june:[
+{word:"la manada",pos:"noun (f)",pronunciation:"lah mah-NAH-dah",definition:"A group of animals that live and hunt together; a pod or pack",sentence:"Splash y Orcalus lideran su manada con valentía por las aguas frías del Pacífico.",translation:"Splash and Orcalus lead their pod bravely through the cold Pacific waters.",hook:"This is the exact word used for an orca pod in Spanish!"},
+{word:"acechar",pos:"verb",pronunciation:"ah-seh-CHAR",definition:"To stalk or lurk; to hunt by watching and waiting silently",sentence:"Orcalus acecha a su presa con paciencia antes de atacar.",translation:"Orcalus stalks his prey patiently before attacking.",hook:"Real orca hunters use this technique."},
+{word:"las profundidades",pos:"noun (f, plural)",pronunciation:"lahs pro-foon-dee-DAH-des",definition:"The depths; the deep, dark parts of the ocean",sentence:"Axel el ajolote vive en las profundidades donde pocos se atreven a ir.",translation:"Axel the axolotl lives in the depths where few dare to go.",hook:null},
+{word:"el depredador",pos:"noun (m)",pronunciation:"el deh-preh-dah-DOR",definition:"A predator; an animal that hunts and eats other animals",sentence:"La orca es el depredador más inteligente del océano.",translation:"The orca is the most intelligent predator in the ocean.",hook:"'Depredador' sounds just like 'predator'!"},
+{word:"la corriente",pos:"noun (f)",pronunciation:"lah ko-RYEN-teh",definition:"A current; a moving flow of water in one direction",sentence:"Splash nada con la corriente para ahorrar energía en su viaje largo.",translation:"Splash swims with the current to save energy on his long journey.",hook:null},
+{word:"emerger",pos:"verb",pronunciation:"eh-mer-HER",definition:"To emerge; to rise up and come out of the water",sentence:"Orcalus emerge del agua con un salto poderoso que moja todo.",translation:"Orcalus emerges from the water with a powerful leap that soaks everything.",hook:"You can see 'emerge' hiding right inside this word!"},
+{word:"el arrecife",pos:"noun (m)",pronunciation:"el ah-reh-SEE-feh",definition:"A reef; an underwater ridge of rock or coral near the surface",sentence:"Ripple el delfín juega entre los colores brillantes del arrecife.",translation:"Ripple the dolphin plays among the brilliant colors of the reef.",hook:null},
+{word:"la bioluminiscencia",pos:"noun (f)",pronunciation:"lah byoh-loo-mee-nee-SEN-syah",definition:"Bioluminescence; the ability of living things to produce their own light",sentence:"En las profundidades, Inky el calamar usa su bioluminiscencia para comunicarse.",translation:"In the depths, Inky the squid uses his bioluminescence to communicate.",hook:"'Bio' means life and 'luminiscencia' means light!"},
+{word:"el sigilo",pos:"noun (m)",pronunciation:"el see-HEE-loh",definition:"Stealth; moving quietly so no one notices",sentence:"Con sigilo, Orcalus se acerca a la manada de focas sin hacer ningún sonido.",translation:"With stealth, Orcalus approaches the seal colony without making a single sound.",hook:null},
+{word:"la ecolocalización",pos:"noun (f)",pronunciation:"lah eh-koh-loh-kah-lee-sah-SYON",definition:"Echolocation; using sound waves to find objects underwater",sentence:"Ripple usa la ecolocalización para encontrar peces aunque el agua esté oscura.",translation:"Ripple uses echolocation to find fish even when the water is dark.",hook:"Dolphins and orcas both use this!"},
+{word:"las mareas",pos:"noun (f, plural)",pronunciation:"lahs mah-REH-ahs",definition:"The tides; the daily rise and fall of the ocean caused by the moon",sentence:"Las mareas cambian dos veces al día y la manada de Orcalus las conoce de memoria.",translation:"The tides change twice a day and Orcalus's pod knows them by heart.",hook:null},
+{word:"aferrarse",pos:"verb",pronunciation:"ah-feh-RRAR-seh",definition:"To cling to; to hold on tightly and refuse to let go",sentence:"La cría de orca se aferra a Splash mientras aprenden a cazar juntos.",translation:"The baby orca clings to Splash while they learn to hunt together.",hook:null},
+{word:"el cardumen",pos:"noun (m)",pronunciation:"el kar-DOO-men",definition:"A school of fish; a large group of fish swimming together",sentence:"Finn el tiburón rodea el cardumen para que los peces no puedan escapar.",translation:"Finn the shark circles the school of fish so they cannot escape.",hook:"In English we say 'school of fish' — in Spanish it has its own word!"},
+{word:"el cetáceo",pos:"noun (m)",pronunciation:"el seh-TAH-seh-oh",definition:"A cetacean; the scientific family that includes whales, dolphins, and orcas",sentence:"La orca es el cetáceo más poderoso del océano y el favorito de Nathan.",translation:"The orca is the most powerful cetacean in the ocean and Nathan's favorite.",hook:"Now you know the scientific category Splash and Orcalus belong to!"},
+{word:"la aleta",pos:"noun (f)",pronunciation:"lah ah-LEH-tah",definition:"A fin or flipper; used by marine mammals to swim",sentence:"La aleta dorsal de Orcalus es tan alta que los marineros pueden verla desde lejos.",translation:"Orcalus's dorsal fin is so tall that sailors can see it from far away.",hook:null},
+{word:"emboscar",pos:"verb",pronunciation:"em-bos-KAR",definition:"To ambush; to hide and then suddenly attack by surprise",sentence:"La manada de orcas emboscó a la ballena después de horas de persecución.",translation:"The orca pod ambushed the whale after hours of pursuit.",hook:null},
+{word:"la bahía",pos:"noun (f)",pronunciation:"lah bah-EE-ah",definition:"A bay; a curved inlet of the sea where the water is calm",sentence:"La manada descansó en la bahía tranquila antes de continuar su migración.",translation:"The pod rested in the calm bay before continuing their migration.",hook:null},
+{word:"el abismo",pos:"noun (m)",pronunciation:"el ah-BEES-moh",definition:"The abyss; an impossibly deep, dark space",sentence:"Incluso Orcalus siente respeto por el abismo oscuro donde la luz nunca llega.",translation:"Even Orcalus feels respect for the dark abyss where light never reaches.",hook:"Also used in English — 'abyss'!"},
+{word:"migrar",pos:"verb",pronunciation:"mee-GRAR",definition:"To migrate; to travel long distances seasonally",sentence:"Las orcas migran miles de kilómetros cada año siguiendo a sus presas.",translation:"Orcas migrate thousands of kilometers every year following their prey.",hook:null},
+{word:"el ecosistema",pos:"noun (m)",pronunciation:"el eh-koh-sees-TEH-mah",definition:"An ecosystem; all living things in an area and how they depend on each other",sentence:"Si desaparecen las orcas, todo el ecosistema marino cambia para siempre.",translation:"If orcas disappear, the entire marine ecosystem changes forever.",hook:"Same word, same meaning as in English!"},
+{word:"la presa",pos:"noun (f)",pronunciation:"lah PREH-sah",definition:"Prey; an animal that is hunted and eaten by another animal",sentence:"Splash estudia el movimiento de su presa antes de atacar.",translation:"Splash studies his prey's movement before attacking.",hook:null},
+{word:"el horizonte",pos:"noun (m)",pronunciation:"el oh-ree-SON-teh",definition:"The horizon; the line where the ocean and sky appear to meet",sentence:"Desde el barco, Nathan vio las aletas de Orcalus y Splash en el horizonte.",translation:"From the boat, Nathan saw Orcalus and Splash's fins on the horizon.",hook:null},
+{word:"desvanecerse",pos:"verb",pronunciation:"des-vah-neh-SER-seh",definition:"To fade away; to slowly disappear or become invisible",sentence:"La sombra de Orcalus se desvanece en las profundidades oscuras del mar.",translation:"Orcalus's shadow fades into the dark depths of the sea.",hook:null},
+{word:"la cría",pos:"noun (f)",pronunciation:"lah KREE-ah",definition:"A calf or baby animal; a young marine mammal",sentence:"La cría de orca nació en enero y ya aprendió a saltar fuera del agua.",translation:"The baby orca was born in January and already learned to jump out of the water.",hook:null},
+{word:"la espuma",pos:"noun (f)",pronunciation:"lah es-POO-mah",definition:"Sea foam; the white bubbles formed when waves crash",sentence:"Orcalus saltó tan alto que levantó una nube de espuma blanca al caer.",translation:"Orcalus jumped so high that he sent up a cloud of white sea foam when he landed.",hook:null},
+{word:"el sonar",pos:"noun (m)",pronunciation:"el soh-NAR",definition:"Sonar; natural ability using sound to detect underwater objects",sentence:"Las orcas tienen un sonar natural mucho más preciso que cualquier tecnología humana.",translation:"Orcas have a natural sonar much more precise than any human technology.",hook:"Same word in Spanish and English — just pronounced differently!"},
+{word:"el vendaval",pos:"noun (m)",pronunciation:"el ven-dah-VAL",definition:"A gale; a very strong, powerful wind at sea",sentence:"La manada nadó unida durante el vendaval para proteger a las crías.",translation:"The pod swam together during the gale to protect the calves.",hook:null},
+{word:"la guarida",pos:"noun (f)",pronunciation:"lah gwah-REE-dah",definition:"A den or lair; a hidden place where an animal lives or hides",sentence:"La bahía secreta es la guarida favorita de Orcalus y su manada.",translation:"The secret bay is Orcalus and his pod's favorite lair.",hook:null},
+{word:"navegar",pos:"verb",pronunciation:"nah-veh-GAR",definition:"To navigate; to find your way across the ocean with skill",sentence:"Orcalus navega por el océano sin mapas usando las corrientes y las estrellas.",translation:"Orcalus navigates the ocean without maps using currents and stars.",hook:null},
+{word:"la travesía",pos:"noun (f)",pronunciation:"lah trah-veh-SEE-ah",definition:"A crossing or voyage; a long journey across the ocean",sentence:"La travesía de Orcalus desde Alaska hasta California duró tres semanas.",translation:"Orcalus's crossing from Alaska to California lasted three weeks.",hook:null}
+],
+july:[
+{word:"arremeter",pos:"verb",pronunciation:"ah-rreh-meh-TER",definition:"To charge or rush at something with full force and speed",sentence:"Orcalus arremete contra las olas como si fueran sus enemigos.",translation:"Orcalus charges against the waves as if they were his enemies.",hook:null},
+{word:"relampaguear",pos:"verb",pronunciation:"reh-lam-pah-geh-AR",definition:"To flash like lightning; to move with sudden blinding speed",sentence:"Los peces de colores relampagueaban en el agua cuando Orcalus se acercaba.",translation:"The colorful fish flashed through the water when Orcalus approached.",hook:"You can see 'relámpago' (lightning) inside this word!"},
+{word:"la fuerza",pos:"noun (f)",pronunciation:"lah FWER-sah",definition:"Strength or force; raw power",sentence:"La fuerza de Orcalus puede voltear un bote pequeño de un solo golpe.",translation:"Orcalus's force can flip a small boat with a single blow.",hook:null},
+{word:"desafiar",pos:"verb",pronunciation:"deh-sah-FYAR",definition:"To challenge or defy; to face something difficult without backing down",sentence:"Nathan desafió su miedo al agua fría y saltó al océano con Orcalus y Splash.",translation:"Nathan defied his fear of cold water and jumped into the ocean with Orcalus and Splash.",hook:null},
+{word:"atravesar",pos:"verb",pronunciation:"ah-trah-veh-SAR",definition:"To cross through something with determination",sentence:"Orcalus atravesó la tormenta sin miedo para encontrar a Splash y su manada.",translation:"Orcalus crossed through the storm fearlessly to find Splash and his pod.",hook:null},
+{word:"la velocidad",pos:"noun (f)",pronunciation:"lah veh-loh-see-DAD",definition:"Speed or velocity; how fast something moves",sentence:"La velocidad de Orcalus en el agua supera la de la mayoría de los barcos.",translation:"Orcalus's speed in water surpasses most boats.",hook:null},
+{word:"rugir",pos:"verb",pronunciation:"roo-HEER",definition:"To roar; to let out a powerful, deep, thundering sound",sentence:"El vendaval rugía tan fuerte que Nathan no podía escuchar a su papá hablar.",translation:"The gale roared so loudly that Nathan couldn't hear his dad speaking.",hook:null},
+{word:"aplastar",pos:"verb",pronunciation:"ah-plahs-TAR",definition:"To crush or flatten; to defeat with overwhelming force",sentence:"Orcalus aplastó al tiburón blanco con la fuerza de su cola.",translation:"Orcalus crushed the white shark with the force of his tail.",hook:null},
+{word:"el estruendo",pos:"noun (m)",pronunciation:"el es-TRWEN-doh",definition:"A thunderous crash or boom; an extremely loud sudden noise",sentence:"El estruendo del trueno hizo que todos los pájaros volaran asustados a la vez.",translation:"The thunderous crash of thunder made all the birds fly away in fright at once.",hook:null},
+{word:"lanzarse",pos:"verb",pronunciation:"lan-SAR-seh",definition:"To hurl oneself; to throw yourself into something with full commitment",sentence:"Orcalus se lanzó desde el agua con tal fuerza que el océano tembló.",translation:"Orcalus hurled himself from the water with such force that the ocean trembled.",hook:null},
+{word:"feroz",pos:"adjective",pronunciation:"feh-ROS",definition:"Fierce; wild, powerful, and dangerous",sentence:"Aunque parece tranquilo, Orcalus puede ser feroz cuando protege a las crías.",translation:"Although he seems calm, Orcalus can be fierce when protecting the calves.",hook:null},
+{word:"el rayo",pos:"noun (m)",pronunciation:"el RAH-yoh",definition:"A lightning bolt; a flash of electricity from the sky",sentence:"Un rayo iluminó el océano y Nathan vio las siluetas de Orcalus y Splash.",translation:"A lightning bolt lit up the ocean and Nathan saw the silhouettes of Orcalus and Splash.",hook:null},
+{word:"implacable",pos:"adjective",pronunciation:"eem-plah-KAH-bleh",definition:"Relentless or unstoppable; never gives up or slows down",sentence:"La persecución de Orcalus fue implacable — nadó por horas sin descanso.",translation:"Orcalus's pursuit was relentless — he swam for hours without rest.",hook:"A great word to use when you want to sound really fluent!"},
+{word:"estallar",pos:"verb",pronunciation:"es-tah-YHAR",definition:"To burst or explode; to suddenly release great energy",sentence:"Orcalus saltó tan alto que cuando cayó el agua estalló en todas direcciones.",translation:"Orcalus jumped so high that when he fell the water burst in all directions.",hook:null},
+{word:"el aguacero",pos:"noun (m)",pronunciation:"el ah-gwah-SEH-roh",definition:"A downpour; a sudden heavy rainstorm",sentence:"El aguacero llegó sin aviso y empapó a Nathan mientras leía en el jardín.",translation:"The downpour arrived without warning and soaked Nathan while he was reading in the garden.",hook:"You can see 'agua' (water) inside — aguacero is a flood of it!"},
+{word:"propulsarse",pos:"verb",pronunciation:"proh-pool-SAR-seh",definition:"To propel oneself; to push yourself forward with powerful force",sentence:"Orcalus se propulsa con su aleta caudal a velocidades increíbles.",translation:"Orcalus propels himself with his tail fin at incredible speeds.",hook:null},
+{word:"incansable",pos:"adjective",pronunciation:"een-kan-SAH-bleh",definition:"Tireless; never getting tired no matter how much effort something takes",sentence:"Orcalus es incansable — puede nadar cientos de kilómetros sin descansar.",translation:"Orcalus is tireless — he can swim hundreds of kilometers without resting.",hook:"'Cansar' means to tire and 'in-' means 'not' — so unstirable!"},
+{word:"el bramido",pos:"noun (m)",pronunciation:"el brah-MEE-doh",definition:"A bellow or deep cry; a loud powerful sound",sentence:"El bramido de Orcalus resonó por todo el océano como un trueno submarino.",translation:"Orcalus's bellow resonated throughout the entire ocean like underwater thunder.",hook:null},
+{word:"enfrentarse",pos:"verb",pronunciation:"en-fren-TAR-seh",definition:"To confront or face; to meet a challenge head-on",sentence:"Nathan se enfrentó a su miedo al agua profunda este verano.",translation:"Nathan confronted his fear of deep water this summer.",hook:null},
+{word:"la persecución",pos:"noun (f)",pronunciation:"lah per-seh-koo-SYON",definition:"A chase or pursuit; following something fast to catch it",sentence:"La persecución de Orcalus duró tres horas antes de que atrapara a su presa.",translation:"Orcalus's chase lasted three hours before he caught his prey.",hook:null},
+{word:"el fragor",pos:"noun (m)",pronunciation:"el frah-GOR",definition:"A din or roar; the combined noise of many powerful forces",sentence:"El fragor del océano durante la tormenta era imposible de ignorar.",translation:"The roar of the ocean during the storm was impossible to ignore.",hook:null},
+{word:"conquistar",pos:"verb",pronunciation:"kon-kees-TAR",definition:"To conquer; to overcome something through effort",sentence:"Nathan conquistó su miedo al agua profunda este verano con la ayuda de Orcalus.",translation:"Nathan conquered his fear of deep water this summer with Orcalus's help.",hook:null},
+{word:"devastador",pos:"adjective",pronunciation:"deh-vahs-tah-DOR",definition:"Devastating; causing massive destruction or overwhelming effect",sentence:"El golpe de la cola de Orcalus fue devastador para el tiburón.",translation:"The blow from Orcalus's tail was devastating to the shark.",hook:null},
+{word:"precipitarse",pos:"verb",pronunciation:"preh-see-pee-TAR-seh",definition:"To rush headlong; to throw yourself into something fast",sentence:"Orcalus se precipitó hacia el tiburón para proteger a la cría de la manada.",translation:"Orcalus rushed headlong toward the shark to protect the calf in the pod.",hook:null},
+{word:"sacudir",pos:"verb",pronunciation:"sah-koo-DEER",definition:"To shake or jolt; to move something violently",sentence:"Orcalus sacudió su cabeza con fuerza para dominar a su presa.",translation:"Orcalus shook his head forcefully to overpower his prey.",hook:null},
+{word:"irrumpir",pos:"verb",pronunciation:"ee-rroom-PEER",definition:"To burst in; to appear suddenly with great force",sentence:"Orcalus irrumpió en el cardumen de peces como un torpedo plateado.",translation:"Orcalus burst into the school of fish like a silver torpedo.",hook:null},
+{word:"la racha",pos:"noun (f)",pronunciation:"lah RAH-chah",definition:"A gust or streak; a sudden burst of wind or a lucky streak",sentence:"Una racha de viento lanzó el sombrero de Nathan al océano.",translation:"A gust of wind sent Nathan's hat flying into the ocean.",hook:"Also used for a hot streak in sports!"},
+{word:"el combate",pos:"noun (m)",pronunciation:"el kom-BAH-teh",definition:"Combat or battle; a fierce fight between powerful opponents",sentence:"El combate entre Orcalus y el tiburón duró solo segundos — Orcalus ganó.",translation:"The combat between Orcalus and the shark lasted only seconds — Orcalus won.",hook:null},
+{word:"volverse loco",pos:"expression",pronunciation:"vol-VER-seh LOH-koh",definition:"To go wild or crazy; extremely excited with energy",sentence:"Orcalus se volvió loco de alegría cuando Nathan llegó a la playa.",translation:"Orcalus went wild with joy when Nathan arrived at the beach.",hook:"Super useful everyday expression in Spanish!"},
+{word:"imparable",pos:"adjective",pronunciation:"eem-pah-RAH-bleh",definition:"Unstoppable; nothing can slow it down or get in its way",sentence:"Cuando Orcalus decide atacar, es completamente imparable.",translation:"When Orcalus decides to attack, he is completely unstoppable.",hook:null}
+],
+august:[
+{word:"añorar",pos:"verb",pronunciation:"ah-nyoh-RAR",definition:"To long for; to deeply miss something or someone",sentence:"Nathan añoraba el verano cuando empezó el primer día de clases.",translation:"Nathan longed for summer when the first day of school began.",hook:"More powerful than just 'missing' — it's a deep ache."},
+{word:"asombrar",pos:"verb",pronunciation:"ah-som-BRAR",definition:"To astonish; to surprise someone so much they can barely believe it",sentence:"La inteligencia de Orcalus y Splash sigue asombrando a los científicos del mundo.",translation:"The intelligence of Orcalus and Splash continues to astonish scientists around the world.",hook:null},
+{word:"la empatía",pos:"noun (f)",pronunciation:"lah em-pah-TEE-ah",definition:"Empathy; understanding and sharing what another person is feeling",sentence:"Nathan mostró empatía cuando Axel estaba triste y lo cuidó con más atención.",translation:"Nathan showed empathy when Axel was sad and took care of him with more attention.",hook:"Same word in English — but in Spanish you truly sound fluent!"},
+{word:"desconfiar",pos:"verb",pronunciation:"des-kon-FYAR",definition:"To distrust; to be suspicious of something",sentence:"Las orcas desconfían de los humanos que no conocen, pero aprenden a distinguir a los amigos.",translation:"Orcas distrust humans they don't know, but they learn to distinguish friends.",hook:"'Confiar' means to trust — 'des-' flips it!"},
+{word:"el orgullo",pos:"noun (m)",pronunciation:"el or-GOO-yoh",definition:"Pride; the good feeling when you or someone you love does something great",sentence:"El orgullo de Nathan al terminar su libro en español era imposible de esconder.",translation:"Nathan's pride at finishing his book in Spanish was impossible to hide.",hook:null},
+{word:"compasivo",pos:"adjective",pronunciation:"kom-pah-SEE-voh",definition:"Compassionate; feeling genuine care and kindness toward others",sentence:"Nathan es compasivo con los animales — nunca dejaría a Orcalus o Splash con hambre.",translation:"Nathan is compassionate with animals — he would never leave Orcalus or Splash hungry.",hook:null},
+{word:"la resiliencia",pos:"noun (f)",pronunciation:"lah reh-see-LYEN-syah",definition:"Resilience; the ability to recover and keep going after something hard",sentence:"Los ajolotes son el símbolo perfecto de la resiliencia — Axel puede regenerar cualquier parte de su cuerpo.",translation:"Axolotls are the perfect symbol of resilience — Axel can regenerate any part of his body.",hook:"Axel taught you this concept before you knew the word!"},
+{word:"la lealtad",pos:"noun (f)",pronunciation:"lah leh-al-TAD",definition:"Loyalty; staying true to someone and never abandoning them",sentence:"La lealtad de Orcalus hacia Nathan y su manada dura toda la vida.",translation:"Orcalus's loyalty to Nathan and his pod lasts a lifetime.",hook:null},
+{word:"reflexionar",pos:"verb",pronunciation:"reh-flek-syoh-NAR",definition:"To reflect; to think deeply and carefully about something",sentence:"Nathan reflexionó sobre todo lo que aprendió este verano antes de volver a la escuela.",translation:"Nathan reflected on everything he learned this summer before going back to school.",hook:null},
+{word:"la valentía",pos:"noun (f)",pronunciation:"lah vah-len-TEE-ah",definition:"Bravery; the courage to do something scary or hard",sentence:"Se necesita valentía para aprender un idioma nuevo — y Nathan la tiene.",translation:"It takes bravery to learn a new language — and Nathan has it.",hook:null},
+{word:"perseverar",pos:"verb",pronunciation:"per-seh-veh-RAR",definition:"To persevere; to keep going and not give up",sentence:"Nathan perseveró con su español todo el verano y llegó a quinto grado más fuerte.",translation:"Nathan persevered with his Spanish all summer and arrived at fifth grade stronger.",hook:null},
+{word:"la curiosidad",pos:"noun (f)",pronunciation:"lah koo-ryoh-see-DAD",definition:"Curiosity; the desire to learn and understand things you don't know",sentence:"La curiosidad de Nathan por los océanos lo llevó a aprender más sobre las orcas que cualquier libro.",translation:"Nathan's curiosity about oceans led him to learn more about orcas than any textbook.",hook:null},
+{word:"superar",pos:"verb",pronunciation:"soo-peh-RAR",definition:"To overcome or surpass; to get past something difficult",sentence:"Este verano, Nathan superó su miedo al agua profunda.",translation:"This summer, Nathan overcame his fear of deep water.",hook:null},
+{word:"el vínculo",pos:"noun (m)",pronunciation:"el VEEN-koo-loh",definition:"A bond or connection; a deep tie between beings who care for each other",sentence:"El vínculo entre Nathan y Orcalus es tan fuerte que ni el tiempo puede romperlo.",translation:"The bond between Nathan and Orcalus is so strong that not even time can break it.",hook:null},
+{word:"maravillarse",pos:"verb",pronunciation:"mah-rah-vee-YHAR-seh",definition:"To marvel at; to be filled with wonder and amazement",sentence:"Nathan se maravilla cada vez que Orcalus y Splash saltan juntos.",translation:"Nathan marvels every time Orcalus and Splash jump together.",hook:"You can see 'maravilla' (marvel/wonder) right inside!"},
+{word:"la sabiduría",pos:"noun (f)",pronunciation:"lah sah-bee-doo-REE-ah",definition:"Wisdom; deep knowledge and good judgment from experience",sentence:"Las ballenas más viejas guardan la sabiduría de la manada y guían a los jóvenes.",translation:"The oldest whales hold the wisdom of the pod and guide the young ones.",hook:null},
+{word:"confiar",pos:"verb",pronunciation:"kon-FYAR",definition:"To trust; to believe in someone completely and feel safe with them",sentence:"Nathan confía en Orcalus completamente — sabe que siempre estará ahí.",translation:"Nathan trusts Orcalus completely — he knows he will always be there.",hook:null},
+{word:"esforzarse",pos:"verb",pronunciation:"es-for-SAR-seh",definition:"To make an effort; to try your hardest even when difficult",sentence:"Nathan se esforzó cada día con el español y al final del verano notó una gran diferencia.",translation:"Nathan made an effort every day with Spanish and by the end of summer noticed a big difference.",hook:null},
+{word:"la paciencia",pos:"noun (f)",pronunciation:"lah pah-SYEN-syah",definition:"Patience; the ability to wait calmly without getting frustrated",sentence:"Aprender español requiere paciencia, pero cada día se vuelve un poco más fácil.",translation:"Learning Spanish requires patience, but each day it becomes a little easier.",hook:null},
+{word:"inspirar",pos:"verb",pronunciation:"een-spee-RAR",definition:"To inspire; to fill someone with motivation to do great things",sentence:"Orcalus y Splash inspiran a Nathan a querer proteger los océanos cuando sea grande.",translation:"Orcalus and Splash inspire Nathan to want to protect the oceans when he grows up.",hook:null},
+{word:"el asombro",pos:"noun (m)",pronunciation:"el ah-SOM-broh",definition:"Awe or wonder; a mix of surprise and deep admiration",sentence:"El asombro en la cara de Nathan cuando vio a Orcalus por primera vez no se puede describir.",translation:"The awe on Nathan's face when he saw Orcalus for the first time cannot be described.",hook:null},
+{word:"el equilibrio",pos:"noun (m)",pronunciation:"el eh-kee-LEE-bryoh",definition:"Balance or equilibrium; a state where everything is steady and in harmony",sentence:"Nathan encontró un buen equilibrio este verano entre el descanso, el juego y el aprendizaje.",translation:"Nathan found a good balance this summer between rest, play, and learning.",hook:null},
+{word:"imprescindible",pos:"adjective",pronunciation:"eem-preh-seen-DEE-bleh",definition:"Indispensable or essential; so important it can't be left out",sentence:"Orcalus es imprescindible en la vida de Nathan — no puede imaginarse sin él.",translation:"Orcalus is indispensable in Nathan's life — he can't imagine being without him.",hook:null},
+{word:"atreverse",pos:"verb",pronunciation:"ah-treh-VER-seh",definition:"To dare; to be brave enough to do something scary or uncertain",sentence:"Nathan se atrevió a leer un libro entero en español — y lo logró.",translation:"Nathan dared to read an entire book in Spanish — and he did it.",hook:null},
+{word:"la complicidad",pos:"noun (f)",pronunciation:"lah kom-plee-see-DAD",definition:"A bond of shared understanding; understanding each other without words",sentence:"La complicidad entre Nathan y Orcalus era tal que no necesitaban hablar.",translation:"The bond between Nathan and Orcalus was such that they didn't need to speak.",hook:"This describes exactly what Nathan has with Orcalus."},
+{word:"la ternura",pos:"noun (f)",pronunciation:"lah ter-NOO-rah",definition:"Tenderness; a gentle, warm, caring feeling toward someone you love",sentence:"Orcalus empujó suavemente a la cría con ternura para enseñarle a nadar.",translation:"Orcalus gently nudged the calf with tenderness to teach it to swim.",hook:null},
+{word:"la nostalgia",pos:"noun (f)",pronunciation:"lah nos-TAL-hyah",definition:"Nostalgia; a warm, bittersweet feeling when you remember something wonderful",sentence:"Nathan sintió nostalgia al pensar en todos los veranos con Orcalus y Splash.",translation:"Nathan felt nostalgia thinking about all the summers with Orcalus and Splash.",hook:"Same word in English — you already know this feeling!"},
+{word:"el legado",pos:"noun (m)",pronunciation:"el leh-GAH-doh",definition:"A legacy; something meaningful that stays with you forever",sentence:"El amor de Nathan por los océanos es el legado de Orcalus — siempre lo llevará consigo.",translation:"Nathan's love of the oceans is Orcalus's legacy — he will always carry it with him.",hook:null},
+{word:"entrañable",pos:"adjective",pronunciation:"en-trah-NYAH-bleh",definition:"Deeply lovable or cherished; so dear to your heart it's hard to describe",sentence:"Para Nathan, Orcalus es el compañero más entrañable que podría tener.",translation:"For Nathan, Orcalus is the most cherished companion he could have.",hook:null},
+{word:"la despedida",pos:"noun (f)",pronunciation:"lah des-peh-DEE-dah",definition:"A farewell; the moment of parting from someone you love until next time",sentence:"La despedida al final del verano siempre era la parte más difícil — hasta la próxima, Orcalus.",translation:"The farewell at the end of summer was always the hardest part — until next time, Orcalus.",hook:"The perfect last word of the summer — goodbye until we meet again."}
+]
+};
+
+var SPANISH_BACKUP={
+june:[
+{word:"la ola",pos:"noun (f)",pronunciation:"lah OH-lah",definition:"A wave; a moving ridge of water on the ocean surface",sentence:"Orcalus cabalgó sobre la ola más grande que Nathan jamás había visto.",translation:"Orcalus rode on the biggest wave Nathan had ever seen.",hook:null},
+{word:"el naufragio",pos:"noun (m)",pronunciation:"el now-FRAH-hyoh",definition:"A shipwreck; the remains of a sunken ship on the ocean floor",sentence:"Orcalus y Splash exploran el naufragio misterioso en el fondo del mar.",translation:"Orcalus and Splash explore the mysterious shipwreck on the ocean floor.",hook:null},
+{word:"sumergirse",pos:"verb",pronunciation:"soo-mer-HEER-seh",definition:"To submerge; to dive completely under the water",sentence:"Orcalus se sumerge hasta 300 metros cuando persigue a su presa.",translation:"Orcalus submerges to 300 meters when pursuing his prey.",hook:null},
+{word:"el oleaje",pos:"noun (m)",pronunciation:"el oh-leh-AH-heh",definition:"The waves; the pattern of continuous ocean waves",sentence:"El oleaje mecía suavemente a Orcalus mientras descansaba en la superficie.",translation:"The waves gently rocked Orcalus as he rested at the surface.",hook:null},
+{word:"la superficie",pos:"noun (f)",pronunciation:"lah soo-per-FEE-syeh",definition:"The surface; the top layer of the water where air meets ocean",sentence:"Orcalus salió a la superficie para respirar y saludó a Nathan con su cola.",translation:"Orcalus surfaced to breathe and greeted Nathan with his tail.",hook:null},
+{word:"la oscuridad",pos:"noun (f)",pronunciation:"lah os-koo-ree-DAD",definition:"Darkness; the complete absence of light in the deep ocean",sentence:"En la oscuridad de las profundidades, Orcalus usa el sonido para ver.",translation:"In the darkness of the depths, Orcalus uses sound to see.",hook:null},
+{word:"el territorio",pos:"noun (m)",pronunciation:"el teh-ree-TOH-ryoh",definition:"Territory; the area of ocean that a pod claims as their own",sentence:"Orcalus conoce cada centímetro de su territorio en el Pacífico.",translation:"Orcalus knows every centimeter of his territory in the Pacific.",hook:null},
+{word:"acuático",pos:"adjective",pronunciation:"ah-KWAH-tee-koh",definition:"Aquatic; relating to or living in water",sentence:"Orcalus es el depredador acuático más inteligente que existe.",translation:"Orcalus is the most intelligent aquatic predator that exists.",hook:null},
+{word:"el estrecho",pos:"noun (m)",pronunciation:"el es-TREH-choh",definition:"A strait; a narrow channel of water connecting two larger bodies",sentence:"Orcalus guió a su manada a través del estrecho durante la tormenta.",translation:"Orcalus guided his pod through the strait during the storm.",hook:null},
+{word:"el silencio",pos:"noun (m)",pronunciation:"el see-LEN-syoh",definition:"Silence; complete quietness in the deep ocean",sentence:"En el silencio del océano profundo, Orcalus escucha todo lo que Nathan no puede oír.",translation:"In the silence of the deep ocean, Orcalus hears everything Nathan cannot.",hook:null},
+{word:"la sombra",pos:"noun (f)",pronunciation:"lah SOM-brah",definition:"A shadow; the dark shape something makes when light shines behind it",sentence:"La sombra enorme de Orcalus pasó bajo el bote y Nathan contuvo la respiración.",translation:"Orcalus's enormous shadow passed under the boat and Nathan held his breath.",hook:null},
+{word:"aflorar",pos:"verb",pronunciation:"ah-floh-RAR",definition:"To surface; to rise up and become visible",sentence:"Orcalus afloró lentamente junto al kayak de Nathan como si lo hubiera esperado.",translation:"Orcalus surfaced slowly beside Nathan's kayak as if he had been waiting for him.",hook:null},
+{word:"la especie",pos:"noun (f)",pronunciation:"lah es-PEH-syeh",definition:"A species; a specific type of animal or living thing",sentence:"La especie de Orcalus y Splash es la más inteligente del océano.",translation:"Orcalus and Splash's species is the most intelligent in the ocean.",hook:null},
+{word:"el abismo",pos:"noun (m)",pronunciation:"el ah-BEES-moh",definition:"The abyss; an impossibly deep, dark space",sentence:"Orcalus y Splash se miran antes de descender juntos hacia el abismo.",translation:"Orcalus and Splash look at each other before descending together into the abyss.",hook:null},
+{word:"el cardumen",pos:"noun (m)",pronunciation:"el kar-DOO-men",definition:"A school of fish; a large group swimming together",sentence:"Orcalus rodeó el cardumen para que ningún pez pudiera escapar.",translation:"Orcalus circled the school of fish so that not a single one could escape.",hook:null}
+],
+july:[
+{word:"el estallido",pos:"noun (m)",pronunciation:"el es-tah-YEE-doh",definition:"A burst or explosion; a sudden release of energy",sentence:"El estallido del trueno hizo que Orcalus saltara fuera del agua de sorpresa.",translation:"The burst of thunder made Orcalus leap out of the water in surprise.",hook:null},
+{word:"irresistible",pos:"adjective",pronunciation:"ee-reh-sees-TEE-bleh",definition:"Irresistible; so powerful it cannot be ignored",sentence:"Para los peces, el olor a comida es irresistible — Orcalus lo sabe y lo usa.",translation:"For fish, the smell of food is irresistible — Orcalus knows this and uses it.",hook:null},
+{word:"el choque",pos:"noun (m)",pronunciation:"el CHOH-keh",definition:"A collision or shock; the sudden violent meeting of two forces",sentence:"El choque de la ola gigante contra las rocas salpicó a Nathan de pies a cabeza.",translation:"The collision of the giant wave against the rocks splashed Nathan from head to toe.",hook:null},
+{word:"desbordar",pos:"verb",pronunciation:"des-bor-DAR",definition:"To overflow or surge beyond limits; too powerful to contain",sentence:"La energía de Orcalus cuando juega desborda todo a su alrededor.",translation:"Orcalus's energy when he plays overflows everything around him.",hook:null},
+{word:"acometer",pos:"verb",pronunciation:"ah-koh-meh-TER",definition:"To undertake boldly; to take on a challenge with full force",sentence:"Orcalus acometió la corriente helada sin dudar ni un segundo.",translation:"Orcalus took on the icy current without hesitating for a single second.",hook:null},
+{word:"la avalancha",pos:"noun (f)",pronunciation:"lah ah-vah-LAN-chah",definition:"An avalanche; an overwhelming rush of something massive",sentence:"Una avalancha de burbujas marcó el lugar donde Orcalus se sumergió a toda velocidad.",translation:"An avalanche of bubbles marked the spot where Orcalus dove at full speed.",hook:null},
+{word:"demoledor",pos:"adjective",pronunciation:"deh-moh-leh-DOR",definition:"Demolishing; so powerful it destroys everything in its path",sentence:"El golpe de cola de Orcalus fue demoledor — el tiburón no volvió.",translation:"Orcalus's tail slap was demolishing — the shark didn't come back.",hook:null},
+{word:"el retumbo",pos:"noun (m)",pronunciation:"el reh-TOOM-boh",definition:"A rumble or deep boom; a low vibrating sound from everywhere",sentence:"El retumbo de la voz de Orcalus bajo el agua hacía vibrar el casco del bote.",translation:"The rumble of Orcalus's voice underwater made the hull of the boat vibrate.",hook:null},
+{word:"encabritarse",pos:"verb",pronunciation:"en-kah-bree-TAR-seh",definition:"To rear up; to rise up on the back end with explosive energy",sentence:"Orcalus se encabritó sobre el agua antes de caer con un golpe tremendo.",translation:"Orcalus reared up out of the water before falling with a tremendous crash.",hook:null},
+{word:"sacudirse",pos:"verb",pronunciation:"sah-koo-DEER-seh",definition:"To shake oneself; to move violently to throw something off",sentence:"Orcalus se sacudió para liberarse de las algas enredadas en su aleta.",translation:"Orcalus shook himself to free the seaweed tangled in his fin.",hook:null},
+{word:"imparable",pos:"adjective",pronunciation:"eem-pah-RAH-bleh",definition:"Unstoppable; nothing can slow it down",sentence:"Cuando Orcalus decide atacar, es completamente imparable.",translation:"When Orcalus decides to attack, he is completely unstoppable.",hook:null},
+{word:"irrumpir",pos:"verb",pronunciation:"ee-rroom-PEER",definition:"To burst in; to appear suddenly with great force",sentence:"Orcalus irrumpió en el cardumen de peces como un torpedo plateado.",translation:"Orcalus burst into the school of fish like a silver torpedo.",hook:null},
+{word:"el bramido",pos:"noun (m)",pronunciation:"el brah-MEE-doh",definition:"A bellow or deep cry; a loud powerful sound",sentence:"El bramido de Orcalus resonó por el océano entero.",translation:"Orcalus's bellow resonated through the entire ocean.",hook:null},
+{word:"derrumbar",pos:"verb",pronunciation:"deh-rrroom-BAR",definition:"To collapse or bring down with great force",sentence:"Las olas derrumbaron el castillo de arena de Nathan en segundos.",translation:"The waves collapsed Nathan's sand castle in seconds.",hook:null},
+{word:"el combate",pos:"noun (m)",pronunciation:"el kom-BAH-teh",definition:"Combat or battle; a fierce fight between powerful opponents",sentence:"Orcalus ganó el combate sin esfuerzo — nadie puede vencerlo.",translation:"Orcalus won the combat effortlessly — nobody can beat him.",hook:null}
+],
+august:[
+{word:"el anhelo",pos:"noun (m)",pronunciation:"el ah-NEH-loh",definition:"A longing or yearning; a deep wish for something you don't have",sentence:"El anhelo de Orcalus por el océano abierto era tan grande que Nathan podía sentirlo.",translation:"Orcalus's yearning for the open ocean was so great that Nathan could feel it.",hook:null},
+{word:"la melancolía",pos:"noun (f)",pronunciation:"lah meh-lan-koh-LEE-ah",definition:"Melancholy; a quiet, deep sadness — a heaviness in the heart",sentence:"Al final del verano, una pequeña melancolía llegó a Nathan — no quería que terminara.",translation:"At the end of summer, a small melancholy came over Nathan — he didn't want it to end.",hook:null},
+{word:"perdonar",pos:"verb",pronunciation:"per-doh-NAR",definition:"To forgive; to let go of anger and give someone another chance",sentence:"Orcalus perdonó al pescador que lo había asustado — las orcas no guardan rencor.",translation:"Orcalus forgave the fisherman who had startled him — orcas don't hold grudges.",hook:null},
+{word:"recapacitar",pos:"verb",pronunciation:"reh-kah-pah-see-TAR",definition:"To reconsider; to stop and think again about a decision",sentence:"Nathan recapacitó y decidió estudiar sus palabras en español antes de jugar.",translation:"Nathan reconsidered and decided to study his Spanish words before playing.",hook:null},
+{word:"la madurez",pos:"noun (f)",pronunciation:"lah mah-doo-RES",definition:"Maturity; the wisdom and responsibility that comes with growing up",sentence:"La madurez de Orcalus se nota en cómo guía a los más jóvenes de la manada.",translation:"Orcalus's maturity shows in how he guides the younger members of the pod.",hook:null},
+{word:"acompañar",pos:"verb",pronunciation:"ah-kom-pah-NYAR",definition:"To accompany; to go with someone so they don't face something alone",sentence:"Orcalus siempre acompaña a Splash en los viajes largos para que nunca esté solo.",translation:"Orcalus always accompanies Splash on long journeys so he's never alone.",hook:null},
+{word:"la serenidad",pos:"noun (f)",pronunciation:"lah seh-reh-nee-DAD",definition:"Serenity; a deep, peaceful calmness",sentence:"La serenidad de Orcalus flotando al amanecer era algo que Nathan nunca olvidaría.",translation:"The serenity of Orcalus floating at dawn was something Nathan would never forget.",hook:null},
+{word:"rememorar",pos:"verb",pronunciation:"reh-meh-moh-RAR",definition:"To reminisce; to recall and relive beautiful memories",sentence:"Nathan rememoraba cada verano con Orcalus como si fueran tesoros en su corazón.",translation:"Nathan reminisced about every summer with Orcalus as if they were treasures in his heart.",hook:null},
+{word:"inigualable",pos:"adjective",pronunciation:"ee-nee-gwah-LAH-bleh",definition:"Unmatched or incomparable; so unique nothing else comes close",sentence:"Para Nathan, el vínculo con Orcalus es inigualable — no hay nada igual en el mundo.",translation:"For Nathan, the bond with Orcalus is unmatched — there is nothing like it in the world.",hook:null},
+{word:"el sacrificio",pos:"noun (m)",pronunciation:"el sah-kree-FEE-syoh",definition:"A sacrifice; giving up something for the sake of someone else",sentence:"Orcalus hace grandes sacrificios para proteger a cada miembro de su manada.",translation:"Orcalus makes great sacrifices to protect every member of his pod.",hook:null},
+{word:"la incertidumbre",pos:"noun (f)",pronunciation:"lah een-ser-tee-DOOM-breh",definition:"Uncertainty; not knowing what will happen next",sentence:"Hay incertidumbre antes de cada nuevo año escolar, pero Nathan siempre la supera.",translation:"There is uncertainty before every new school year, but Nathan always overcomes it.",hook:null},
+{word:"transformarse",pos:"verb",pronunciation:"trans-for-MAR-seh",definition:"To transform oneself; to change deeply and become something new",sentence:"Nathan se transformó este verano — creció, aprendió y se hizo más fuerte.",translation:"Nathan transformed this summer — he grew, learned, and became stronger.",hook:null},
+{word:"el crecimiento",pos:"noun (m)",pronunciation:"el kreh-see-MYEN-toh",definition:"Growth; the process of getting bigger, stronger, or more mature",sentence:"Este fue un verano de crecimiento para Nathan en muchos sentidos.",translation:"This was a summer of growth for Nathan in many ways.",hook:null},
+{word:"la gratitud",pos:"noun (f)",pronunciation:"lah grah-tee-TOOD",definition:"Gratitude; a deep feeling of thankfulness for what you have",sentence:"Nathan sintió una gratitud enorme al final del verano — por Orcalus, Splash, y su familia.",translation:"Nathan felt enormous gratitude at the end of summer — for Orcalus, Splash, and his family.",hook:null},
+{word:"la despedida",pos:"noun (f)",pronunciation:"lah des-peh-DEE-dah",definition:"A farewell; the moment of parting until next time",sentence:"La despedida al final del verano — hasta la próxima, Orcalus.",translation:"The farewell at the end of summer — until next time, Orcalus.",hook:"The perfect last word of summer."}
+]
+};
+
+// Spanish practice tasks
+var SPANISH_PRACTICE_TASKS=[
+  {id:'sp_read',emoji:'📚',name:'Read in Spanish',stars:3},
+  {id:'sp_duolingo',emoji:'📱',name:'Duolingo',stars:3},
+  {id:'sp_convo',emoji:'💬',name:'Spanish conversation with Dad',stars:5},
+  {id:'sp_dictionary',emoji:'📖',name:'Look up a new word in my dictionary',stars:2}
+];
+
+// Chores list
+var SUMMER_CHORES=[
+  {id:'make_bed',emoji:'🛏️',name:'Make your bed',stars:2},
+  {id:'put_clothes',emoji:'👕',name:'Put away your clothes',stars:2},
+  {id:'clean_mirrors',emoji:'🪟',name:'Clean mirrors',stars:3},
+  {id:'water_plants',emoji:'🪴',name:'Water the plants',stars:3},
+  {id:'trash_cans',emoji:'🗑️',name:'Empty the little trash cans',stars:4},
+  {id:'tidy_living',emoji:'🛋️',name:'Tidy the living room',stars:4},
+  {id:'noah_toys',emoji:'🧸',name:"Help clean up Noah's mess in one room",stars:4},
+  {id:'wash_clothes',emoji:'🧺',name:'Help wash clothes',stars:4},
+  {id:'wash_dishes',emoji:'🍽️',name:'Help wash dishes',stars:4},
+  {id:'groceries',emoji:'🛒',name:'Help unload and put away groceries',stars:5},
+  {id:'read_noah',emoji:'📖',name:'Read a book to Noah',stars:5},
+  {id:'organize_space',emoji:'🗂️',name:'Organize a space in your room (bookshelf, drawer, closet…)',stars:5},
+  {id:'cook',emoji:'🍳',name:'Help make breakfast, lunch, or dinner',stars:6},
+  {id:'baking',emoji:'🍪',name:'Help make a sweet treat for the house',stars:6},
+  {id:'clean_car',emoji:'🚗',name:'Help clean the car',stars:7}
+];
+
+// ═══════════════════════════════════════════
+// ORCALUS SVG (with belly patch)
+// ═══════════════════════════════════════════
+function getOrcalusSvg(size){
+  var s=size||56;
+  return'<svg viewBox="0 0 110 100" style="width:'+s+'px;height:'+s+'px;animation:float 3s ease-in-out infinite;filter:drop-shadow(0 3px 8px rgba(0,0,0,.4))">'
+    +'<ellipse cx="55" cy="56" rx="38" ry="24" fill="#1a1a2e"/>'
+    +'<ellipse cx="55" cy="64" rx="26" ry="16" fill="#f0f4f8"/>'
+    +'<ellipse cx="76" cy="47" rx="11" ry="8" fill="#f0f4f8"/>'
+    +'<circle cx="78" cy="47" r="3.5" fill="#1a1a2e"/>'
+    +'<circle cx="79" cy="46" r="1.2" fill="white"/>'
+    +'<path d="M55,32 L65,50 L45,50 Z" fill="#1a1a2e"/>'
+    +'<path d="M20,56 Q10,44 6,50 Q10,60 20,62 Z" fill="#1a1a2e"/>'
+    +'<path d="M20,56 Q10,63 6,59 Q10,51 20,54 Z" fill="#1a1a2e"/>'
+    +'<path d="M40,64 Q28,75 24,70 Q32,62 40,62 Z" fill="#1a1a2e"/>'
+    +'<path d="M60,61 Q65,64 70,61" stroke="#555" stroke-width="1.5" fill="none" stroke-linecap="round"/>'
+    +'<ellipse cx="52" cy="68" rx="9" ry="6" fill="#c8a882" opacity=".85"/>'
+    +'<ellipse cx="52" cy="68" rx="7" ry="4.5" fill="#d4b896" opacity=".7"/>'
+    +'<line x1="46" y1="66" x2="58" y2="66" stroke="#b8956a" stroke-width=".8" stroke-dasharray="2,1.5" opacity=".6"/>'
+    +'<line x1="46" y1="69" x2="58" y2="69" stroke="#b8956a" stroke-width=".8" stroke-dasharray="2,1.5" opacity=".6"/>'
+    +'</svg>';
 }
+
+// ═══════════════════════════════════════════
+// SPANISH TAB FUNCTIONS
+// ═══════════════════════════════════════════
+function getSpanishMonth(){
+  var m=new Date().getMonth();
+  if(m===5)return'june';
+  if(m===6)return'july';
+  if(m===7)return'august';
+  return'june';
+}
+function getSpanishMonthLabel(){
+  var m=getSpanishMonth();
+  if(m==='june')return'June \u00B7 Ocean &amp; Its Secrets \uD83C\uDF0A';
+  if(m==='july')return'July \u00B7 Power, Action &amp; Intensity \u26A1';
+  return'August \u00B7 Mind, Feelings &amp; People \uD83E\uDDE0';
+}
+function getSpanishAllWords(){
+  var m=getSpanishMonth();
+  return(SPANISH_WORDS[m]||SPANISH_WORDS.june).concat(SPANISH_BACKUP[m]||[]);
+}
+function getTodaySpanishWord(){
+  if(!S.spanishState)S.spanishState={};
+  var today=new Date().toDateString();
+  var words=getSpanishAllWords();
+  if(S.spanishState.date!==today){
+    S.spanishState.date=today;
+    S.spanishState.skipsUsed=0;
+    S.spanishState.skippedIndices=[];
+    var dayOfMonth=new Date().getDate()-1;
+    S.spanishState.wordIndex=dayOfMonth%30; // only cycle through primaries (first 30)
+    S.spanishState.practiced=false;
+    save();
+  }
+  return{word:words[S.spanishState.wordIndex%words.length],index:S.spanishState.wordIndex};
+}
+function skipSpanishWord(){
+  if(!S.spanishState)S.spanishState={};
+  var maxSkips=5;
+  if((S.spanishState.skipsUsed||0)>=maxSkips){showToast('No more skips today! Come back tomorrow for new words.');return;}
+  if(!S.spanishState.skippedIndices)S.spanishState.skippedIndices=[];
+  S.spanishState.skippedIndices.push(S.spanishState.wordIndex||0);
+  S.spanishState.skipsUsed=(S.spanishState.skipsUsed||0)+1;
+  var words=getSpanishAllWords();
+  var tries=0;
+  do{
+    S.spanishState.wordIndex=((S.spanishState.wordIndex||0)+1)%words.length;
+    tries++;
+  }while(S.spanishState.skippedIndices.includes(S.spanishState.wordIndex)&&tries<words.length);
+  save();renderSpanishTab();
+  showToast('Smart! Moving to the next word \uD83C\uDF0A');
+}
+function markWordPracticed(){
+  if(!S.spanishState)S.spanishState={};
+  if(S.spanishState.practiced){showToast('Already got credit for today\'s word!');return;}
+  S.spanishState.practiced=true;
+  if(!S.spanishArchive)S.spanishArchive=[];
+  var words=getSpanishAllWords();
+  var w=words[(S.spanishState.wordIndex||0)%words.length];
+  var alreadyIn=S.spanishArchive.some(function(a){return a.word===w.word});
+  if(!alreadyIn){
+    S.spanishArchive.push({word:w.word,def:w.definition,date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'})});
+  }
+  S.stars=(S.stars||0)+3;
+  S.totalStarsEarned=(S.totalStarsEarned||0)+3;
+  if(!S.summerProgress)S.summerProgress={};
+  S.summerProgress.spanishDate=new Date().toDateString();
+  save();updateStars();renderSpanishTab();renderHomeStats();
+  confetti();showToast('\uD83C\uDF1F +3 \u2B50 Orcalus is proud of you!');
+}
+function toggleSpanishTask(id){
+  if(!S.spanishTasks)S.spanishTasks={};
+  var today=new Date().toDateString();
+  var key=id+'_'+today;
+  if(S.spanishTasks[key]){
+    var task=SPANISH_PRACTICE_TASKS.find(function(t){return t.id===id});
+    if(task)S.stars=Math.max(0,(S.stars||0)-task.stars);
+    delete S.spanishTasks[key];
+  } else {
+    S.spanishTasks[key]=true;
+    var task=SPANISH_PRACTICE_TASKS.find(function(t){return t.id===id});
+    if(task){
+      S.stars=(S.stars||0)+task.stars;
+      S.totalStarsEarned=(S.totalStarsEarned||0)+task.stars;
+      confetti();showToast(task.emoji+' +'+task.stars+' \u2B50 Great practice!');
+    }
+    if(!S.summerProgress)S.summerProgress={};
+    S.summerProgress.spanishDate=new Date().toDateString();
+  }
+  save();updateStars();renderSpanishTab();renderHomeStats();
+}
+function renderSpanishTab(){
+  var orcaEl=document.getElementById('spanishOrcaDisplay');
+  if(orcaEl)orcaEl.innerHTML=getOrcalusSvg(70);
+  var ml=document.getElementById('spanishMonthLabel');
+  if(ml)ml.innerHTML=getSpanishMonthLabel();
+  var result=getTodaySpanishWord();
+  var w=result.word;
+  if(!w)return;
+  var wordEl=document.getElementById('spanishWord');if(wordEl)wordEl.textContent=w.word;
+  var posEl=document.getElementById('spanishPos');if(posEl)posEl.textContent=w.pos;
+  var pronEl=document.getElementById('spanishPron');if(pronEl)pronEl.textContent=w.pronunciation;
+  var defEl=document.getElementById('spanishDef');if(defEl)defEl.textContent=w.definition;
+  var sentEl=document.getElementById('spanishSentence');if(sentEl)sentEl.textContent=w.sentence;
+  var transEl=document.getElementById('spanishTranslation');if(transEl)transEl.textContent=w.translation;
+  var hookEl=document.getElementById('spanishHook');
+  if(hookEl){if(w.hook){hookEl.textContent='\uD83D\uDCA1 '+w.hook;hookEl.style.display='block';}else{hookEl.style.display='none';}}
+  var skipsLeft=5-((S.spanishState&&S.spanishState.skipsUsed)||0);
+  var skipBtn=document.getElementById('spanishSkipBtn');
+  var skipInfo=document.getElementById('spanishSkipsLeft');
+  if(skipBtn)skipBtn.disabled=skipsLeft<=0;
+  if(skipInfo)skipInfo.textContent=skipsLeft>0?'You can skip up to '+skipsLeft+' more word'+(skipsLeft===1?'':'s')+' today':'No more skips today!';
+  var wordNum=document.getElementById('spanishWordNum');
+  if(wordNum){var su=S.spanishState&&S.spanishState.skipsUsed||0;wordNum.textContent='Day '+new Date().getDate()+(su>0?' \u00B7 '+su+' word'+(su===1?'':'s')+' skipped today':'');}
+  // Tasks
+  var taskList=document.getElementById('spanishTaskList');
+  if(taskList){
+    var today=new Date().toDateString();
+    taskList.innerHTML=SPANISH_PRACTICE_TASKS.map(function(t){
+      var done=!!(S.spanishTasks&&S.spanishTasks[t.id+'_'+today]);
+      return'<div class="spanish-task-item'+(done?' done':'')+'" onclick="toggleSpanishTask(\''+t.id+'\')">'
+        +'<div class="spanish-task-cb">'+(done?'✓':'')+'</div>'
+        +'<span style="font-size:1.1rem">'+t.emoji+'</span>'
+        +'<div style="flex:1;font-size:.82rem">'+t.name+'</div>'
+        +'<div style="font-size:.72rem;color:var(--gold-b);font-weight:700">+'+t.stars+'\u2B50</div>'
+        +'</div>';
+    }).join('');
+  }
+  // Archive
+  var archiveEl=document.getElementById('spanishArchive');
+  var archiveCount=document.getElementById('spanishArchiveCount');
+  var archive=S.spanishArchive||[];
+  if(archiveCount)archiveCount.textContent=archive.length>0?'You\'ve collected '+archive.length+' word'+(archive.length===1?'':'s')+' this summer! \uD83C\uDF1F':'Complete today\'s word to start your collection!';
+  if(archiveEl){
+    if(archive.length===0){archiveEl.innerHTML='<div style="font-size:.78rem;color:var(--dim);text-align:center;padding:12px">Your word collection will appear here!</div>';}
+    else{archiveEl.innerHTML=[...archive].reverse().map(function(a){return'<div class="archive-word-card"><div class="archive-word">'+a.word+'</div><div class="archive-def">'+a.def+'</div><div style="font-size:.65rem;color:rgba(171,71,188,.5);margin-top:2px">'+a.date+'</div></div>';}).join('');}
+  }
+}
+
+// ═══════════════════════════════════════════
+// READING TAB FUNCTIONS
+// ═══════════════════════════════════════════
+var _readingFormState={title:'',bookType:'new',rating:'',summaryText:'',selfEval:{1:null,2:null,3:null}};
+var _recognition=null;
+
+function updateReadingTitle(val){_readingFormState.title=val.trim();}
+function updateReadingSummary(val){_readingFormState.summaryText=val.trim();}
+function startVoiceInput(field){
+  // Voice input via keyboard mic — just focus the right textarea
+  var id=field==='title'?'readingTitleDisplay':'readingSummaryDisplay';
+  var el=document.getElementById(id);
+  if(el){el.focus();}
+}
+function setBookType(type){
+  _readingFormState.bookType=type;
+  document.getElementById('btnNewBook').style.borderColor=type==='new'?'rgba(41,182,246,.8)':'rgba(41,182,246,.3)';
+  document.getElementById('btnSameBook').style.borderColor=type==='same'?'rgba(41,182,246,.8)':'rgba(255,255,255,.1)';
+  document.getElementById('btnFinished').style.borderColor=type==='finished'?'rgba(102,187,106,.8)':'rgba(102,187,106,.3)';
+}
+function setRating(r){
+  _readingFormState.rating=r;
+  ['loved','okay','meh'].forEach(function(n){var b=document.getElementById('rating'+n.charAt(0).toUpperCase()+n.slice(1));if(b)b.classList.remove('selected');});
+  var map={loved:'Loved',okay:'Okay',meh:'Meh'};
+  var el=document.getElementById('rating'+map[r]);if(el)el.classList.add('selected');
+}
+function setSelfEval(q,val){
+  _readingFormState.selfEval[q]=val;
+  var yBtn=document.getElementById('evalQ'+q+'yes');var nBtn=document.getElementById('evalQ'+q+'no');
+  if(yBtn)yBtn.className='self-eval-btn'+(val===true?' yes':'');
+  if(nBtn)nBtn.className='self-eval-btn'+(val===false?' no':'');
+}
+function showReadingForm(){
+  _readingFormState={title:'',bookType:'new',rating:'',summaryText:'',selfEval:{1:null,2:null,3:null}};
+  var td=document.getElementById('readingTitleDisplay');if(td)td.value='';
+  var sd=document.getElementById('readingSummaryDisplay');if(sd)sd.value='';
+  document.getElementById('readingFormSection').style.display='block';
+  document.getElementById('readingFeedbackSection').style.display='none';
+  // Reset self eval buttons
+  [1,2,3].forEach(function(q){
+    var y=document.getElementById('evalQ'+q+'yes');var n=document.getElementById('evalQ'+q+'no');
+    if(y)y.className='self-eval-btn';if(n)n.className='self-eval-btn';
+  });
+  // Reset rating
+  ['Loved','Okay','Meh'].forEach(function(r){var b=document.getElementById('rating'+r);if(b)b.classList.remove('selected');});
+  setBookType('new');
+}
+function cancelReadingForm(){document.getElementById('readingFormSection').style.display='none';}
+function dismissReadingFeedback(){document.getElementById('readingFeedbackSection').style.display='none';}
+async function submitReadingLog(){
+  // Read directly from textareas in case oninput didn't fire
+  var titleEl=document.getElementById('readingTitleDisplay');
+  var summaryEl=document.getElementById('readingSummaryDisplay');
+  if(titleEl&&titleEl.value)_readingFormState.title=titleEl.value.trim();
+  if(summaryEl&&summaryEl.value)_readingFormState.summaryText=summaryEl.value.trim();
+
+  if(!_readingFormState.title){showToast('Tell Splash what book you read! Tap the title box \uD83D\uDCDA');return;}
+  if(!_readingFormState.summaryText){showToast('Tell Splash what happened — tap the summary box! \uD83D\uDC0B');return;}
+  var selfStars=Object.values(_readingFormState.selfEval).filter(function(v){return v===true}).length;
+  document.getElementById('readingFormSection').style.display='none';
+  document.getElementById('readingFeedbackSection').style.display='block';
+  document.getElementById('readingFeedbackText').textContent='Splash is reading your summary...';
+  document.getElementById('readingStarsAwarded').textContent='';
+  var aiStars=0;var feedbackText='Great job logging your reading today, Nathan! \uD83D\uDC0B';
+  try{
+    var resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',max_tokens:200,
+      system:'You are Splash, a friendly orca who is Nathan\'s best friend. Nathan is 10 and working on summarizing skills — giving the main idea concisely without rambling. Rate his summary 1-3 (1=needs work on conciseness, 2=pretty good, 3=excellent) and give one encouraging sentence of specific feedback. His self-rating: main idea='+((_readingFormState.selfEval[1])?'yes':'no')+', kept it short='+((_readingFormState.selfEval[2])?'yes':'no')+', understandable='+((_readingFormState.selfEval[3])?'yes':'no')+'. Respond ONLY as JSON with no markdown: {"stars":1-3,"feedback":"one sentence from Splash in first person"}',
+      messages:[{role:'user',content:'Book: '+_readingFormState.title+'\n\nSummary: '+_readingFormState.summaryText}]
+    })});
+    var data=await resp.json();
+    var text=data.content[0].text.replace(/```json|```/g,'').trim();
+    var parsed=JSON.parse(text);
+    aiStars=Math.min(3,Math.max(0,parseInt(parsed.stars)||0));
+    feedbackText=parsed.feedback||feedbackText;
+  }catch(e){aiStars=1;feedbackText='Great job reading today, Nathan! Splash loved hearing about your book! \uD83D\uDC0B';}
+  var totalStars=5+selfStars+aiStars;
+  S.stars=(S.stars||0)+totalStars;
+  S.totalStarsEarned=(S.totalStarsEarned||0)+totalStars;
+  if(!S.readingLog)S.readingLog=[];
+  var entry={id:'rl_'+Date.now(),title:_readingFormState.title,bookType:_readingFormState.bookType,rating:_readingFormState.rating,summary:_readingFormState.summaryText,selfEval:_readingFormState.selfEval,selfStars:selfStars,aiStars:aiStars,totalStars:totalStars,aiFeeback:feedbackText,date:new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}),ts:Date.now()};
+  S.readingLog.push(entry);
+  if(_readingFormState.bookType==='finished'){if(!S.summerBooks)S.summerBooks=0;S.summerBooks=(S.summerBooks||0)+1;}
+  if(!S.summerProgress)S.summerProgress={};
+  S.summerProgress.readingDate=new Date().toDateString();
+  save();updateStars();
+  document.getElementById('readingFeedbackText').textContent=feedbackText;
+  document.getElementById('readingStarsAwarded').textContent='\uD83C\uDF1F +'+totalStars+' stars earned!';
+  confetti();confetti();renderReadingTab();renderHomeStats();
+}
+function renderReadingTab(){
+  var orcaEl=document.getElementById('readingOrcaDisplay');
+  if(orcaEl)orcaEl.innerHTML=getOrcaSvg(70);
+  var msgs=['Splash loves story time! What are you reading today?','Splash can\'t wait to hear about your book! \uD83D\uDCDA','What adventures did you read about? Tell Splash! \uD83D\uDC0B','Reading makes your brain as powerful as an orca! \uD83C\uDF0A'];
+  var msgEl=document.getElementById('readingSplashMsg');
+  if(msgEl)msgEl.textContent=msgs[new Date().getDate()%msgs.length];
+  var goalEl=document.getElementById('readingGoalSection');
+  if(goalEl){
+    var goal=S.summerReadingGoal||0;var books=S.summerBooks||0;
+    if(!goal){
+      goalEl.innerHTML='<div style="font-size:.78rem;color:var(--dim);margin-bottom:6px">Set your summer reading goal!</div>'
+        +'<div style="display:flex;gap:8px;align-items:center;justify-content:center">'
+        +'<input type="number" id="readingGoalInput" placeholder="# books" min="1" max="50" class="admin-input" style="width:80px;text-align:center">'
+        +'<button onclick="setReadingGoal()" style="font-family:\'Fredoka One\',cursive;font-size:.78rem;padding:7px 14px;border-radius:10px;border:none;background:linear-gradient(135deg,#1565c0,#29b6f6);color:#fff;cursor:pointer">Set Goal!</button>'
+        +'</div>';
+    } else {
+      var pct=Math.min(100,Math.round(books/goal*100));
+      goalEl.innerHTML='<div style="font-size:.72rem;color:var(--dim);margin-bottom:4px">Goal: '+books+' / '+goal+' books</div>'
+        +'<div style="background:rgba(255,255,255,.08);border-radius:8px;overflow:hidden;height:10px"><div style="width:'+pct+'%;background:linear-gradient(90deg,var(--glow),var(--bright));height:100%;border-radius:8px;transition:width .6s"></div></div>'
+        +(pct>=100?'<div style="font-size:.72rem;color:var(--green);font-weight:700;margin-top:4px">\uD83C\uDF89 Goal reached! Splash is SO proud!</div>':'');
+    }
+  }
+  var bc=document.getElementById('bookCounter');var books=S.summerBooks||0;
+  if(bc)bc.textContent='\uD83D\uDCDA '+(books===0?'No books finished yet — you\'ve got this!':books+' book'+(books===1?'':'s')+' finished this summer!');
+  var hist=document.getElementById('readingHistory');
+  if(hist){
+    var log=S.readingLog||[];
+    if(log.length===0){hist.innerHTML='<div style="font-size:.78rem;color:var(--dim);text-align:center;padding:12px">Your reading history will appear here after your first session!</div>';}
+    else{
+      var re={loved:'\u2764\uFE0F',okay:'\uD83D\uDE0A',meh:'\uD83D\uDE15'};
+      hist.innerHTML=[...log].reverse().map(function(e){
+        return'<div class="reading-entry" onclick="toggleReadingEntry(\''+e.id+'\')" id="entry_'+e.id+'">'
+          +'<div style="display:flex;align-items:center;gap:8px">'
+          +'<span style="font-size:1.4rem">'+(re[e.rating]||'\uD83D\uDCDA')+'</span>'
+          +'<div class="reading-entry-title">'+e.title+'</div>'
+          +(e.bookType==='finished'?'<span style="font-size:.65rem;color:var(--green);font-weight:700">\u2705 Finished!</span>':'')
+          +'</div>'
+          +'<div style="font-size:.65rem;color:var(--dim);margin-top:3px">'+e.date+' \u00B7 +'+e.totalStars+'\u2B50</div>'
+          +'<div class="reading-entry-summary" id="summary_'+e.id+'" style="display:none">'+e.summary+'</div>'
+          +'<div class="reading-entry-feedback" id="feedback_'+e.id+'" style="display:none">\uD83D\uDC0B '+e.aiFeeback+'</div>'
+          +'</div>';
+      }).join('');
+    }
+  }
+}
+function toggleReadingEntry(id){
+  var s=document.getElementById('summary_'+id);var f=document.getElementById('feedback_'+id);var e=document.getElementById('entry_'+id);
+  if(!s)return;var open=s.style.display==='block';
+  s.style.display=open?'none':'block';if(f)f.style.display=open?'none':'block';
+  if(e)e.classList.toggle('expanded',!open);
+}
+function setReadingGoal(){
+  var v=parseInt(document.getElementById('readingGoalInput').value)||0;
+  if(v<1){showToast('Set a goal of at least 1 book!');return;}
+  S.summerReadingGoal=v;save();renderReadingTab();
+  showToast('\uD83C\uDFAF Goal set! Read '+v+' books this summer! Splash believes in you!');
+}
+
+// ═══════════════════════════════════════════
+// CHORES TAB FUNCTIONS
+// ═══════════════════════════════════════════
+function renderChoresTab(){
+  var today=new Date().toDateString();
+  if(!S.choreDone)S.choreDone={};
+  var todayStars=0;
+  var list=document.getElementById('choreList');if(!list)return;
+  list.innerHTML=SUMMER_CHORES.map(function(c){
+    var key=c.id+'_'+today;var done=!!S.choreDone[key];
+    if(done)todayStars+=c.stars;
+    return'<div class="chore-card'+(done?' done':'')+'" onclick="doChore(\''+c.id+'\')">'
+      +'<span class="chore-emoji">'+c.emoji+'</span>'
+      +'<span class="chore-name">'+c.name+'</span>'
+      +(done?'<span style="font-size:.7rem;color:var(--green);font-weight:700">\u2705 Done!</span>':'<span class="chore-stars-badge">+'+c.stars+'\u2B50</span>')
+      +'</div>';
+  }).join('');
+  var starsEl=document.getElementById('choresTodayStars');
+  if(starsEl)starsEl.textContent='\u2B50 '+todayStars+' stars earned from chores today'+(todayStars===0?' \u2014 pick one to get started!':'!');
+}
+function doChore(choreId){
+  var today=new Date().toDateString();
+  if(!S.choreDone)S.choreDone={};
+  var key=choreId+'_'+today;
+  if(S.choreDone[key])return;
+  var chore=SUMMER_CHORES.find(function(c){return c.id===choreId});if(!chore)return;
+  S.choreDone[key]=true;
+  S.stars=(S.stars||0)+chore.stars;S.totalStarsEarned=(S.totalStarsEarned||0)+chore.stars;
+  if(!S.summerProgress)S.summerProgress={};S.summerProgress.choresDate=today;
+  save();updateStars();celebrateTask();
+  showToast(chore.emoji+' +'+chore.stars+' \u2B50 Great work! Splash notices! \uD83D\uDC0B');
+  renderChoresTab();renderHomeStats();
+}
+
+// ═══════════════════════════════════════════
+// SUMMER STREAK
+// ═══════════════════════════════════════════
+function getSummerStreak(){
+  var streak=0;var today=new Date();
+  for(var i=0;i<60;i++){
+    var d=new Date(today);d.setDate(today.getDate()-i);
+    var dow=d.getDay();if(dow===0||dow===6)continue;
+    var ds=d.toDateString();
+    var sp=!!(S.summerProgress&&S.summerProgress.spanishDate===ds)||!!(S.spanishTasks&&Object.keys(S.spanishTasks).some(function(k){return k.endsWith(ds)}));
+    var rd=!!(S.summerProgress&&S.summerProgress.readingDate===ds)||!!(S.readingLog&&S.readingLog.some(function(e){return new Date(e.ts).toDateString()===ds}));
+    var ch=!!(S.summerProgress&&S.summerProgress.choresDate===ds)||!!(S.choreDone&&Object.keys(S.choreDone).some(function(k){return k.endsWith(ds)}));
+    if(sp&&rd&&ch)streak++;else if(i>0)break;
+  }
+  return streak;
+}
+
+// ═══════════════════════════════════════════
+// ORCALUS WELCOME
+// ═══════════════════════════════════════════
+function checkOrcalusWelcome(){
+  if(S.orcalusWelcomed)return;
+  if((S.pods||[]).some(function(p){return p.id==='orcalus'})){S.orcalusWelcomed=true;save();return;}
+  setTimeout(function(){
+    var popup=document.getElementById('orcalusWelcomePopup');
+    if(!popup)return;
+    var svgEl=document.getElementById('orcalusWelcomeSvg');
+    if(svgEl)svgEl.innerHTML=getOrcalusSvg(100);
+    popup.classList.add('open');confetti();confetti();confetti();
+  },2000);
+}
+function claimOrcalus(){
+  var popup=document.getElementById('orcalusWelcomePopup');
+  if(popup)popup.classList.remove('open');
+  S.orcalusWelcomed=true;
+  initPods();
+  if(!(S.pods||[]).some(function(p){return p.id==='orcalus'})){
+    S.pods.push({id:'orcalus',species:'orcalus',name:'Orcalus',hunger:80,happiness:90,health:100,level:1,xp:0,lastFed:'',lastPlayed:'',lastWashed:'',lastTucked:'',birthday:''});
+  }
+  save();renderPod();
+  showToast('\uD83D\uDC0B Orcalus has joined the pod! Welcome home! \uD83D\uDC99');
+  confetti();confetti();
+}
+
+// Extend PET_SPECIES and PET_BIRTHDAYS for Orcalus
+if(typeof PET_SPECIES!=='undefined'){
+  PET_SPECIES.orcalus={emoji:'orcalus',species:'Orcalus',food:'\uD83D\uDC1F Salmon',foodCost:1,personality:"brave and loyal — Nathan's real orca!"};
+}
+if(typeof PET_BIRTHDAYS!=='undefined'){
+  PET_BIRTHDAYS.orcalus='2025-01-01';
+}
+
+// getWeekdayStreak overridden for summer
+getWeekdayStreak=function(){return getSummerStreak();};
+
+// Add summer keys to PROGRESS_KEYS
+if(typeof PROGRESS_KEYS!=='undefined'){
+  ['spanishTasks','spanishState','spanishArchive','readingLog','summerBooks','summerReadingGoal','choreDone','summerProgress','orcalusWelcomed'].forEach(function(k){if(!PROGRESS_KEYS.includes(k))PROGRESS_KEYS.push(k);});
+}
+
 
 // Trophy case removed — renderTrophies kept as stub for any remaining calls
 function renderTrophies(){
@@ -2348,7 +3073,9 @@ function badgeHTML(badge){
 }
 function renderSchedule(){
   const today=new Date().toLocaleDateString('en-US',{weekday:'long'});
-  document.getElementById('scheduleView').innerHTML=(S.schedule||DEFAULT_SCHEDULE).map(d=>`
+  var sv=document.getElementById('scheduleView');
+  if(!sv)return;
+  sv.innerHTML=(S.schedule||DEFAULT_SCHEDULE).map(d=>`
     <div class="sch-day" style="${d.day===today?'border:2px solid rgba(41,182,246,.55);background:rgba(21,101,192,.25)':''}">
       <div class="day-name">${d.icon||'📅'} ${d.day}${d.day===today?' ← TODAY':''}</div>
       ${d.items.map(i=>`<div class="sch-item"><span class="sch-time">${i.time}</span>${badgeHTML(i.badge)}<span>${i.emoji?i.emoji+' ':''}${i.label}</span></div>`).join('')}
@@ -2838,14 +3565,7 @@ function startTaskTimer(taskId,mins){
   tick();
 }
 
-// Keep initTimer stub so old references don't crash
-function initTimer(){}
-function setTimer(){}
-function startTimer(){}
-function pauseTimer(){}
-function resetTimer(){}
-function updateTimerDisplay(){}
-function timerDone(){}
+// Timer tab removed — timer functions kept as stubs are below the originals above
 
 // ═══════════════════════════════════════════
 // BREAK TIMER
@@ -3268,7 +3988,8 @@ function showEncourage(){
 function showTab(name,btn){
   document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
   document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
-  document.getElementById('panel-'+name).classList.add('active');
+  var panel=document.getElementById('panel-'+name);
+  if(panel)panel.classList.add('active');
   if(btn)btn.classList.add('active');
   if(name==='dashboard')try{renderDashboard()}catch(e){}
   if(name==='pod'){try{renderPod()}catch(e){}try{updateSplashDisplay()}catch(e){}}
@@ -3279,6 +4000,10 @@ function showTab(name,btn){
     try{renderRewardLog()}catch(e){}
     try{renderMoodHistory()}catch(e){}
   }
+  if(name==='spanish')try{renderSpanishTab()}catch(e){console.log('spanish tab error',e)}
+  if(name==='reading')try{renderReadingTab()}catch(e){console.log('reading tab error',e)}
+  if(name==='chores')try{renderChoresTab()}catch(e){console.log('chores tab error',e)}
+  if(name==='home')try{renderHomeStats()}catch(e){}
 }
 
 // ═══════════════════════════════════════════
@@ -3988,7 +4713,7 @@ function logHuntingJournal(food){
 // ═══════════════════════════════════════════
 // POD SYSTEM
 // ═══════════════════════════════════════════
-const PET_SPECIES = {
+var PET_SPECIES = {
   orca:     {emoji:'🐋',species:'Orca',        food:'🐟 Salmon',   foodCost:1,personality:'powerful and loyal'},
   dolphin:  {emoji:'🐬',species:'Dolphin',     food:'🐟 Fish',     foodCost:1,personality:'playful and clever'},
   shark:    {emoji:'🦈',species:'Baby Shark',  food:'🐠 Fish',     foodCost:2,personality:'tough and brave'},
@@ -4095,6 +4820,7 @@ function getPetDisplay(species,size){
   if(species==='orca') return getOrcaSvg(s);
   if(species==='axolotl') return getAxolotlSvg(s);
   if(species==='seal') return getSealSvg(s);
+  if(species==='orcalus') return getOrcalusSvg(s);
   var sp=PET_SPECIES[species]||PET_SPECIES.orca;
   return '<div style="font-size:2.8rem;animation:float 3s ease-in-out infinite">'+sp.emoji+'</div>';
 }
@@ -4435,6 +5161,9 @@ function openPetAction(idx){
       pamEl.style.fontSize='';
     } else if(pet.species==='seal'){
       pamEl.innerHTML=getSealSvg(80);
+      pamEl.style.fontSize='';
+    } else if(pet.species==='orcalus'){
+      pamEl.innerHTML=getOrcalusSvg(80);
       pamEl.style.fontSize='';
     } else {
       pamEl.innerHTML='';
