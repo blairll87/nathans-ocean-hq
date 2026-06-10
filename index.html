@@ -6,6 +6,19 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
+<meta name="version" content="2.0.6">
+<script>
+// Force fresh load — prevents stale cache on phones and remote devices
+(function(){
+  var v='2.0.6';
+  var url=window.location.href;
+  if(url.indexOf('v=')===-1&&url.indexOf('?')===-1){
+    // First visit without version — redirect to versioned URL
+    window.location.replace(url+(url.indexOf('?')>-1?'&':'?')+'v='+v);
+  }
+})();
+</script>
+<meta http-equiv="Expires" content="0">
 <title>Nathan's Ocean HQ</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
