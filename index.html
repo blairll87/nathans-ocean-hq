@@ -121,6 +121,11 @@ body.theme-night {
    BASE STYLES
 ═══════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{background:#000;min-height:100%;}
+html.theme-morning-bg{background:linear-gradient(135deg,#bf360c,#e65100);}
+html.theme-afternoon-bg{background:linear-gradient(135deg,#004d40,#00695c);}
+html.theme-evening-bg{background:linear-gradient(135deg,#7f0000,#bf360c);}
+html.theme-night-bg{background:linear-gradient(135deg,#000510,#0a1628);}
 html,body{height:100%;overflow:hidden;}
 body{
   font-family:'Nunito',sans-serif;
@@ -1016,9 +1021,9 @@ const firebaseConfig = {
   apiKey: "AIzaSyCFPPvFNiTF-Tc9e53Tp52oPw99cEGUYoA",
   authDomain: "nathans-ocean-hq.firebaseapp.com",
   projectId: "nathans-ocean-hq",
-  storageBucket: "nathans-ocean-hq.appspot.com",
-  messagingSenderId: "1234567890",
-  appId: "nathans-ocean-hq"
+  storageBucket: "nathans-ocean-hq.firebasestorage.app",
+  messagingSenderId: "25258496859",
+  appId: "1:25258496859:web:2928e69ab8f73d559bc07e"
 };
 
 const fbApp = initializeApp(firebaseConfig);
@@ -1378,6 +1383,7 @@ function loadFromCloud(){
 function onLoad(){
   initState();
   setTheme();
+  document.documentElement.className='theme-'+getTimeBlock()+'-bg';
   setGreeting();
   renderStarsBar();
   renderStats();
@@ -1450,6 +1456,7 @@ function setTheme(){
   if(block===_currentTheme)return;
   _currentTheme=block;
   document.body.className='theme-'+block;
+  document.documentElement.className='theme-'+block+'-bg';
 }
 
 function startThemeCheck(){
