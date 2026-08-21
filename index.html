@@ -646,7 +646,12 @@ body.theme-morning {
   transform-origin:top center;pointer-events:none;z-index:0;
   animation:ray-shimmer 4s ease-in-out infinite;
 }
-@keyframes ray-shimmer{0%,100%{opacity:.4}50%{opacity:.9}}
+@keyframes ray-shimmer{
+  0%   { opacity:0.12; transform:scaleX(1); }
+  40%  { opacity:0.7;  transform:scaleX(1.2); }
+  60%  { opacity:0.8;  transform:scaleX(1.25); }
+  100% { opacity:0.12; transform:scaleX(1); }
+}
 
 /* Afternoon - bright turquoise with rising bubbles */
 body.theme-afternoon {
@@ -704,6 +709,19 @@ body.theme-night {
     #001e42 55%, #002050 75%, #001535 90%, #000510 100%
   );
 }
+/* Caustic light pattern for morning */
+.bg-caustics{position:fixed;inset:0;pointer-events:none;z-index:0;background:repeating-linear-gradient(45deg,transparent 0px,transparent 30px,rgba(255,240,100,.025) 31px,transparent 32px),repeating-linear-gradient(-45deg,transparent 0px,transparent 45px,rgba(255,255,200,.02) 46px,transparent 47px);animation:caustic-shift 8s linear infinite;}
+@keyframes caustic-shift{0%{background-position:0 0,0 0}100%{background-position:60px 60px,-90px 90px}}
+/* Dramatic wave swells for evening */
+.bg-wave-swell{position:fixed;left:-60%;width:220%;border-radius:50%;pointer-events:none;z-index:0;}
+@keyframes swell-a{0%{transform:translateX(0) translateY(0) scaleY(1)}25%{transform:translateX(-40px) translateY(-15px) scaleY(1.4)}50%{transform:translateX(-15px) translateY(8px) scaleY(.7)}75%{transform:translateX(35px) translateY(-10px) scaleY(1.3)}100%{transform:translateX(0) translateY(0) scaleY(1)}}
+@keyframes swell-b{0%{transform:translateX(-20px) translateY(5px) scaleY(1.1)}30%{transform:translateX(30px) translateY(-18px) scaleY(1.5)}60%{transform:translateX(-35px) translateY(12px) scaleY(.6)}100%{transform:translateX(-20px) translateY(5px) scaleY(1.1)}}
+@keyframes swell-c{0%{transform:translateX(10px) translateY(-8px) scaleY(.9)}35%{transform:translateX(-45px) translateY(20px) scaleY(1.6)}65%{transform:translateX(25px) translateY(-15px) scaleY(.75)}100%{transform:translateX(10px) translateY(-8px) scaleY(.9)}}
+@keyframes swell-d{0%{transform:translateX(-30px) scaleY(1.2)}40%{transform:translateX(40px) scaleY(.6)}70%{transform:translateX(-20px) scaleY(1.5)}100%{transform:translateX(-30px) scaleY(1.2)}}
+@keyframes swell-e{0%{transform:translateX(25px) translateY(10px) scaleY(1)}45%{transform:translateX(-50px) translateY(-20px) scaleY(1.7)}75%{transform:translateX(30px) translateY(15px) scaleY(.8)}100%{transform:translateX(25px) translateY(10px) scaleY(1)}}
+/* Evening sparse bioluminescence */
+.bg-eve-particle{position:fixed;border-radius:50%;pointer-events:none;z-index:0;animation:eve-glow ease-in-out infinite;}
+@keyframes eve-glow{0%,100%{opacity:0;transform:scale(1)}50%{opacity:.6;transform:scale(1.8)}}
 .bg-particle {
   position:fixed;border-radius:50%;pointer-events:none;z-index:0;
   animation:particle-drift ease-in-out infinite;
@@ -1033,6 +1051,17 @@ body.theme-night {
 
       <!-- General -->
       <div class="admin-panel active" id="ap-general">
+        <div class="admin-section">
+          <div class="admin-section-title">Preview Theme</div>
+          <div style="font-size:.72rem;color:var(--dim);margin-bottom:8px">Preview any time-of-day theme. Closes back to auto when you exit Parent Mode.</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="admin-btn" onclick="previewTheme('morning')" style="flex:1;font-size:.75rem;padding:8px 6px">☀️ Morning</button>
+            <button class="admin-btn" onclick="previewTheme('afternoon')" style="flex:1;font-size:.75rem;padding:8px 6px">🌊 Afternoon</button>
+            <button class="admin-btn" onclick="previewTheme('evening')" style="flex:1;font-size:.75rem;padding:8px 6px">🌌 Evening</button>
+            <button class="admin-btn" onclick="previewTheme('night')" style="flex:1;font-size:.75rem;padding:8px 6px">🌙 Night</button>
+            <button class="admin-btn admin-btn-secondary" onclick="previewTheme('auto')" style="flex:1;font-size:.75rem;padding:8px 6px">🔄 Auto</button>
+          </div>
+        </div>
         <div class="admin-section">
           <div class="admin-section-title">Weekly Star Goal</div>
           <input class="admin-input" type="number" id="weeklyGoalInput" placeholder="e.g. 100">
@@ -1558,6 +1587,7 @@ function getTimeBlock(){
 }
 
 function setTheme(){
+  if(_themeOverride)return; // respect manual preview
   var block=getTimeBlock();
   if(block===_currentTheme)return;
   _currentTheme=block;
@@ -1573,26 +1603,31 @@ function buildBackground(block){
 
   if(block==='morning'){
     // Golden surface shimmer
-    var surf=document.createElement('div');
-    surf.className='bg-morning-surface';
-    container.appendChild(surf);
-    // Light rays through water
-    var angles=[-12,-5,2,8,14];
-    var lefts=[10,28,42,60,76];
-    var widths=[90,60,110,70,80];
-    var delays=[0,.9,1.8,.5,1.3];
-    for(var i=0;i<5;i++){
-      var ray=document.createElement('div');
-      ray.className='bg-ray';
-      ray.style.cssText='left:'+lefts[i]+'%;width:'+widths[i]+'px;height:70%;transform:rotate('+angles[i]+'deg);animation-delay:'+delays[i]+'s;';
+    var surf=document.createElement('div');surf.className='bg-morning-surface';container.appendChild(surf);
+    // Caustic light pattern
+    var caust=document.createElement('div');caust.className='bg-caustics';container.appendChild(caust);
+    // 9 breathing rays - varied sizes and slow durations
+    var rayData=[
+      {l:5, w:70, h:85, rot:-14, dur:7.5, del:-1.2},
+      {l:15,w:45, h:70, rot:-9,  dur:9.2, del:-3.8},
+      {l:24,w:90, h:90, rot:-4,  dur:8.1, del:-0.5},
+      {l:36,w:55, h:75, rot:1,   dur:10.4,del:-4.2},
+      {l:45,w:110,h:95, rot:5,   dur:7.8, del:-2.1},
+      {l:58,w:65, h:80, rot:9,   dur:11.0,del:-5.5},
+      {l:70,w:80, h:85, rot:13,  dur:8.6, del:-1.7},
+      {l:82,w:50, h:70, rot:17,  dur:9.8, del:-3.1},
+      {l:90,w:75, h:88, rot:21,  dur:6.9, del:-2.8},
+    ];
+    rayData.forEach(function(r){
+      var ray=document.createElement('div');ray.className='bg-ray';
+      ray.style.cssText='left:'+r.l+'%;width:'+r.w+'px;height:'+r.h+'%;transform:rotate('+r.rot+'deg);animation-duration:'+r.dur+'s;animation-delay:'+r.del+'s;';
       container.appendChild(ray);
-    }
-    // Small rising bubbles
-    for(var i=0;i<12;i++){
-      var b=document.createElement('div');
-      b.className='bg-bubble';
-      var sz=3+Math.random()*8;
-      b.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*100)+'%;animation-duration:'+(8+Math.random()*12)+'s;animation-delay:-'+(Math.random()*12)+'s;opacity:.4;';
+    });
+    // Small warm bubbles
+    for(var i=0;i<10;i++){
+      var b=document.createElement('div');b.className='bg-bubble';
+      var sz=3+Math.random()*7;
+      b.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*100)+'%;animation-duration:'+(10+Math.random()*14)+'s;animation-delay:-'+(Math.random()*14)+'s;opacity:.3;background:rgba(255,220,100,.2);border-color:rgba(255,220,100,.3);';
       container.appendChild(b);
     }
   }
@@ -1612,19 +1647,28 @@ function buildBackground(block){
   else if(block==='evening'){
     // Pink glow at top
     var glow=document.createElement('div');glow.className='bg-evening-glow';container.appendChild(glow);
-    // Waves
+    // Dramatic rolling wave swells
     var waveData=[
-      {h:80,b:60,bg:'rgba(233,30,140,.05)',dur:7,del:0},
-      {h:60,b:45,bg:'rgba(156,26,177,.05)',dur:9,del:-2},
-      {h:100,b:30,bg:'rgba(106,27,154,.04)',dur:11,del:-4},
-      {h:70,b:15,bg:'rgba(74,20,140,.05)',dur:8,del:-1},
-      {h:50,b:5,bg:'rgba(49,27,146,.04)',dur:6,del:-3},
+      {h:120,b:72,bg:'rgba(233,30,140,.07)', dur:7,  del:0,   anim:'swell-a'},
+      {h:90, b:58,bg:'rgba(180,26,177,.065)',dur:9.5,del:-1.5,anim:'swell-b'},
+      {h:150,b:43,bg:'rgba(140,27,154,.055)',dur:11, del:-3,  anim:'swell-c'},
+      {h:100,b:28,bg:'rgba(106,20,140,.06)', dur:8,  del:-2,  anim:'swell-d', wide:true},
+      {h:130,b:13,bg:'rgba(74,27,146,.07)',  dur:13, del:-4,  anim:'swell-e'},
+      {h:80, b:3, bg:'rgba(49,30,180,.05)',  dur:6,  del:-1,  anim:'swell-a'},
     ];
     waveData.forEach(function(w){
-      var wave=document.createElement('div');wave.className='bg-wave';
-      wave.style.cssText='height:'+w.h+'px;bottom:'+w.b+'%;background:'+w.bg+';animation-duration:'+w.dur+'s;animation-delay:'+w.del+'s;';
+      var wave=document.createElement('div');wave.className='bg-wave-swell';
+      wave.style.cssText='height:'+w.h+'px;bottom:'+w.b+'%;background:'+w.bg+';animation:'+w.anim+' '+w.dur+'s ease-in-out infinite '+w.del+'s;'+(w.wide?'left:-70%;width:240%;':'');
       container.appendChild(wave);
     });
+    // Sparse early bioluminescence
+    var eveColors=['rgba(200,100,255,','rgba(180,80,220,','rgba(140,60,200,'];
+    for(var i=0;i<18;i++){
+      var p=document.createElement('div');p.className='bg-eve-particle';
+      var sz=2+Math.random()*4;var col=eveColors[Math.floor(Math.random()*eveColors.length)];
+      p.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*100)+'%;top:'+(20+Math.random()*80)+'%;background:'+col+'0.7);box-shadow:0 0 '+(sz*4)+'px '+col+'0.6);animation-duration:'+(3+Math.random()*5)+'s;animation-delay:-'+(Math.random()*5)+'s;';
+      container.appendChild(p);
+    }
   }
 
   else if(block==='night'){
@@ -2785,6 +2829,23 @@ function showPanel(name,navEl){
 // ═══════════════════════════════════════
 // PARENT MODE
 // ═══════════════════════════════════════
+var _themeOverride=null;
+function previewTheme(block){
+  if(block==='auto'){
+    _themeOverride=null;
+    _currentTheme='';
+    setTheme();
+    buildBackground(getTimeBlock());
+    showToast('🔄 Back to automatic theme!');
+  } else {
+    _themeOverride=block;
+    _currentTheme=block;
+    document.body.className='theme-'+block;
+    document.documentElement.className='theme-'+block+'-bg';
+    buildBackground(block);
+    showToast('Previewing '+block+' theme!');
+  }
+}
 function openParentMode(){
   _adminUnlocked=false;
   document.getElementById('pinSection').style.display='block';
@@ -2792,7 +2853,16 @@ function openParentMode(){
   document.getElementById('pinInput').value='';
   document.getElementById('parentOverlay').classList.add('open');
 }
-function closeParentMode(){document.getElementById('parentOverlay').classList.remove('open');}
+function closeParentMode(){
+  document.getElementById('parentOverlay').classList.remove('open');
+  // Reset to auto theme if was previewing
+  if(_themeOverride){
+    _themeOverride=null;
+    _currentTheme='';
+    setTheme();
+    buildBackground(getTimeBlock());
+  }
+}
 
 function checkPin(){
   var entered=document.getElementById('pinInput').value;
@@ -3175,6 +3245,7 @@ function confetti(){
 // ═══════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════
+window.previewTheme=previewTheme;
 window.showPanel=showPanel;
 window.toggleMorningTask=toggleMorningTask;
 window.toggleBedtimeTask=toggleBedtimeTask;
