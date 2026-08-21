@@ -1177,7 +1177,7 @@ const PROGRESS_KEYS = [
   'readingLog','readingGoalEng','readingGoalEsp','readingMins',
   'dictionary','jijiSessions','jijiPct','jijiPctDate',
   'oceanFactsLearned','oceanFactToday','factIndexToday',
-  'overrideReminders','emailSettings','weeklyStarGoal',
+  'overrideReminders','emailSettings','weeklyStarGoal','weekStart','weeklyStarsEarned',
   'pin','adminUnlocked','lastEmailDate',
   'summerProgress','choreDone','spanishTasks','spanishState',
   'spanishArchive','summerBooks','summerReadingGoal','orcalusWelcomed'
@@ -1714,16 +1714,44 @@ function setGreeting(){
 // ═══════════════════════════════════════
 function updateStars(){renderStarsBar();renderStats();}
 
+function getWeekStart(){
+  var d=new Date();
+  var day=d.getDay(); // 0=Sun
+  var diff=d.getDate()-(day===0?6:day-1); // Monday
+  var monday=new Date(d.setDate(diff));
+  return monday.toDateString();
+}
+
+function getWeeklyStars(){
+  var weekStart=getWeekStart();
+  // Reset if new week
+  if(S.weekStart!==weekStart){
+    S.weekStart=weekStart;
+    S.weeklyStarsEarned=0;
+    save();
+  }
+  return S.weeklyStarsEarned||0;
+}
+
+function addStars(amount){
+  S.stars=(S.stars||0)+amount;
+  S.totalStarsEarned=(S.totalStarsEarned||0)+amount;
+  // Make sure week is initialized
+  getWeeklyStars();
+  S.weeklyStarsEarned=(S.weeklyStarsEarned||0)+amount;
+}
+
 function renderStarsBar(){
-  var stars=S.stars||0;
-  var total=Math.max(S.totalStarsEarned||0,stars);
+  var spendable=S.stars||0;
+  var total=Math.max(S.totalStarsEarned||0,spendable);
   var goal=S.weeklyStarGoal||100;
-  var pct=Math.min(100,Math.round(stars/goal*100));
+  var weeklyEarned=getWeeklyStars();
+  var pct=Math.min(100,Math.round(weeklyEarned/goal*100));
   var rank=getOceanRank(total);
   var el=document.getElementById('starsCount');
-  if(el)el.textContent='⭐ '+stars;
+  if(el)el.textContent='⭐ '+spendable;
   var meta=document.getElementById('starsMeta');
-  if(meta)meta.innerHTML=stars+' / '+goal+' this week<br>'+rank.badge+' '+rank.title;
+  if(meta)meta.innerHTML=weeklyEarned+' / '+goal+' this week<br>'+rank.badge+' '+rank.title;
   var fill=document.getElementById('progressFill');
   if(fill)fill.style.width=pct+'%';
 }
@@ -2066,16 +2094,15 @@ function toggleMorningTask(id){
     delete S.morningDone[key];
   } else {
     S.morningDone[key]=true;
-    S.stars=(S.stars||0)+task.stars;
-    S.totalStarsEarned=(S.totalStarsEarned||0)+task.stars;
+    addStars(task.stars);
     confetti();
     showToast(task.emoji+' +'+task.stars+' ⭐ Great start!');
     // Check if all done
     var allDone=MORNING_TASKS.every(function(t){return S.morningDone[t.id+'_'+today];});
     if(allDone){
       S['morningBonus_'+today]=true;
-      S.stars=(S.stars||0)+5;
-      S.totalStarsEarned=(S.totalStarsEarned||0)+5;
+      addStars(5);
+      
       setTimeout(function(){showToast('🎉 +5 bonus stars! Morning routine complete!');confetti();confetti();},600);
     }
   }
@@ -2093,15 +2120,14 @@ function toggleBedtimeTask(id){
     delete S.nightDone[key];
   } else {
     S.nightDone[key]=true;
-    S.stars=(S.stars||0)+task.stars;
-    S.totalStarsEarned=(S.totalStarsEarned||0)+task.stars;
+    addStars(task.stars);
     confetti();
     showToast(task.emoji+' +'+task.stars+' ⭐ Good night routine!');
     var allDone=BEDTIME_TASKS.every(function(t){return S.nightDone[t.id+'_'+today];});
     if(allDone){
       S['nightBonus_'+today]=true;
-      S.stars=(S.stars||0)+5;
-      S.totalStarsEarned=(S.totalStarsEarned||0)+5;
+      addStars(5);
+      
       setTimeout(function(){showToast('🌙 +5 bonus stars! Bedtime complete! Sweet dreams!');confetti();confetti();},600);
     }
   }
@@ -2119,14 +2145,13 @@ function toggleTuesdayTask(id){
     delete S.tuesdayDone[key];
   } else {
     S.tuesdayDone[key]=true;
-    S.stars=(S.stars||0)+task.stars;
-    S.totalStarsEarned=(S.totalStarsEarned||0)+task.stars;
+    addStars(task.stars);
     confetti();showToast(task.emoji+' +'+task.stars+' ⭐ Keep going!');
     // Escape hatch rewards
     var doneCount=TUESDAY_TASKS.filter(function(t){return S.tuesdayDone[t.id+'_'+today];}).length;
     if(doneCount===2)setTimeout(function(){showToast('🌟 2 blocks done — full stars earned!');confetti();},600);
-    if(doneCount===3)setTimeout(function(){showToast('🔥 3 blocks — bonus stars! +5 ⭐');S.stars=(S.stars||0)+5;S.totalStarsEarned=(S.totalStarsEarned||0)+5;updateStars();save();},800);
-    if(doneCount===4)setTimeout(function(){showToast('🏆 ALL 4 blocks! Maximum stars! +10 ⭐');S.stars=(S.stars||0)+10;S.totalStarsEarned=(S.totalStarsEarned||0)+10;updateStars();save();confetti();confetti();confetti();},800);
+    if(doneCount===3)setTimeout(function(){showToast('🔥 3 blocks — bonus stars! +5 ⭐');addStars(5);updateStars();save();},800);
+    if(doneCount===4)setTimeout(function(){showToast('🏆 ALL 4 blocks! Maximum stars! +10 ⭐');addStars(10);updateStars();save();confetti();confetti();confetti();},800);
   }
   save();updateStars();renderTimeContent();
 }
@@ -2142,8 +2167,7 @@ function toggleMondayTask(id){
     delete S.mondayDone[key];
   } else {
     S.mondayDone[key]=true;
-    S.stars=(S.stars||0)+task.stars;
-    S.totalStarsEarned=(S.totalStarsEarned||0)+task.stars;
+    addStars(task.stars);
     confetti();showToast(task.emoji+' +'+task.stars+' ⭐ Great work!');
   }
   save();updateStars();renderTimeContent();
@@ -2171,8 +2195,7 @@ function logJiJi(){
     showToast('JiJi already logged today!');return;
   }
   S.jijiSessions.push({date:today,ts:Date.now()});
-  S.stars=(S.stars||0)+5;
-  S.totalStarsEarned=(S.totalStarsEarned||0)+5;
+  addStars(5);
   save();updateStars();renderTimeContent();renderGoalsTab();
   confetti();confetti();showToast('📏 +5 ⭐ JiJi session logged! Keep it up!');
 }
@@ -2196,8 +2219,8 @@ function renderFactCard(){
 function logFact(isNew){
   if(isNew){
     S.oceanFactsLearned=(S.oceanFactsLearned||0)+1;
-    S.stars=(S.stars||0)+1;
-    S.totalStarsEarned=(S.totalStarsEarned||0)+1;
+    addStars(1);
+    
     save();updateStars();renderGoalsTab();
     showToast('🤯 +1 ⭐ New ocean fact learned! You now know '+(S.oceanFactsLearned||0)+'!');
     confetti();
@@ -2498,8 +2521,7 @@ async function submitReadingLog(){
     feedbackText=parsed.feedback||feedbackText;
   }catch(e){aiStars=1;}
   var totalStars=5+selfStars+aiStars;
-  S.stars=(S.stars||0)+totalStars;
-  S.totalStarsEarned=(S.totalStarsEarned||0)+totalStars;
+  addStars(totalStars);
   if(!S.readingLog)S.readingLog=[];
   // Track reading minutes
   if(!S.readingMins)S.readingMins=0;
