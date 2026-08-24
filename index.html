@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.0.2">
+<meta name="version" content="3.0.4">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.0.2';
+  var v='3.0.4';
   if(window.location.href.indexOf('v=')===-1){
     window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
   }
@@ -1119,6 +1119,13 @@ body.theme-night {
       <!-- Email -->
       <div class="admin-panel" id="ap-email">
         <div class="admin-section">
+          <div class="admin-section-title">Anthropic API Key</div>
+          <div style="font-size:.72rem;color:var(--dim);margin-bottom:8px">Powers the AI dictionary lookups and reading summary feedback. Get your key from console.anthropic.com</div>
+          <input class="admin-input" type="password" id="anthropicKeyInput" placeholder="sk-ant-...">
+          <button class="admin-btn" onclick="saveAnthropicKey()">Save API Key</button>
+          <div style="font-size:.68rem;color:var(--green);margin-top:4px" id="anthropicKeyStatus"></div>
+        </div>
+        <div class="admin-section" style="border-top:1px solid var(--border);padding-top:14px">
           <div class="admin-section-title">Weekly Report Emails</div>
           <div style="font-size:.72rem;color:var(--dim);margin-bottom:8px">A summary report will be sent every Friday night to these emails.</div>
           <input class="admin-input" type="email" id="email1Input" placeholder="Your email">
@@ -2505,9 +2512,11 @@ async function submitReadingLog(){
   document.getElementById('readingStarsAwarded').textContent='';
   var aiStars=0;var feedbackText='Great job logging your reading today, Nathan! Splash is so proud! 🐋';
   try{
+    var apiKey=getAnthropicKey();
+    if(!apiKey){aiStars=1;feedbackText='Add your Anthropic API key in Parent Mode → Email to enable AI feedback!';document.getElementById('readingFeedbackText').textContent=feedbackText;document.getElementById('readingStarsAwarded').textContent='🌟 +'+(5+selfStars)+' stars earned!';addStars(5+selfStars);save();updateStars();renderReadingHistory();return;}
     var resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',max_tokens:200,
         system:'You are Splash, a friendly orca who is Nathan\'s best friend. Nathan is 10 and working on summarizing skills — giving the main idea concisely without rambling. Rate his summary 1-3 (1=needs work on conciseness, 2=pretty good, 3=excellent). His self-rating: main idea='+((_readingFormState.selfEval[1])?'yes':'no')+', kept it short='+((_readingFormState.selfEval[2])?'yes':'no')+', understandable='+((_readingFormState.selfEval[3])?'yes':'no')+'. Respond ONLY as JSON with no markdown: {"stars":1-3,"feedback":"one encouraging sentence from Splash in first person, mention his name"}',
@@ -2600,9 +2609,11 @@ async function lookupWord(){
   var resultEl=document.getElementById('dictResult');
   if(resultEl){resultEl.style.display='block';resultEl.innerHTML='<div style="font-size:.78rem;color:var(--dim);padding:8px">Looking up "'+word+'"...</div>';}
   try{
+    var apiKey=getAnthropicKey();
+    if(!apiKey){aiStars=1;feedbackText='Add your Anthropic API key in Parent Mode → Email to enable AI feedback!';document.getElementById('readingFeedbackText').textContent=feedbackText;document.getElementById('readingStarsAwarded').textContent='🌟 +'+(5+selfStars)+' stars earned!';addStars(5+selfStars);save();updateStars();renderReadingHistory();return;}
     var resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',max_tokens:200,
         system:'You help Nathan, a 10-year-old, learn vocabulary. Give a simple definition and one example sentence using the word naturally. The language is '+_dictLang+'. Respond ONLY as JSON with no markdown: {"word":"the word","definition":"simple definition a 10-year-old understands","sentence":"example sentence using the word"}',
@@ -2868,6 +2879,21 @@ function previewTheme(block){
     showToast('Previewing '+block+' theme!');
   }
 }
+function saveAnthropicKey(){
+  var key=document.getElementById('anthropicKeyInput').value.trim();
+  if(!key||!key.startsWith('sk-ant-')){showToast('Invalid key — should start with sk-ant-');return;}
+  if(!S.emailSettings)S.emailSettings={};
+  S.emailSettings.anthropicKey=key;
+  save();
+  var status=document.getElementById('anthropicKeyStatus');
+  if(status)status.textContent='✅ API key saved!';
+  showToast('✅ AI features are now active!');
+}
+
+function getAnthropicKey(){
+  return(S.emailSettings&&S.emailSettings.anthropicKey)||'';
+}
+
 function openParentMode(){
   _adminUnlocked=false;
   document.getElementById('pinSection').style.display='block';
@@ -2909,6 +2935,13 @@ function showAdminTab(name,el){
 
 function loadAdminSettings(){
   var wg=document.getElementById('weeklyGoalInput');if(wg)wg.value=S.weeklyStarGoal||100;
+  // API key
+  var ak=document.getElementById('anthropicKeyInput');
+  if(ak&&S.emailSettings&&S.emailSettings.anthropicKey){
+    ak.placeholder='API key saved ✅';
+    var aks=document.getElementById('anthropicKeyStatus');
+    if(aks)aks.textContent='✅ AI features active!';
+  }
   // Email settings
   var es=S.emailSettings||{};
   var e1=document.getElementById('email1Input');if(e1)e1.value=es.email1||'';
@@ -3068,11 +3101,15 @@ async function sendWeeklyEmail(){
         s.src='https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js';
         s.onload=res;s.onerror=rej;document.head.appendChild(s);
       });
-      window.emailjs.init(es.publicKey);
+      if(!window.emailjs._initialized){window.emailjs.init(es.publicKey||'2PjOHL2Qq4MezKsNA');window.emailjs._initialized=true;}
     }
+    var serviceId=es.serviceId||'service_xwugg88';
+    var templateId=es.templateId||'template_6kwn0q9';
+    var publicKey=es.publicKey||'2PjOHL2Qq4MezKsNA';
+    if(!window.emailjs._initialized){window.emailjs.init(publicKey);window.emailjs._initialized=true;}
     var emails=[es.email1,es.email2].filter(Boolean);
     for(var i=0;i<emails.length;i++){
-      await window.emailjs.send(es.serviceId,es.templateId,Object.assign({to_email:emails[i]},report));
+      await window.emailjs.send(serviceId,templateId,Object.assign({to_email:emails[i]},report));
     }
     S.lastEmailDate=new Date().toDateString();save();
     showToast('📧 Weekly report sent!');
@@ -3267,6 +3304,7 @@ function confetti(){
 // ═══════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════
+window.saveAnthropicKey=saveAnthropicKey;
 window.previewTheme=previewTheme;
 window.showPanel=showPanel;
 window.toggleMorningTask=toggleMorningTask;
