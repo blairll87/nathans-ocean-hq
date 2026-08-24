@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.0.5">
+<meta name="version" content="3.0.6">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.0.5';
+  var v='3.0.6';
   if(window.location.href.indexOf('v=')===-1){
     window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
   }
@@ -1061,6 +1061,21 @@ body.theme-night {
             <button class="admin-btn" onclick="previewTheme('night')" style="flex:1;font-size:.75rem;padding:8px 6px">🌙 Night</button>
             <button class="admin-btn admin-btn-secondary" onclick="previewTheme('auto')" style="flex:1;font-size:.75rem;padding:8px 6px">🔄 Auto</button>
           </div>
+        </div>
+        <div class="admin-section">
+          <div class="admin-section-title">Give Nathan Stars ⭐</div>
+          <div style="font-size:.72rem;color:var(--dim);margin-bottom:8px">Add bonus stars directly to Nathan's account.</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input class="admin-input" type="number" id="giveStarsInput" placeholder="# of stars" min="1" style="margin:0;flex:1">
+            <button class="admin-btn" onclick="giveStars()" style="margin:0;white-space:nowrap">Give Stars ⭐</button>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+            <button class="admin-btn admin-btn-secondary" onclick="quickGiveStars(5)" style="flex:1;font-size:.72rem;padding:6px">+5 ⭐</button>
+            <button class="admin-btn admin-btn-secondary" onclick="quickGiveStars(10)" style="flex:1;font-size:.72rem;padding:6px">+10 ⭐</button>
+            <button class="admin-btn admin-btn-secondary" onclick="quickGiveStars(25)" style="flex:1;font-size:.72rem;padding:6px">+25 ⭐</button>
+            <button class="admin-btn admin-btn-secondary" onclick="quickGiveStars(50)" style="flex:1;font-size:.72rem;padding:6px">+50 ⭐</button>
+          </div>
+          <div style="font-size:.72rem;color:var(--dim);margin-top:6px">Current stars: <strong id="currentStarsDisplay">0</strong> ⭐</div>
         </div>
         <div class="admin-section">
           <div class="admin-section-title">Weekly Star Goal</div>
@@ -2934,6 +2949,8 @@ function showAdminTab(name,el){
 }
 
 function loadAdminSettings(){
+  var disp=document.getElementById('currentStarsDisplay');
+  if(disp)disp.textContent=S.stars||0;
   var wg=document.getElementById('weeklyGoalInput');if(wg)wg.value=S.weeklyStarGoal||100;
   // API key
   var ak=document.getElementById('anthropicKeyInput');
@@ -2957,6 +2974,23 @@ function loadAdminSettings(){
   renderAdminPets();
 }
 
+function giveStars(){
+  var v=parseInt(document.getElementById('giveStarsInput').value)||0;
+  if(v<1){showToast('Enter a number of stars to give!');return;}
+  addStars(v);save();updateStars();
+  var disp=document.getElementById('currentStarsDisplay');
+  if(disp)disp.textContent=S.stars||0;
+  document.getElementById('giveStarsInput').value='';
+  showToast('⭐ +'+v+' stars given to Nathan!');
+  confetti();
+}
+function quickGiveStars(v){
+  addStars(v);save();updateStars();
+  var disp=document.getElementById('currentStarsDisplay');
+  if(disp)disp.textContent=S.stars||0;
+  showToast('⭐ +'+v+' stars given to Nathan!');
+  confetti();
+}
 function saveWeeklyGoal(){
   var v=parseInt(document.getElementById('weeklyGoalInput').value)||100;
   S.weeklyStarGoal=v;save();renderStarsBar();
@@ -3310,6 +3344,8 @@ function confetti(){
 // ═══════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════
+window.giveStars=giveStars;
+window.quickGiveStars=quickGiveStars;
 window.saveAnthropicKey=saveAnthropicKey;
 window.previewTheme=previewTheme;
 window.showPanel=showPanel;
