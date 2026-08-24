@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.0.4">
+<meta name="version" content="3.0.5">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.0.4';
+  var v='3.0.5';
   if(window.location.href.indexOf('v=')===-1){
     window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
   }
@@ -3088,10 +3088,10 @@ function buildEmailReport(){
   };
 }
 
-async function sendWeeklyEmail(){
+async function sendWeeklyEmail(force){
   var es=S.emailSettings||{};
-  if(!es.serviceId||!es.templateId||!es.publicKey){return;}
   if(!es.email1&&!es.email2){return;}
+  if(!force&&S.lastEmailDate===new Date().toDateString()){return;}
   var report=buildEmailReport();
   // Load EmailJS
   try{
@@ -3112,12 +3112,18 @@ async function sendWeeklyEmail(){
       await window.emailjs.send(serviceId,templateId,Object.assign({to_email:emails[i]},report));
     }
     S.lastEmailDate=new Date().toDateString();save();
-    showToast('📧 Weekly report sent!');
-  }catch(e){console.log('Email error:',e);}
+    showToast('📧 Report sent to '+emails.length+' email'+(emails.length>1?'s':'')+'! Check your inbox.');
+  }catch(e){
+    console.log('Email error:',e);
+    showToast('❌ Email failed — check Parent Mode email settings and try again.');
+  }
 }
 
 async function sendTestEmail(){
-  await sendWeeklyEmail();
+  showToast('📧 Sending test report...');
+  var es=S.emailSettings||{};
+  if(!es.email1&&!es.email2){showToast('❌ Add your email in Parent Mode → Email tab first!');return;}
+  await sendWeeklyEmail(true);
 }
 
 function checkFridayEmail(){
