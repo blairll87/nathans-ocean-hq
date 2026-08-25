@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.0.6">
+<meta name="version" content="3.0.8">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.0.6';
+  var v='3.0.8';
   if(window.location.href.indexOf('v=')===-1){
     window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
   }
@@ -332,9 +332,9 @@ body{
   border-radius:18px;padding:13px 15px;margin-bottom:10px;
 }
 .fact-eyebrow{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--accent);margin-bottom:5px;}
-.fact-text{font-size:.88rem;color:var(--text);line-height:1.5;margin-bottom:10px;font-weight:600;}
-.fact-source{font-size:.68rem;color:var(--dim);margin-bottom:8px;}
-.fact-instruction{font-size:.72rem;color:var(--dim);margin-bottom:8px;font-style:italic;}
+.fact-text{font-size:.88rem;color:var(--text);line-height:1.5;margin-bottom:10px;font-weight:700;}
+.fact-source{font-size:.68rem;color:var(--accent);margin-bottom:8px;font-weight:700;}
+.fact-instruction{font-size:.72rem;color:var(--text);margin-bottom:8px;font-style:italic;opacity:.8;}
 .fact-btns{display:flex;gap:8px;}
 .fact-btn{
   flex:1;font-family:'Fredoka One',cursive;font-size:.8rem;
@@ -624,6 +624,41 @@ body{
    ANIMATIONS
 ═══════════════════════════════════════ */
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* ═══════════════════════════════════════
+   CHALLENGES TAB
+═══════════════════════════════════════ */
+.challenge-card{
+  background:var(--card);border-radius:18px;padding:14px 15px;
+  margin-bottom:10px;box-shadow:0 3px 12px var(--card-shadow);
+  border-left:4px solid var(--accent);
+}
+.challenge-card.complete{border-left-color:#10b981;}
+.challenge-card.locked{opacity:.5;border-left-color:var(--dimmer);}
+.challenge-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.challenge-icon{font-size:1.6rem;flex-shrink:0;}
+.challenge-title{font-family:'Fredoka One',cursive;font-size:.95rem;color:var(--accent);flex:1;}
+.challenge-card.complete .challenge-title{color:#10b981;}
+.challenge-goal{font-size:.75rem;color:var(--dim);margin-bottom:8px;font-weight:700;}
+.challenge-progress-track{height:8px;background:rgba(128,128,128,.12);border-radius:99px;overflow:hidden;margin-bottom:8px;}
+.challenge-progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s;}
+.challenge-card.complete .challenge-progress-fill{background:linear-gradient(90deg,#10b981,#34d399);}
+.challenge-progress-label{font-size:.68rem;color:var(--dim);margin-bottom:8px;text-align:right;}
+.challenge-hint{
+  background:rgba(128,128,128,.06);border-radius:12px;
+  padding:10px 12px;font-size:.75rem;color:var(--text);
+  line-height:1.5;font-style:italic;
+}
+.challenge-hint.warm{background:rgba(255,152,0,.08);color:var(--text);}
+.challenge-hint.hot{background:rgba(239,68,68,.08);color:var(--text);}
+.challenge-hint.complete{background:rgba(16,185,129,.1);font-style:normal;font-weight:700;color:#10b981;}
+.challenge-come-back{font-size:.65rem;color:var(--dimmer);margin-top:6px;text-align:center;}
+.challenge-badge{
+  font-size:.65rem;font-weight:800;padding:3px 8px;border-radius:20px;
+  background:rgba(128,128,128,.1);color:var(--dim);
+}
+.challenge-badge.part2{background:rgba(255,152,0,.12);color:#f59e0b;}
+
 /* ═══════════════════════════════════════
    ANIMATED BACKGROUNDS - TIME OF DAY
 ═══════════════════════════════════════ */
@@ -967,6 +1002,18 @@ body.theme-night {
     <div id="readingHistory"></div>
   </div>
 
+
+  <!-- ─── CHALLENGES PANEL ─── -->
+  <div id="panel-challenges" style="display:none">
+    <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--accent);margin-bottom:4px;margin-top:4px">🏆 Secret Challenges</div>
+    <div style="font-size:.75rem;color:var(--dim);margin-bottom:12px">Complete challenges to unlock secrets hidden in the deep ocean! The hints get better the closer you get. 👀</div>
+    <div id="challengesList"></div>
+  </div>
+
+  <!-- ─── MIDNIGHT ZONE PANEL ─── -->
+  <div id="panel-midnight" style="display:none;background:linear-gradient(180deg,#000510,#001e42);min-height:100%;padding:12px 14px 80px">
+  </div>
+
   <!-- ─── POD PANEL ─── -->
   <div id="panel-pod" style="display:none">
     <div class="pet-tabs-row" id="petTabsRow"></div>
@@ -1009,9 +1056,9 @@ body.theme-night {
     <div class="nav-icon">🎯</div>
     <div class="nav-lbl">Goals</div>
   </div>
-  <div class="nav-item" id="nav-reading" onclick="showPanel('reading',this)">
-    <div class="nav-icon">📖</div>
-    <div class="nav-lbl">Reading</div>
+  <div class="nav-item" id="nav-challenges" onclick="showPanel('challenges',this)">
+    <div class="nav-icon">🏆</div>
+    <div class="nav-lbl">Challenges</div>
   </div>
   <div class="nav-item" id="nav-pod" onclick="showPanel('pod',this)">
     <div class="nav-icon">🐋</div>
@@ -1199,7 +1246,7 @@ const PROGRESS_KEYS = [
   'readingLog','readingGoalEng','readingGoalEsp','readingMins',
   'dictionary','jijiSessions','jijiPct','jijiPctDate',
   'oceanFactsLearned','oceanFactToday','factIndexToday',
-  'overrideReminders','emailSettings','weeklyStarGoal','weekStart','weeklyStarsEarned',
+  'overrideReminders','emailSettings','weeklyStarGoal','weekStart','weeklyStarsEarned','challengesCompleted','challengesPopupSeen','pendingPetUnlock','unlockedLegendaryFoods','midnightZoneUnlocked',
   'pin','adminUnlocked','lastEmailDate',
   'summerProgress','choreDone','spanishTasks','spanishState',
   'spanishArchive','summerBooks','summerReadingGoal','orcalusWelcomed'
@@ -1556,6 +1603,9 @@ function onLoad(){
   renderReadingTab();
   renderGoalsTab();
   checkOrcalusWelcome();
+  try{checkChallengesPopup()}catch(e){}
+  try{checkPendingPetUnlocks()}catch(e){}
+  try{checkChallengeCompletions()}catch(e){}
   startMidnightCheck();
   startThemeCheck();
   checkFridayEmail();
@@ -2397,7 +2447,9 @@ function checkLevelUp(p){
 
 function renderFoodGrid(){
   var el=document.getElementById('foodGrid');if(!el)return;
-  el.innerHTML=SPLASH_FOODS.map(function(f){
+  var unlocked=S.unlockedLegendaryFoods||[];
+  var allFoods=SPLASH_FOODS.concat(LEGENDARY_FOODS.filter(function(f){return unlocked.includes(f.id);}));
+  el.innerHTML=allFoods.map(function(f){
     return'<div class="food-item" onclick="feedSplashFood(\''+f.id+'\')">'
       +'<div class="food-emoji">'+f.emoji+'</div>'
       +'<div class="food-name">'+f.name+'</div>'
@@ -2407,7 +2459,7 @@ function renderFoodGrid(){
 }
 
 function feedSplashFood(foodId){
-  var food=SPLASH_FOODS.find(function(f){return f.id===foodId;});
+  var food=SPLASH_FOODS.find(function(f){return f.id===foodId;})||LEGENDARY_FOODS.find(function(f){return f.id===foodId;});
   if(!food)return;
   if((S.stars||0)<food.cost){showToast('Not enough stars!');return;}
   if(!S.pods||!S.pods[0])return;
@@ -2859,7 +2911,7 @@ function checkOrcalusWelcome(){
 // PANEL NAVIGATION
 // ═══════════════════════════════════════
 function showPanel(name,navEl){
-  var panels=['home','goals','reading','pod','rewards'];
+  var panels=['home','goals','challenges','midnight','reading','pod','rewards'];
   panels.forEach(function(p){
     var el=document.getElementById('panel-'+p);
     if(el)el.style.display=p===name?'block':'none';
@@ -2871,7 +2923,10 @@ function showPanel(name,navEl){
   if(name==='pod'){renderPodTab();}
   if(name==='reading'){renderReadingTab();}
   if(name==='goals'){renderGoalsTab();}
+  if(name==='challenges'){renderChallengesTab();}
+  if(name==='midnight'){renderMidnightZone();}
   if(name==='rewards'){renderRewards();renderToyShop();renderRewardLog();}
+  if(name==='home')renderTimeContent();
 }
 
 // ═══════════════════════════════════════
@@ -2894,6 +2949,393 @@ function previewTheme(block){
     showToast('Previewing '+block+' theme!');
   }
 }
+// ═══════════════════════════════════════
+// CHALLENGES SYSTEM
+// ═══════════════════════════════════════
+var CHALLENGES=[
+  // PART 1s
+  {
+    id:'morning_p1',part:1,group:'morning',
+    icon:'🌅',title:'Morning Routine — Part 1',
+    goal:'Complete your morning routine 5 weekdays in a row',
+    type:'morning_streak',target:5,
+    hints:[
+      {threshold:0,  text:'Something legendary is hiding in the deep ocean... complete this challenge to get a clue. Come back as you get closer for a better hint! 👀',level:'cold'},
+      {threshold:3,  text:'Getting warmer! Hint: Splash is going to eat very well when you finish this... 🐟',level:'warm'},
+      {threshold:5,  text:'UNLOCKED! Check Splash\'s food store — something legendary just appeared! 🎉',level:'complete'},
+    ],
+    reward:'food_legendary',
+    unlockMsg:'🎉 Challenge complete! Check the food store — something new and legendary just appeared!',
+  },
+  {
+    id:'jiji_p1',part:1,group:'jiji',
+    icon:'📏',title:'JiJi Journey — Part 1',
+    goal:'Log 3 JiJi sessions',
+    type:'jiji_sessions',target:3,
+    hints:[
+      {threshold:0, text:'A mysterious reward is locked behind this challenge... keep going and come back for a better hint! 👀',level:'cold'},
+      {threshold:2, text:'Almost there! Hint: Splash hasn\'t eaten THIS before... something from the very deep 🦑',level:'warm'},
+      {threshold:3, text:'UNLOCKED! Two challenges down — check the food store for something new! 🎉',level:'complete'},
+    ],
+    reward:'food_legendary',
+    unlockMsg:'🎉 JiJi Part 1 complete! More legendary food appeared in the store!',
+  },
+  {
+    id:'reading_p1',part:1,group:'reading',
+    icon:'📖',title:'Reading — Part 1',
+    goal:'Log 3 reading sessions',
+    type:'reading_sessions',target:3,
+    hints:[
+      {threshold:0, text:'A creature that has never been seen in the pod is waiting... come back as you get closer for a better hint! 👀',level:'cold'},
+      {threshold:2, text:'Almost! Hint: this creature has a very long... something. On its head. 🌀',level:'warm'},
+      {threshold:3, text:'UNLOCKED! A mysterious new creature wants to join the pod — go check! 🦄',level:'complete'},
+    ],
+    reward:'pet_narwhal',
+    unlockMsg:'🦄 A narwhal has appeared! Go to the pod to meet your new friend and give them a name!',
+  },
+  {
+    id:'stars_p1',part:1,group:'stars',
+    icon:'⭐',title:'Star Collector — Part 1',
+    goal:'Earn 100 stars in one week',
+    type:'weekly_stars',target:100,
+    hints:[
+      {threshold:0,  text:'Something incredible is hiding at the bottom of the ocean... earn stars to get closer to the secret! 👀',level:'cold'},
+      {threshold:50, text:'So close! Hint: this creature swam with the dinosaurs and never really left... 🦷',level:'warm'},
+      {threshold:100,text:'UNLOCKED! The narwhal has joined the pod! Go name your new friend! 🦄',level:'complete'},
+    ],
+    reward:'pet_narwhal',
+    unlockMsg:'🦄 Stars Part 1 complete! The narwhal is now in your pod — go give them a name!',
+  },
+  // PART 2s — unlocked after their Part 1 is complete
+  {
+    id:'morning_p2',part:2,group:'morning',
+    icon:'🌅',title:'Morning Routine — Part 2',
+    goal:'Complete your morning routine 10 weekdays in a row',
+    type:'morning_streak',target:10,
+    requiresComplete:'morning_p1',
+    hints:[
+      {threshold:0, text:'You proved you can do 5 — now prove you can do 10. Something with 8 arms is watching... 👀',level:'cold'},
+      {threshold:5, text:'More than halfway! Hint: this creature is one of the smartest animals on Earth. It can open jars. 🫙',level:'warm'},
+      {threshold:9, text:'ONE MORE DAY! Tomorrow you meet something incredible... 🐙',level:'hot'},
+      {threshold:10,text:'UNLOCKED! A new creature wants to join the pod — go meet them and choose a name! 🐙',level:'complete'},
+    ],
+    reward:'pet_octopus',
+    unlockMsg:'🐙 An octopus has appeared in the pod! Go give them a name!',
+  },
+  {
+    id:'jiji_p2',part:2,group:'jiji',
+    icon:'📏',title:'JiJi Journey — Part 2',
+    goal:'Log 6 JiJi sessions',
+    type:'jiji_sessions',target:6,
+    requiresComplete:'jiji_p1',
+    hints:[
+      {threshold:0, text:'You\'re building something big. A legendary food item from millions of years ago is locked here... 👀',level:'cold'},
+      {threshold:4, text:'Almost! Hint: this creature was 60 feet long, had 7-inch teeth, and made great white sharks look small... 🦷',level:'warm'},
+      {threshold:6, text:'UNLOCKED! The Megalodon has been added to the food store! Feed it to Splash! 🦷',level:'complete'},
+    ],
+    reward:'food_megalodon',
+    unlockMsg:'🦷 The Megalodon just appeared in the food store! Feed it to Splash for an incredible fact!',
+  },
+  {
+    id:'reading_p2',part:2,group:'reading',
+    icon:'📖',title:'Reading — Part 2',
+    goal:'Log 5 reading sessions',
+    type:'reading_sessions',target:5,
+    requiresComplete:'reading_p1',
+    hints:[
+      {threshold:0, text:'A secret place in the ocean that almost no one knows about is locked here... keep reading and come back! 👀',level:'cold'},
+      {threshold:3, text:'So close! Hint: it\'s so deep that sunlight never reaches it. But living things glow there on their own... 🌊',level:'warm'},
+      {threshold:5, text:'UNLOCKED! A new creature with 8 arms just joined the pod! Go name them! 🐙',level:'complete'},
+    ],
+    reward:'pet_octopus',
+    unlockMsg:'🐙 Reading Part 2 complete! The octopus has joined the pod — go give them a name!',
+  },
+  {
+    id:'stars_p2',part:2,group:'stars',
+    icon:'⭐',title:'Star Collector — Part 2',
+    goal:'Earn 150 stars in one week',
+    type:'weekly_stars',target:150,
+    requiresComplete:'stars_p1',
+    hints:[
+      {threshold:0,   text:'The biggest unlock of all is behind this challenge. Something no one in the pod has ever seen... 👀',level:'cold'},
+      {threshold:75,  text:'You\'re in the home stretch! Hint: it\'s 200 to 1,000 meters deep. Orcas hunt there. Completely dark except for living lights... 🌑',level:'warm'},
+      {threshold:150, text:'UNLOCKED! The Midnight Zone is open — go explore the deepest secret in Nathan\'s Ocean HQ! 🌑',level:'complete'},
+    ],
+    reward:'midnight_zone',
+    unlockMsg:'🌑 THE MIDNIGHT ZONE HAS BEEN DISCOVERED! A new secret section just appeared in your app!',
+  },
+];
+
+// Legendary food items that unlock
+var LEGENDARY_FOODS=[
+  {id:'giant_squid',  emoji:'🦑',name:'Giant Squid',   cost:4, hunger:40, msg:'Giant squid live in the Midnight Zone — 200 to 1,000 meters deep! Orcas dive down to hunt them in complete darkness using echolocation! 🌑'},
+  {id:'blue_whale',   emoji:'🐋',name:'Blue Whale',    cost:6, hunger:60, msg:'Orcas hunt blue whale calves in coordinated pod attacks! The blue whale is the largest animal ever — 100 feet long — but orca pods can take them down! 👑'},
+  {id:'megalodon',    emoji:'🦷',name:'Megalodon',     cost:10,hunger:100,msg:'The Megalodon was 60 feet long with 7-inch teeth and went extinct 3.6 million years ago. Some scientists think its descendants still influence modern shark behavior! 🦷'},
+];
+
+var MIDNIGHT_ZONE_FACTS=[
+  {text:"The Midnight Zone (200-1,000m deep) is completely dark — no sunlight reaches this far. But it's full of life that makes its OWN light! 🌑",s:"🌑 Midnight Zone"},
+  {text:"Orcas regularly dive to 300 meters into the Midnight Zone to hunt giant squid and deep-sea fish. They navigate in total darkness using echolocation!",s:"🐋 Orca Hunting"},
+  {text:"90% of all creatures in the Midnight Zone are bioluminescent — they produce their own light to communicate, hunt, and hide!",s:"✨ Bioluminescence"},
+  {text:"The pressure in the Midnight Zone is 20-100 times greater than at the surface. Orca bodies are specially adapted to handle this pressure!",s:"🌊 Deep Pressure"},
+  {text:"Giant squid — up to 43 feet long — live in the Midnight Zone. Their eyes are the size of dinner plates to see in the darkness!",s:"🦑 Giant Squid"},
+  {text:"Lanternfish are the most common fish in the Midnight Zone and one of orcas' favorite deep-sea snacks. They migrate up at night to feed!",s:"🐟 Lanternfish"},
+  {text:"The anglerfish lives in the Midnight Zone and uses a glowing lure on its head to attract prey in the darkness!",s:"🎣 Anglerfish"},
+  {text:"Some creatures in the Midnight Zone have never been seen by humans. Scientists estimate we've only explored 5% of the ocean!",s:"🔬 Deep Mysteries"},
+];
+
+function getChallengeProgress(challenge){
+  var today=new Date();
+  var completed=S.challengesCompleted||{};
+  if(completed[challenge.id])return{value:challenge.target,done:true};
+
+  if(challenge.type==='morning_streak'){
+    // Count consecutive weekday mornings
+    var streak=0;
+    for(var i=0;i<30;i++){
+      var d=new Date(today);d.setDate(today.getDate()-i);
+      var dow=d.getDay();if(dow===0||dow===6)continue;
+      var ds=d.toDateString();
+      if(S.morningDone&&Object.keys(S.morningDone).some(function(k){return k.endsWith(ds);})){
+        // Check if ALL morning tasks done that day
+        var tasksForDay=MORNING_TASKS.filter(function(t){return S.morningDone[t.id+'_'+ds];});
+        if(tasksForDay.length>=MORNING_TASKS.length*0.8)streak++;
+        else if(i>0)break;
+      } else if(i>0)break;
+    }
+    return{value:Math.min(streak,challenge.target),done:streak>=challenge.target};
+  }
+
+  if(challenge.type==='jiji_sessions'){
+    var sessions=(S.jijiSessions||[]).length;
+    return{value:Math.min(sessions,challenge.target),done:sessions>=challenge.target};
+  }
+
+  if(challenge.type==='reading_sessions'){
+    var sessions=(S.readingLog||[]).length;
+    return{value:Math.min(sessions,challenge.target),done:sessions>=challenge.target};
+  }
+
+  if(challenge.type==='weekly_stars'){
+    var weekly=S.weeklyStarsEarned||0;
+    return{value:Math.min(weekly,challenge.target),done:weekly>=challenge.target};
+  }
+
+  return{value:0,done:false};
+}
+
+function getChallengeHint(challenge,progress){
+  var hints=challenge.hints.slice().reverse();
+  for(var i=0;i<hints.length;i++){
+    if(progress>=hints[i].threshold)return hints[i];
+  }
+  return challenge.hints[0];
+}
+
+function isChallengeVisible(challenge){
+  if(!challenge.requiresComplete)return true;
+  var completed=S.challengesCompleted||{};
+  return!!completed[challenge.requiresComplete];
+}
+
+function completeChallenge(challenge){
+  if(!S.challengesCompleted)S.challengesCompleted={};
+  if(S.challengesCompleted[challenge.id])return;
+  S.challengesCompleted[challenge.id]=true;
+
+  // Apply reward
+  if(challenge.reward==='food_legendary'){
+    if(!S.unlockedLegendaryFoods)S.unlockedLegendaryFoods=[];
+    LEGENDARY_FOODS.forEach(function(f){
+      if(f.id!=='megalodon'&&!S.unlockedLegendaryFoods.includes(f.id)){
+        S.unlockedLegendaryFoods.push(f.id);
+      }
+    });
+  }
+  if(challenge.reward==='food_megalodon'){
+    if(!S.unlockedLegendaryFoods)S.unlockedLegendaryFoods=[];
+    if(!S.unlockedLegendaryFoods.includes('megalodon'))S.unlockedLegendaryFoods.push('megalodon');
+  }
+  if(challenge.reward==='pet_narwhal'){
+    if(!(S.pods||[]).some(function(p){return p.species==='narwhal';})){
+      if(!S.pendingPetUnlock)S.pendingPetUnlock=[];
+      if(!S.pendingPetUnlock.includes('narwhal'))S.pendingPetUnlock.push('narwhal');
+    }
+  }
+  if(challenge.reward==='pet_octopus'){
+    if(!(S.pods||[]).some(function(p){return p.species==='octopus';})){
+      if(!S.pendingPetUnlock)S.pendingPetUnlock=[];
+      if(!S.pendingPetUnlock.includes('octopus'))S.pendingPetUnlock.push('octopus');
+    }
+  }
+  if(challenge.reward==='midnight_zone'){
+    S.midnightZoneUnlocked=true;
+  }
+
+  save();
+  // Show celebration
+  confetti();confetti();confetti();
+  showToast(challenge.unlockMsg);
+  setTimeout(function(){renderChallengesTab();renderFoodGrid();renderPodTab();},500);
+}
+
+function checkChallengeCompletions(){
+  CHALLENGES.forEach(function(c){
+    if(!isChallengeVisible(c))return;
+    if(S.challengesCompleted&&S.challengesCompleted[c.id])return;
+    var prog=getChallengeProgress(c);
+    if(prog.done)completeChallenge(c);
+  });
+}
+
+function renderChallengesTab(){
+  var el=document.getElementById('challengesList');if(!el)return;
+  checkChallengeCompletions();
+  var completed=S.challengesCompleted||{};
+  var visible=CHALLENGES.filter(function(c){return isChallengeVisible(c);});
+  var html='';
+
+  visible.forEach(function(c){
+    var prog=getChallengeProgress(c);
+    var isDone=!!completed[c.id];
+    var hint=getChallengeHint(c,prog.value);
+    var pct=Math.min(100,Math.round(prog.value/c.target*100));
+
+    html+='<div class="challenge-card'+(isDone?' complete':'')+'">'+
+      '<div class="challenge-header">'+
+        '<div class="challenge-icon">'+c.icon+'</div>'+
+        '<div>'+
+          '<div class="challenge-title">'+c.title+
+            '<span class="challenge-badge'+(c.part===2?' part2':'')+'"> Part '+c.part+'</span>'+
+          '</div>'+
+          '<div class="challenge-goal">'+c.goal+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="challenge-progress-track">'+
+        '<div class="challenge-progress-fill" style="width:'+pct+'%"></div>'+
+      '</div>'+
+      '<div class="challenge-progress-label">'+prog.value+' / '+c.target+(isDone?' ✅':'')+'</div>'+
+      '<div class="challenge-hint '+hint.level+'">'+
+        (isDone?'🎉 ':'🔒 ')+hint.text+
+      '</div>'+
+      (!isDone?'<div class="challenge-come-back">Keep going — the hint gets better the closer you get! 👀</div>':'')+
+      '</div>';
+  });
+
+  // Show locked part 2s
+  var locked=CHALLENGES.filter(function(c){return c.requiresComplete&&!isChallengeVisible(c);});
+  if(locked.length>0){
+    html+='<div style="margin-top:16px"><div class="slabel">🔒 Locked — complete Part 1 first</div>';
+    locked.forEach(function(c){
+      html+='<div class="challenge-card locked">'+
+        '<div class="challenge-header">'+
+          '<div class="challenge-icon">'+c.icon+'</div>'+
+          '<div>'+
+            '<div class="challenge-title">'+c.title+
+              '<span class="challenge-badge part2"> Part 2</span>'+
+            '</div>'+
+            '<div class="challenge-goal">'+c.goal+'</div>'+
+          '</div>'+
+        '</div>'+
+        '<div style="font-size:.72rem;color:var(--dimmer);font-style:italic">Complete Part 1 to unlock this challenge...</div>'+
+        '</div>';
+    });
+    html+='</div>';
+  }
+
+  // Midnight Zone preview if unlocked
+  if(S.midnightZoneUnlocked){
+    html+='<div style="background:linear-gradient(135deg,#000510,#001e42);border:1.5px solid rgba(41,182,246,.3);border-radius:18px;padding:14px;margin-top:16px;text-align:center">'+
+      '<div style="font-size:2rem;margin-bottom:6px">🌑</div>'+
+      '<div style="font-family:\'Fredoka One\',cursive;font-size:1rem;color:#29b6f6;margin-bottom:6px">The Midnight Zone</div>'+
+      '<div style="font-size:.75rem;color:#7b9ab0;margin-bottom:10px">You discovered the deepest secret in Nathan\'s Ocean HQ!</div>'+
+      '<button onclick="showPanel(\'midnight\',document.getElementById(\'nav-midnight\'))" style="font-family:\'Fredoka One\',cursive;font-size:.82rem;padding:10px 20px;border-radius:14px;border:none;background:linear-gradient(135deg,#001e42,#29b6f6);color:#fff;cursor:pointer">Enter the Midnight Zone 🌑</button>'+
+      '</div>';
+  }
+
+  el.innerHTML=html;
+}
+
+// ═══════════════════════════════════════
+// MIDNIGHT ZONE TAB
+// ═══════════════════════════════════════
+function renderMidnightZone(){
+  var el=document.getElementById('panel-midnight');if(!el)return;
+  var factIdx=new Date().getDate()%MIDNIGHT_ZONE_FACTS.length;
+  var fact=MIDNIGHT_ZONE_FACTS[factIdx];
+  el.innerHTML=
+    '<div style="text-align:center;padding:20px 0 10px">'+
+      '<div style="font-size:3rem;margin-bottom:8px;animation:float 3s ease-in-out infinite">🌑</div>'+
+      '<div style="font-family:\'Fredoka One\',cursive;font-size:1.3rem;color:#29b6f6;margin-bottom:4px">The Midnight Zone</div>'+
+      '<div style="font-size:.72rem;color:#7b9ab0;margin-bottom:16px">200 - 1,000 meters deep · Where orcas hunt in darkness</div>'+
+    '</div>'+
+    '<div style="background:rgba(41,182,246,.08);border:1.5px solid rgba(41,182,246,.2);border-radius:18px;padding:14px;margin-bottom:10px">'+
+      '<div style="font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#29b6f6;margin-bottom:5px">🔬 Midnight Zone Fact</div>'+
+      '<div style="font-size:.88rem;color:#e8f4fd;font-weight:700;line-height:1.5;margin-bottom:6px">'+fact.text+'</div>'+
+      '<div style="font-size:.68rem;color:#29b6f6">'+fact.s+'</div>'+
+    '</div>'+
+    '<div class="slabel">🌑 About the Midnight Zone</div>'+
+    MIDNIGHT_ZONE_FACTS.map(function(f){
+      return'<div style="background:rgba(0,5,16,.6);border:1px solid rgba(41,182,246,.15);border-radius:14px;padding:10px 12px;margin-bottom:8px">'+
+        '<div style="font-size:.78rem;color:#e8f4fd;line-height:1.5;margin-bottom:4px">'+f.text+'</div>'+
+        '<div style="font-size:.65rem;color:#29b6f6">'+f.s+'</div>'+
+        '</div>';
+    }).join('');
+}
+
+// Check for pending pet unlocks
+function checkPendingPetUnlocks(){
+  var pending=S.pendingPetUnlock||[];
+  if(pending.length===0)return;
+  var petToUnlock=pending[0];
+  var petNames={narwhal:'narwhal',octopus:'octopus'};
+  var petEmojis={narwhal:'🦄',octopus:'🐙'};
+  var petMsgs={
+    narwhal:'A narwhal has appeared from the deep ocean! Narwhals are real — their spiral tusk is actually a giant tooth up to 10 feet long! Give your new friend a name!',
+    octopus:'An octopus has crawled into the pod! Octopuses have three hearts, blue blood, and can change color in under a second! Give your new friend a name!',
+  };
+  setTimeout(function(){
+    var name=prompt(petEmojis[petToUnlock]+' '+petMsgs[petToUnlock]+'\n\nWhat would you like to name your new '+petToUnlock+'?');
+    if(!name)name=petToUnlock.charAt(0).toUpperCase()+petToUnlock.slice(1);
+    if(!S.pods)S.pods=[];
+    S.pods.push({
+      id:petToUnlock+'_'+Date.now(),
+      species:petToUnlock,
+      name:name,
+      hunger:90,happiness:100,health:100,
+      level:1,xp:0,
+      lastFed:'',lastPlayed:'',lastWashed:'',lastTucked:'',
+      birthday:new Date().toISOString().slice(0,10)
+    });
+    S.pendingPetUnlock=pending.slice(1);
+    save();renderPodTab();
+    confetti();confetti();confetti();
+    showToast(petEmojis[petToUnlock]+' Welcome '+name+' to the pod!');
+  },1000);
+}
+
+// New challenge tab popup (shows once)
+function checkChallengesPopup(){
+  if(S.challengesPopupSeen)return;
+  setTimeout(function(){
+    S.challengesPopupSeen=true;save();
+    showToast('🏆 NEW! Check the Challenges tab — 8 secret challenges are waiting for you!');
+    // Flash the challenges nav item
+    var navEl=document.getElementById('nav-challenges');
+    if(navEl){
+      var flashes=0;
+      var flash=setInterval(function(){
+        navEl.style.background=flashes%2===0?'rgba(255,213,79,.3)':'';
+        flashes++;if(flashes>8)clearInterval(flash);
+      },300);
+    }
+  },3000);
+}
+
+// Add narwhal and octopus to PET_SPECIES
+PET_SPECIES.narwhal={emoji:'🦄',species:'Narwhal',food:'🦑 Squid',foodCost:2,personality:'mysterious and magical'};
+PET_SPECIES.octopus={emoji:'🐙',species:'Octopus',food:'🦐 Shrimp',foodCost:1,personality:'clever and curious'};
+
 function saveAnthropicKey(){
   var key=document.getElementById('anthropicKeyInput').value.trim();
   if(!key||!key.startsWith('sk-ant-')){showToast('Invalid key — should start with sk-ant-');return;}
@@ -3345,6 +3787,8 @@ function confetti(){
 // INIT
 // ═══════════════════════════════════════
 window.giveStars=giveStars;
+window.renderChallengesTab=renderChallengesTab;
+window.renderMidnightZone=renderMidnightZone;
 window.quickGiveStars=quickGiveStars;
 window.saveAnthropicKey=saveAnthropicKey;
 window.previewTheme=previewTheme;
