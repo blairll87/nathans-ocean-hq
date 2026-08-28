@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.0.10">
+<meta name="version" content="3.0.11">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.0.10';
+  var v='3.0.11';
   if(window.location.href.indexOf('v=')===-1){
     window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
   }
@@ -1010,6 +1010,10 @@ body.theme-night {
     <div id="challengesList"></div>
   </div>
 
+  <!-- ─── ABYSS PANEL ─── -->
+  <div id="panel-abyss" style="display:none;background:linear-gradient(180deg,#000208,#000510);min-height:100%;padding:12px 14px 80px">
+  </div>
+
   <!-- ─── MIDNIGHT ZONE PANEL ─── -->
   <div id="panel-midnight" style="display:none;background:linear-gradient(180deg,#000510,#001e42);min-height:100%;padding:12px 14px 80px">
   </div>
@@ -1261,7 +1265,7 @@ const PROGRESS_KEYS = [
   'readingLog','readingGoalEng','readingGoalEsp','readingMins',
   'dictionary','jijiSessions','jijiPct','jijiPctDate',
   'oceanFactsLearned','oceanFactToday','factIndexToday',
-  'overrideReminders','emailSettings','weeklyStarGoal','weekStart','weeklyStarsEarned','challengesCompleted','challengesPopupSeen','pendingPetUnlock','unlockedLegendaryFoods','midnightZoneUnlocked',
+  'overrideReminders','emailSettings','weeklyStarGoal','weekStart','weeklyStarsEarned','challengesCompleted','challengeBaselines','challengesPopupSeen','pendingPetUnlock','unlockedLegendaryFoods','midnightZoneUnlocked','goldenSplashUnlocked','goldenSplashActive','abyssUnlocked',
   'pin','adminUnlocked','lastEmailDate',
   'summerProgress','choreDone','spanishTasks','spanishState',
   'spanishArchive','summerBooks','summerReadingGoal','orcalusWelcomed'
@@ -2354,7 +2358,8 @@ function renderPetCard(){
   var hunger=Math.max(0,Math.min(100,p.hunger||70));
   var happy=Math.max(0,Math.min(100,p.happiness||80));
   var health=Math.max(0,Math.min(100,p.health||100));
-  var svg=getPetSvg(p.species,64);
+  var isGolden=p.species==='orca'&&S.goldenSplashActive&&S.goldenSplashUnlocked;
+var svg=isGolden?getGoldenOrcaSvg(64):getPetSvg(p.species,64);
   var isTucked=p.lastTucked===today;
   var isWashed=p.lastWashed===today;
 
@@ -2374,7 +2379,13 @@ function renderPetCard(){
     +'<div class="sbar-row"><div class="sbar-lbl">🐟 Hunger</div><div class="sbar-track"><div class="sbar-fill" style="width:'+hunger+'%;background:#29b6f6"></div></div><div class="sbar-pct">'+hunger+'%</div></div>'
     +'<div class="sbar-row"><div class="sbar-lbl">😊 Happy</div><div class="sbar-track"><div class="sbar-fill" style="width:'+happy+'%;background:#66bb6a"></div></div><div class="sbar-pct">'+happy+'%</div></div>'
     +'<div class="sbar-row"><div class="sbar-lbl">❤️ Health</div><div class="sbar-track"><div class="sbar-fill" style="width:'+health+'%;background:#ef5350"></div></div><div class="sbar-pct">'+health+'%</div></div>'
-    +'<div class="pet-actions-grid">'
+    +'<div style="margin-bottom:10px">'+
+      (p.species==='orca'&&S.goldenSplashUnlocked?
+        '<button onclick="toggleGoldenSplash()" style="width:100%;font-family:\'Fredoka One\',cursive;font-size:.8rem;padding:9px;border-radius:12px;border:1.5px solid rgba(255,213,79,.4);background:rgba(255,213,79,.1);color:#f59e0b;cursor:pointer">'+
+        (S.goldenSplashActive?'✨ Golden Form ON — tap to switch back':'✨ Toggle Golden Form')+
+        '</button>':'')+
+      '</div>'+
+      '<div class="pet-actions-grid">'
       +'<div class="pet-act-btn" onclick="petFeed('+_activePetIndex+')">'
         +'<div class="pet-act-icon">🐟</div>'
         +'<div class="pet-act-name">Feed</div>'
@@ -2926,7 +2937,7 @@ function checkOrcalusWelcome(){
 // PANEL NAVIGATION
 // ═══════════════════════════════════════
 function showPanel(name,navEl){
-  var panels=['home','goals','challenges','midnight','reading','pod','rewards'];
+  var panels=['home','goals','challenges','midnight','abyss','reading','pod','rewards'];
   panels.forEach(function(p){
     var el=document.getElementById('panel-'+p);
     if(el)el.style.display=p===name?'block':'none';
@@ -2940,6 +2951,7 @@ function showPanel(name,navEl){
   if(name==='goals'){renderGoalsTab();}
   if(name==='challenges'){renderChallengesTab();}
   if(name==='midnight'){renderMidnightZone();}
+  if(name==='abyss'){renderAbyss();}
   if(name==='rewards'){renderRewards();renderToyShop();renderRewardLog();}
   if(name==='home')renderTimeContent();
 }
@@ -3079,6 +3091,68 @@ var CHALLENGES=[
     reward:'midnight_zone',
     unlockMsg:'🌑 THE MIDNIGHT ZONE HAS BEEN DISCOVERED! A new secret section just appeared in your app!',
   },
+
+  // PART 3s — baseline tracking, unlocked after Part 2 complete
+  {
+    id:'morning_p3',part:3,group:'morning',
+    icon:'🌅',title:'Morning Routine — Part 3',
+    goal:'Complete your morning routine 15 weekdays in a row',
+    type:'morning_streak',target:15,
+    requiresComplete:'morning_p2',
+    hints:[
+      {threshold:0, text:"You've proven you're consistent. Now prove you're legendary. Something magical is happening to Splash... 👀",level:'cold'},
+      {threshold:6, text:"Halfway! Hint: it's not a new pet. It's something that happens TO Splash himself... ✨",level:'warm'},
+      {threshold:11,text:"Almost there! Splash is starting to glow... 🌟",level:'hot'},
+      {threshold:15,text:"UNLOCKED! Splash has a secret golden form — go to the pod to toggle it! ✨",level:'complete'},
+    ],
+    reward:'golden_splash',
+    unlockMsg:'✨ Golden Splash unlocked! Go to the pod and tap Splash to toggle his golden form!',
+  },
+  {
+    id:'jiji_p3',part:3,group:'jiji',
+    icon:'📏',title:'JiJi Journey — Part 3',
+    goal:'Log 10 JiJi sessions after completing Part 2',
+    type:'jiji_sessions_baseline',target:10,
+    requiresComplete:'jiji_p2',
+    hints:[
+      {threshold:0, text:"Something enormous is waiting in the deep. The biggest animal that has ever lived... 👀",level:'cold'},
+      {threshold:4, text:"Getting closer! Hint: it's 100 feet long. Its heart is the size of a car. 🐋",level:'warm'},
+      {threshold:8, text:"ONE or TWO more sessions! The giant is almost here... 🐋",level:'hot'},
+      {threshold:10,text:"UNLOCKED! A blue whale has joined the pod! Go name the largest animal ever! 🐋",level:'complete'},
+    ],
+    reward:'pet_blue_whale',
+    unlockMsg:'🐋 A blue whale has appeared in the pod! The largest animal ever lived — go give them a name!',
+  },
+  {
+    id:'reading_p3',part:3,group:'reading',
+    icon:'📖',title:'Reading — Part 3',
+    goal:'Log 8 reading sessions after completing Part 2',
+    type:'reading_sessions_baseline',target:8,
+    requiresComplete:'reading_p2',
+    hints:[
+      {threshold:0, text:"There's a place deeper than the Midnight Zone. So deep even orcas don't go. Something is down there... 👀",level:'cold'},
+      {threshold:3, text:"Deeper! Hint: below 4,000 meters. Crushing pressure. Alien creatures. Complete darkness. 🌑",level:'warm'},
+      {threshold:6, text:"Almost in the Abyss! One or two more sessions and a new secret section appears... 🌑",level:'hot'},
+      {threshold:8, text:"UNLOCKED! THE ABYSS is now open — deeper than the Midnight Zone. Something extraordinary awaits! 🌑",level:'complete'},
+    ],
+    reward:'abyss',
+    unlockMsg:'🌑 THE ABYSS HAS BEEN DISCOVERED! A new secret section just appeared — deeper than the Midnight Zone!',
+  },
+  {
+    id:'stars_p3',part:3,group:'stars',
+    icon:'⭐',title:'Star Collector — Part 3',
+    goal:'Earn 200 stars in one week',
+    type:'weekly_stars',target:200,
+    requiresComplete:'stars_p2',
+    hints:[
+      {threshold:0,   text:"A creature that dives 3km deep and battles giant squid in the dark is waiting... earn stars to get closer! 👀",level:'cold'},
+      {threshold:75,  text:"More than a third there! Hint: it has the largest brain of any animal ever. It clicks so loud it can stun prey. 🐳",level:'warm'},
+      {threshold:150, text:"SO close! One final push and a legendary creature joins Splash's food store... 🐳",level:'hot'},
+      {threshold:200, text:"UNLOCKED! The Sperm Whale has appeared in the food store — feed it to Splash for the most incredible fact yet! 🐳",level:'complete'},
+    ],
+    reward:'food_sperm_whale',
+    unlockMsg:'🐳 The Sperm Whale just appeared in the food store! Feed it to Splash for an incredible fact!',
+  },
 ];
 
 // Legendary food items that unlock
@@ -3086,8 +3160,19 @@ var LEGENDARY_FOODS=[
   {id:'giant_squid',  emoji:'🦑',name:'Giant Squid',   cost:4, hunger:40, msg:'Giant squid live in the Midnight Zone — 200 to 1,000 meters deep! Orcas dive down to hunt them in complete darkness using echolocation! 🌑'},
   {id:'blue_whale',   emoji:'🐋',name:'Blue Whale',    cost:6, hunger:60, msg:'Orcas hunt blue whale calves in coordinated pod attacks! The blue whale is the largest animal ever — 100 feet long — but orca pods can take them down! 👑'},
   {id:'megalodon',    emoji:'🦷',name:'Megalodon',     cost:10,hunger:100,msg:'The Megalodon was 60 feet long with 7-inch teeth and went extinct 3.6 million years ago. Some scientists think its descendants still influence modern shark behavior! 🦷'},
+  {id:'sperm_whale',  emoji:'🐳',name:'Sperm Whale',   cost:12,hunger:90, msg:'Sperm whales dive 3 KILOMETERS into the abyss to battle giant squid in total darkness! They have the largest brain of any animal ever and make clicks so loud they can stun prey! 🐳'},
 ];
 
+var ABYSS_FACTS=[
+  {text:"The Abyss (4,000-6,000m deep) has pressure 600 times greater than at the surface — enough to crush a submarine! Yet life thrives here.",s:"🌑 The Abyss"},
+  {text:"Anglerfish live in the Abyss and dangle a glowing lure from their heads to attract prey in total darkness. The light is made by bacteria living inside them!",s:"🎣 Anglerfish"},
+  {text:"The vampire squid isn't actually a squid or an octopus — it's its own unique creature that lives in the Abyss and feeds on marine snow!",s:"🧛 Vampire Squid"},
+  {text:"Giant isopods — deep sea pill bugs up to 2.5 feet long — roam the Abyss floor eating whatever falls from above. They can go years without food!",s:"🦞 Giant Isopod"},
+  {text:"Sperm whales dive from the surface all the way to the Abyss — 3 kilometers down — to hunt giant squid. They hold their breath for 90 minutes!",s:"🐳 Sperm Whale"},
+  {text:"Marine snow — tiny particles of dead creatures — slowly falls from the surface to the Abyss like an endless underwater snowstorm, feeding everything below!",s:"❄️ Marine Snow"},
+  {text:"The Dumbo octopus lives in the Abyss and flaps ear-like fins to swim. It's the deepest-living octopus ever found — 7km down!",s:"🐙 Dumbo Octopus"},
+  {text:"Scientists have only explored about 5% of the ocean. The Abyss is one of the least known places on Earth — there are likely creatures there no human has ever seen!",s:"🔬 Unknown Depths"},
+];
 var MIDNIGHT_ZONE_FACTS=[
   {text:"The Midnight Zone (200-1,000m deep) is completely dark — no sunlight reaches this far. But it's full of life that makes its OWN light! 🌑",s:"🌑 Midnight Zone"},
   {text:"Orcas regularly dive to 300 meters into the Midnight Zone to hunt giant squid and deep-sea fish. They navigate in total darkness using echolocation!",s:"🐋 Orca Hunting"},
@@ -3123,12 +3208,31 @@ function getChallengeProgress(challenge){
 
   if(challenge.type==='jiji_sessions'){
     var sessions=(S.jijiSessions||[]).length;
-    return{value:Math.min(sessions,challenge.target),done:sessions>=challenge.target};
+    // For Part 2, subtract Part 1 baseline if it exists
+    var baseline=challenge.part===2&&S.challengeBaselines&&S.challengeBaselines.jiji?S.challengeBaselines.jiji:0;
+    var progress=Math.max(0,sessions-baseline);
+    return{value:Math.min(progress,challenge.target),done:progress>=challenge.target};
+  }
+
+  if(challenge.type==='jiji_sessions_baseline'){
+    var sessions=(S.jijiSessions||[]).length;
+    var baseline=S.challengeBaselines&&S.challengeBaselines.jiji_p3?S.challengeBaselines.jiji_p3:sessions;
+    var progress=Math.max(0,sessions-baseline);
+    return{value:Math.min(progress,challenge.target),done:progress>=challenge.target};
   }
 
   if(challenge.type==='reading_sessions'){
     var sessions=(S.readingLog||[]).length;
-    return{value:Math.min(sessions,challenge.target),done:sessions>=challenge.target};
+    var baseline=challenge.part===2&&S.challengeBaselines&&S.challengeBaselines.reading?S.challengeBaselines.reading:0;
+    var progress=Math.max(0,sessions-baseline);
+    return{value:Math.min(progress,challenge.target),done:progress>=challenge.target};
+  }
+
+  if(challenge.type==='reading_sessions_baseline'){
+    var sessions=(S.readingLog||[]).length;
+    var baseline=S.challengeBaselines&&S.challengeBaselines.reading_p3?S.challengeBaselines.reading_p3:sessions;
+    var progress=Math.max(0,sessions-baseline);
+    return{value:Math.min(progress,challenge.target),done:progress>=challenge.target};
   }
 
   if(challenge.type==='weekly_stars'){
@@ -3157,6 +3261,13 @@ function completeChallenge(challenge){
   if(!S.challengesCompleted)S.challengesCompleted={};
   if(S.challengesCompleted[challenge.id])return;
   S.challengesCompleted[challenge.id]=true;
+  // Save baseline for Part 2 baseline challenges
+  if(!S.challengeBaselines)S.challengeBaselines={};
+  if(challenge.id==='jiji_p1'){S.challengeBaselines.jiji=(S.jijiSessions||[]).length;}
+  if(challenge.id==='jiji_p2'){S.challengeBaselines.jiji_p3=(S.jijiSessions||[]).length;}
+  if(challenge.id==='reading_p1'){S.challengeBaselines.reading=(S.readingLog||[]).length;}
+  if(challenge.id==='reading_p2'){S.challengeBaselines.reading_p3=(S.readingLog||[]).length;}
+  if(challenge.id==='morning_p2'){S.challengeBaselines.morning_p3_start=new Date().toISOString();}
 
   // Apply reward
   if(challenge.reward==='food_legendary'){
@@ -3185,6 +3296,22 @@ function completeChallenge(challenge){
   }
   if(challenge.reward==='midnight_zone'){
     S.midnightZoneUnlocked=true;
+  }
+  if(challenge.reward==='golden_splash'){
+    S.goldenSplashUnlocked=true;
+  }
+  if(challenge.reward==='pet_blue_whale'){
+    if(!(S.pods||[]).some(function(p){return p.species==='blue_whale';})){
+      if(!S.pendingPetUnlock)S.pendingPetUnlock=[];
+      if(!S.pendingPetUnlock.includes('blue_whale'))S.pendingPetUnlock.push('blue_whale');
+    }
+  }
+  if(challenge.reward==='abyss'){
+    S.abyssUnlocked=true;
+  }
+  if(challenge.reward==='food_sperm_whale'){
+    if(!S.unlockedLegendaryFoods)S.unlockedLegendaryFoods=[];
+    if(!S.unlockedLegendaryFoods.includes('sperm_whale'))S.unlockedLegendaryFoods.push('sperm_whale');
   }
 
   save();
@@ -3266,6 +3393,15 @@ function renderChallengesTab(){
       '<div style="font-size:.75rem;color:#7b9ab0;margin-bottom:10px">You discovered the deepest secret in Nathan\'s Ocean HQ!</div>'+
       '<button onclick="showPanel(\'midnight\',document.getElementById(\'nav-midnight\'))" style="font-family:\'Fredoka One\',cursive;font-size:.82rem;padding:10px 20px;border-radius:14px;border:none;background:linear-gradient(135deg,#001e42,#29b6f6);color:#fff;cursor:pointer">Enter the Midnight Zone 🌑</button>'+
       '</div>';
+  // Show Abyss button if unlocked
+  if(S.abyssUnlocked){
+    html+='<div style="background:linear-gradient(135deg,#000208,#001030);border:1.5px solid rgba(100,181,246,.2);border-radius:18px;padding:14px;margin-top:10px;text-align:center">'+
+      '<div style="font-size:2rem;margin-bottom:6px">🌑</div>'+
+      '<div style="font-family:\'Fredoka One\',cursive;font-size:1rem;color:#64b5f6;margin-bottom:6px">The Abyss</div>'+
+      '<div style="font-size:.75rem;color:#546e7a;margin-bottom:10px">Below 4,000 meters — deeper than any orca dares to go!</div>'+
+      '<button onclick="showPanel(\'abyss\',null)" style="font-family:\'Fredoka One\',cursive;font-size:.82rem;padding:10px 20px;border-radius:14px;border:none;background:linear-gradient(135deg,#000510,#64b5f6);color:#fff;cursor:pointer">Enter the Abyss 🌑</button>'+
+      '</div>';
+  }
   }
 
   el.innerHTML=html;
@@ -3299,6 +3435,40 @@ function renderMidnightZone(){
 }
 
 // Check for pending pet unlocks
+// ═══════════════════════════════════════
+// THE ABYSS TAB
+// ═══════════════════════════════════════
+function renderAbyss(){
+  var el=document.getElementById('panel-abyss');if(!el)return;
+  var factIdx=new Date().getDate()%ABYSS_FACTS.length;
+  var fact=ABYSS_FACTS[factIdx];
+  el.innerHTML=
+    '<div style="text-align:center;padding:20px 0 10px">'+
+      '<div style="font-size:3rem;margin-bottom:8px;animation:float 4s ease-in-out infinite">🌑</div>'+
+      '<div style="font-family:\'Fredoka One\',cursive;font-size:1.3rem;color:#64b5f6;margin-bottom:4px">The Abyss</div>'+
+      '<div style="font-size:.72rem;color:#546e7a;margin-bottom:16px">4,000 - 6,000 meters deep · Where no light has ever reached</div>'+
+    '</div>'+
+    '<div style="background:rgba(100,181,246,.06);border:1.5px solid rgba(100,181,246,.15);border-radius:18px;padding:14px;margin-bottom:10px">'+
+      '<div style="font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#64b5f6;margin-bottom:5px">🔬 Abyss Fact</div>'+
+      '<div style="font-size:.88rem;color:#cfd8dc;font-weight:700;line-height:1.5;margin-bottom:6px">'+fact.text+'</div>'+
+      '<div style="font-size:.68rem;color:#64b5f6">'+fact.s+'</div>'+
+    '</div>'+
+    '<div style="font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#546e7a;margin:14px 0 8px">🌑 Life in the Abyss</div>'+
+    ABYSS_FACTS.map(function(f){
+      return'<div style="background:rgba(0,2,8,.8);border:1px solid rgba(100,181,246,.1);border-radius:14px;padding:10px 12px;margin-bottom:8px">'+
+        '<div style="font-size:.78rem;color:#cfd8dc;line-height:1.5;margin-bottom:4px">'+f.text+'</div>'+
+        '<div style="font-size:.65rem;color:#64b5f6">'+f.s+'</div>'+
+        '</div>';
+    }).join('');
+}
+
+// Golden Splash toggle
+function toggleGoldenSplash(){
+  S.goldenSplashActive=!S.goldenSplashActive;
+  save();renderPetCard();
+  showToast(S.goldenSplashActive?'✨ Golden Splash activated! 🌟':'Splash is back to normal! 🐋');
+}
+
 function checkPendingPetUnlocks(){
   var pending=S.pendingPetUnlock||[];
   if(pending.length===0)return;
@@ -3308,6 +3478,7 @@ function checkPendingPetUnlocks(){
   var petMsgs={
     narwhal:'A narwhal has appeared from the deep ocean! Narwhals are real — their spiral tusk is actually a giant tooth up to 10 feet long! Give your new friend a name!',
     octopus:'An octopus has crawled into the pod! Octopuses have three hearts, blue blood, and can change color in under a second! Give your new friend a name!',
+    blue_whale:'A BLUE WHALE has joined the pod! The largest animal ever to live on Earth — up to 100 feet long and 200 tons! Give your new friend a name!',
   };
   setTimeout(function(){
     var name=prompt(petEmojis[petToUnlock]+' '+petMsgs[petToUnlock]+'\n\nWhat would you like to name your new '+petToUnlock+'?');
@@ -3349,6 +3520,8 @@ function checkChallengesPopup(){
 
 // Add narwhal and octopus to PET_SPECIES
 PET_SPECIES.narwhal={emoji:'🦄',species:'Narwhal',food:'🦑 Squid',foodCost:2,personality:'mysterious and magical'};
+PET_SPECIES.blue_whale={emoji:'🐋',species:'Blue Whale',food:'🦐 Krill',foodCost:1,personality:'gentle giant of the ocean'};
+PET_SPECIES.octopus={emoji:'🐙',species:'Octopus',food:'🦐 Shrimp',foodCost:1,personality:'clever and curious'};
 PET_SPECIES.octopus={emoji:'🐙',species:'Octopus',food:'🦐 Shrimp',foodCost:1,personality:'clever and curious'};
 
 function saveAnthropicKey(){
@@ -3690,6 +3863,23 @@ function startMidnightCheck(){
 // ═══════════════════════════════════════
 // SVG FUNCTIONS
 // ═══════════════════════════════════════
+function getGoldenOrcaSvg(s){
+  return'<svg viewBox="0 0 100 100" style="width:'+s+'px;height:'+s+'px;animation:float 3s ease-in-out infinite;filter:drop-shadow(0 3px 12px rgba(255,213,79,.8))">'
+    +'<ellipse cx="50" cy="55" rx="35" ry="22" fill="#b8860b"/>'
+    +'<ellipse cx="50" cy="62" rx="22" ry="14" fill="#ffd700"/>'
+    +'<ellipse cx="68" cy="48" rx="9" ry="7" fill="#ffd700"/>'
+    +'<circle cx="70" cy="48" r="3" fill="#b8860b"/>'
+    +'<circle cx="71" cy="47" r="1" fill="#fff8dc"/>'
+    +'<path d="M50,33 L58,48 L42,48 Z" fill="#b8860b"/>'
+    +'<path d="M18,55 Q10,45 6,50 Q10,58 18,60 Z" fill="#b8860b"/>'
+    +'<path d="M18,55 Q10,62 6,58 Q10,50 18,53 Z" fill="#b8860b"/>'
+    +'<path d="M38,62 Q28,72 24,68 Q30,60 38,60 Z" fill="#b8860b"/>'
+    +'<path d="M55,60 Q60,63 65,60" stroke="#ffd700" stroke-width="1.5" fill="none" stroke-linecap="round"/>'
+    +'<circle cx="20" cy="30" r="3" fill="rgba(255,213,79,.6)" style="animation:pulse 2s ease-in-out infinite"/>'
+    +'<circle cx="75" cy="25" r="2" fill="rgba(255,213,79,.5)" style="animation:pulse 2.5s ease-in-out infinite"/>'
+    +'<circle cx="45" cy="20" r="2.5" fill="rgba(255,213,79,.7)" style="animation:pulse 1.8s ease-in-out infinite"/>'
+    +'</svg>';
+}
 function getOrcaSvg(s){
   return'<svg viewBox="0 0 100 100" style="width:'+s+'px;height:'+s+'px;animation:float 3s ease-in-out infinite;filter:drop-shadow(0 3px 6px rgba(0,0,0,.3))">'
     +'<ellipse cx="50" cy="55" rx="35" ry="22" fill="#1a1a2e"/>'
@@ -3808,6 +3998,8 @@ function confetti(){
 window.setReminderEmoji=setReminderEmoji;
 window.giveStars=giveStars;
 window.renderChallengesTab=renderChallengesTab;
+window.toggleGoldenSplash=toggleGoldenSplash;
+window.renderAbyss=renderAbyss;
 window.renderMidnightZone=renderMidnightZone;
 window.quickGiveStars=quickGiveStars;
 window.saveAnthropicKey=saveAnthropicKey;
