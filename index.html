@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.0.18">
+<meta name="version" content="3.0.21">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.0.18';
+  var v='3.0.21';
   if(window.location.href.indexOf('v=')===-1){
     window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
   }
@@ -3726,48 +3726,6 @@ function renderMidnightZone(){
 
   el.innerHTML=html;
 }
-
-  var html=
-    // Header
-    '<div style="text-align:center;padding:16px 0 8px">'+
-      '<div style="font-size:3rem;margin-bottom:6px;animation:float 3s ease-in-out infinite">🌑</div>'+
-      '<div style="font-family:\'Fredoka One\',cursive;font-size:1.3rem;color:#29b6f6;margin-bottom:2px">The Midnight Zone</div>'+
-      '<div style="font-size:.7rem;color:#7b9ab0;margin-bottom:4px">200 - 1,000 meters deep · Where orcas hunt in darkness</div>'+
-      '<div style="font-size:.65rem;color:#4a90a0;font-weight:700">'+unlockedCount+' / '+creatures.length+' creatures discovered</div>'+
-    '</div>'+
-
-    // Depth tracker
-    '<div style="background:rgba(0,5,16,.7);border:1.5px solid rgba(41,182,246,.2);border-radius:18px;padding:14px;margin-bottom:10px">'+
-      '<div style="font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#29b6f6;margin-bottom:10px">📏 How Deep Is That?</div>'+
-      // Visual depth bars
-      [
-        {label:'🏊 Olympic Pool',    depth:2,    color:'#81d4fa',pct:0.2},
-        {label:'🗽 Statue of Liberty',depth:93,  color:'#4fc3f7',pct:9},
-        {label:'🌑 Midnight Zone starts',depth:200,color:'#29b6f6',pct:20},
-        {label:'✈️ Airplane flies UP',  depth:10668,color:'#0288d1',pct:100},
-        {label:'🌑 Midnight Zone ends', depth:1000, color:'#0077b6',pct:100},
-        {label:'🏔️ Everest (flipped!)', depth:8849, color:'#01579b',pct:100},
-      ].map(function(d){
-        var barPct=Math.min(100,Math.round(d.depth/10));
-        return'<div style="margin-bottom:8px">'+
-          '<div style="display:flex;justify-content:space-between;font-size:.65rem;color:#7b9ab0;margin-bottom:3px">'+
-            '<span>'+d.label+'</span>'+
-            '<span style="color:#29b6f6;font-weight:800">'+d.depth.toLocaleString()+'m</span>'+
-          '</div>'+
-          '<div style="height:5px;background:rgba(41,182,246,.1);border-radius:99px;overflow:hidden">'+
-            '<div style="height:100%;width:'+barPct+'%;background:'+d.color+';border-radius:99px;max-width:100%"></div>'+
-          '</div>'+
-          '</div>';
-      }).join('')+
-      '<div style="font-size:.65rem;color:#546e7a;margin-top:6px;font-style:italic">💡 If you flipped Mount Everest upside down and sank it, the peak would still be inside the Midnight Zone!</div>'+
-    '</div>'+
-
-    // Daily fact
-    '<div style="background:rgba(41,182,246,.08);border:1.5px solid rgba(41,182,246,.2);border-radius:18px;padding:13px;margin-bottom:10px">'+
-      '<div style="font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#29b6f6;margin-bottom:5px">🔬 Today\'s Midnight Zone Fact</div>'+
-      '<div style="font-size:.85rem;color:#e8f4fd;font-weight:700;line-height:1.5;margin-bottom:5px">'+fact.text+'</div>'+
-      '<div style="font-size:.65rem;color:#29b6f6">'+fact.s+'</div>'+
-    '</div>'+
 
 // ═══════════════════════════════════════
 // THE ABYSS TAB
