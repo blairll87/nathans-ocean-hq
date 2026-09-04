@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.0.12">
+<meta name="version" content="3.0.14">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.0.12';
+  var v='3.0.14';
   if(window.location.href.indexOf('v=')===-1){
     window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
   }
@@ -1271,7 +1271,7 @@ const PROGRESS_KEYS = [
   'readingLog','readingGoalEng','readingGoalEsp','readingMins',
   'dictionary','jijiSessions','jijiPct','jijiPctDate',
   'oceanFactsLearned','oceanFactToday','factIndexToday',
-  'overrideReminders','emailSettings','weeklyStarGoal','weekStart','weeklyStarsEarned','challengesCompleted','challengeBaselines','challengesPopupSeen','pendingPetUnlock','unlockedLegendaryFoods','midnightZoneUnlocked','goldenSplashUnlocked','goldenSplashActive','abyssUnlocked',
+  'overrideReminders','emailSettings','weeklyStarGoal','weekStart','weeklyStarsEarned','challengesCompleted','challengeBaselines','challengesPopupSeen','pendingPetUnlock','unlockedLegendaryFoods','midnightZoneUnlocked','goldenSplashUnlocked','goldenSplashActive','abyssUnlocked','midnightCreaturesUnlocked',
   'pin','adminUnlocked','lastEmailDate',
   'summerProgress','choreDone','spanishTasks','spanishState',
   'spanishArchive','summerBooks','summerReadingGoal','orcalusWelcomed'
@@ -2550,6 +2550,8 @@ function feedSplashFood(foodId){
   }
   if(!S.foodCounts)S.foodCounts={};
   S.foodCounts[food.id]=(S.foodCounts[food.id]||0)+1;
+  // Unlock Midnight Zone creature if applicable
+  unlockMidnightCreature(food.id);
   save();updateStars();
   if(_activePetIndex===0)renderPetCard();
   renderHuntingJournal();
@@ -3456,29 +3458,157 @@ function renderChallengesTab(){
 // ═══════════════════════════════════════
 // MIDNIGHT ZONE TAB
 // ═══════════════════════════════════════
+// Midnight Zone creature data
+var MIDNIGHT_CREATURES=[
+  // Pre-populated
+  {id:'giant_squid',  emoji:'🦑', name:'Giant Squid',       depth:'200-1000m', unlocked:true,
+   bio:'Up to 43 feet long with eyes the size of dinner plates! Lives in total darkness and is one of orcas\' favorite prey.',
+   fact:'Their huge eyes evolved to spot the faint bioluminescent glow of predators in the dark!',
+   threat:'⚡⚡⚡', feedItem:null},
+  {id:'lanternfish',  emoji:'🐟', name:'Lanternfish',        depth:'200-1000m', unlocked:true,
+   bio:'The most common fish in the Midnight Zone — they migrate UP at night to feed at the surface, then dive back down at dawn.',
+   fact:'There are so many lanternfish they show up on sonar as a "phantom seafloor"!',
+   threat:'⚡', feedItem:null},
+  {id:'anglerfish',   emoji:'🎣', name:'Anglerfish',         depth:'200-4000m', unlocked:true,
+   bio:'Dangles a glowing lure from its head to attract prey in total darkness. The light comes from bacteria living inside the lure!',
+   fact:'Female anglerfish are huge — males are tiny and permanently fuse to the female\'s body!',
+   threat:'⚡⚡⚡', feedItem:null},
+  // Unlock by feeding Splash
+  {id:'deep_shark',   emoji:'🦈', name:'Deep Sea Shark',     depth:'200-1000m', unlocked:false,
+   bio:'Several shark species hunt in the Midnight Zone including the goblin shark, which has a jaw that shoots forward to catch prey!',
+   fact:'The goblin shark has barely changed in 125 million years — it\'s a living fossil!',
+   threat:'⚡⚡⚡⚡', feedItem:'f8', feedEmoji:'🦈', feedName:'Shark'},
+  {id:'emp_penguin',  emoji:'🐧', name:'Emperor Penguin',    depth:'200-500m',  unlocked:false,
+   bio:'Emperor penguins dive up to 1,850 feet into the Midnight Zone to hunt fish and squid — holding their breath for 22 minutes!',
+   fact:'Their bones are denser than most birds so they can sink faster and dive deeper!',
+   threat:'⚡⚡', feedItem:'f5', feedEmoji:'🐧', feedName:'Penguin'},
+  {id:'weddell_seal', emoji:'🦦', name:'Weddell Seal',       depth:'200-600m',  unlocked:false,
+   bio:'Weddell seals dive up to 2,000 feet into the Midnight Zone and can hold their breath for 80 minutes — longer than almost any mammal!',
+   fact:'They echolocate like dolphins to navigate under Antarctic ice in complete darkness!',
+   threat:'⚡⚡', feedItem:'f3', feedEmoji:'🦦', feedName:'Seal'},
+  {id:'sea_lion',     emoji:'🦭', name:'California Sea Lion', depth:'200-900m', unlocked:false,
+   bio:'California sea lions regularly dive into the Midnight Zone to hunt squid at night, sometimes making over 50 dives in a single night!',
+   fact:'They can sleep underwater by "logging" at the surface between dives!',
+   threat:'⚡⚡', feedItem:'f4', feedEmoji:'🦭', feedName:'Sea Lion'},
+  {id:'dolphin_deep', emoji:'🐬', name:'Bottlenose Dolphin',  depth:'200-500m', unlocked:false,
+   bio:'Bottlenose dolphins make surprisingly deep dives into the Midnight Zone, using echolocation clicks to hunt in complete darkness.',
+   fact:'Dolphins can make up to 1,000 clicks per second — their echolocation is more precise than any human technology!',
+   threat:'⚡⚡⚡', feedItem:'f7', feedEmoji:'🐬', feedName:'Dolphin'},
+  {id:'sperm_whale',  emoji:'🐳', name:'Sperm Whale',         depth:'200-3000m', unlocked:false,
+   bio:'Sperm whales make the deepest dives of any toothed whale — 3 kilometers into the darkness — to battle giant squid. They hold their breath for 90 minutes!',
+   fact:'Their clicks are so loud they can stun or even kill prey — the loudest sound produced by any animal!',
+   threat:'⚡⚡⚡⚡⚡', feedItem:'f9', feedEmoji:'🐋', feedName:'Baby Whale'},
+];
+
+function getMidnightCreatureUnlocks(){
+  var unlocked=S.midnightCreaturesUnlocked||[];
+  return MIDNIGHT_CREATURES.map(function(c){
+    return Object.assign({},c,{unlocked:c.unlocked||unlocked.includes(c.id)});
+  });
+}
+
+function unlockMidnightCreature(foodId){
+  var creature=MIDNIGHT_CREATURES.find(function(c){return c.feedItem===foodId;});
+  if(!creature||creature.unlocked)return;
+  var unlocked=S.midnightCreaturesUnlocked||[];
+  if(unlocked.includes(creature.id))return;
+  unlocked.push(creature.id);
+  S.midnightCreaturesUnlocked=unlocked;
+  save();
+  setTimeout(function(){
+    showToast('🌑 New Midnight Zone creature discovered! Check the Midnight Zone! '+creature.emoji);
+    confetti();confetti();
+  },500);
+}
+
 function renderMidnightZone(){
   var el=document.getElementById('panel-midnight');if(!el)return;
   var factIdx=new Date().getDate()%MIDNIGHT_ZONE_FACTS.length;
   var fact=MIDNIGHT_ZONE_FACTS[factIdx];
-  el.innerHTML=
-    '<div style="text-align:center;padding:20px 0 10px">'+
-      '<div style="font-size:3rem;margin-bottom:8px;animation:float 3s ease-in-out infinite">🌑</div>'+
-      '<div style="font-family:\'Fredoka One\',cursive;font-size:1.3rem;color:#29b6f6;margin-bottom:4px">The Midnight Zone</div>'+
-      '<div style="font-size:.72rem;color:#7b9ab0;margin-bottom:16px">200 - 1,000 meters deep · Where orcas hunt in darkness</div>'+
+  var creatures=getMidnightCreatureUnlocks();
+  var unlockedCount=creatures.filter(function(c){return c.unlocked;}).length;
+
+  var html=
+    // Header
+    '<div style="text-align:center;padding:16px 0 8px">'+
+      '<div style="font-size:3rem;margin-bottom:6px;animation:float 3s ease-in-out infinite">🌑</div>'+
+      '<div style="font-family:\'Fredoka One\',cursive;font-size:1.3rem;color:#29b6f6;margin-bottom:2px">The Midnight Zone</div>'+
+      '<div style="font-size:.7rem;color:#7b9ab0;margin-bottom:4px">200 - 1,000 meters deep · Where orcas hunt in darkness</div>'+
+      '<div style="font-size:.65rem;color:#4a90a0;font-weight:700">'+unlockedCount+' / '+creatures.length+' creatures discovered</div>'+
     '</div>'+
-    '<div style="background:rgba(41,182,246,.08);border:1.5px solid rgba(41,182,246,.2);border-radius:18px;padding:14px;margin-bottom:10px">'+
-      '<div style="font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#29b6f6;margin-bottom:5px">🔬 Midnight Zone Fact</div>'+
-      '<div style="font-size:.88rem;color:#e8f4fd;font-weight:700;line-height:1.5;margin-bottom:6px">'+fact.text+'</div>'+
-      '<div style="font-size:.68rem;color:#29b6f6">'+fact.s+'</div>'+
+
+    // Depth tracker
+    '<div style="background:rgba(0,5,16,.7);border:1.5px solid rgba(41,182,246,.2);border-radius:18px;padding:14px;margin-bottom:10px">'+
+      '<div style="font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#29b6f6;margin-bottom:10px">📏 How Deep Is That?</div>'+
+      // Visual depth bars
+      [
+        {label:'🏊 Olympic Pool',    depth:2,    color:'#81d4fa',pct:0.2},
+        {label:'🗽 Statue of Liberty',depth:93,  color:'#4fc3f7',pct:9},
+        {label:'🌑 Midnight Zone starts',depth:200,color:'#29b6f6',pct:20},
+        {label:'✈️ Airplane flies UP',  depth:10668,color:'#0288d1',pct:100},
+        {label:'🌑 Midnight Zone ends', depth:1000, color:'#0077b6',pct:100},
+        {label:'🏔️ Everest (flipped!)', depth:8849, color:'#01579b',pct:100},
+      ].map(function(d){
+        var barPct=Math.min(100,Math.round(d.depth/10));
+        return'<div style="margin-bottom:8px">'+
+          '<div style="display:flex;justify-content:space-between;font-size:.65rem;color:#7b9ab0;margin-bottom:3px">'+
+            '<span>'+d.label+'</span>'+
+            '<span style="color:#29b6f6;font-weight:800">'+d.depth.toLocaleString()+'m</span>'+
+          '</div>'+
+          '<div style="height:5px;background:rgba(41,182,246,.1);border-radius:99px;overflow:hidden">'+
+            '<div style="height:100%;width:'+barPct+'%;background:'+d.color+';border-radius:99px;max-width:100%"></div>'+
+          '</div>'+
+          '</div>';
+      }).join('')+
+      '<div style="font-size:.65rem;color:#546e7a;margin-top:6px;font-style:italic">💡 If you flipped Mount Everest upside down and sank it, the peak would still be inside the Midnight Zone!</div>'+
     '</div>'+
-    '<div class="slabel">🌑 About the Midnight Zone</div>'+
-    MIDNIGHT_ZONE_FACTS.map(function(f){
-      return'<div style="background:rgba(0,5,16,.6);border:1px solid rgba(41,182,246,.15);border-radius:14px;padding:10px 12px;margin-bottom:8px">'+
-        '<div style="font-size:.78rem;color:#e8f4fd;line-height:1.5;margin-bottom:4px">'+f.text+'</div>'+
-        '<div style="font-size:.65rem;color:#29b6f6">'+f.s+'</div>'+
-        '</div>';
-    }).join('');
+
+    // Daily fact
+    '<div style="background:rgba(41,182,246,.08);border:1.5px solid rgba(41,182,246,.2);border-radius:18px;padding:13px;margin-bottom:10px">'+
+      '<div style="font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#29b6f6;margin-bottom:5px">🔬 Today\'s Midnight Zone Fact</div>'+
+      '<div style="font-size:.85rem;color:#e8f4fd;font-weight:700;line-height:1.5;margin-bottom:5px">'+fact.text+'</div>'+
+      '<div style="font-size:.65rem;color:#29b6f6">'+fact.s+'</div>'+
+    '</div>'+
+
+    // Creature field guide
+    '<div style="font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#7b9ab0;margin:14px 0 8px">🌑 Creature Field Guide</div>'+
+    '<div style="font-size:.7rem;color:#4a90a0;margin-bottom:10px;font-style:italic">Feed Splash different prey to discover hidden creatures!</div>'+
+
+    creatures.map(function(c){
+      if(c.unlocked){
+        return'<div style="background:rgba(0,10,30,.7);border:1.5px solid rgba(41,182,246,.2);border-radius:16px;padding:12px;margin-bottom:8px">'+
+          '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">'+
+            '<div style="font-size:2rem">'+c.emoji+'</div>'+
+            '<div>'+
+              '<div style="font-family:\'Fredoka One\',cursive;font-size:.9rem;color:#29b6f6">'+c.name+'</div>'+
+              '<div style="font-size:.62rem;color:#7b9ab0">📍 '+c.depth+' · Threat: '+c.threat+'</div>'+
+            '</div>'+
+          '</div>'+
+          '<div style="font-size:.75rem;color:#b0d4e8;line-height:1.5;margin-bottom:6px">'+c.bio+'</div>'+
+          '<div style="background:rgba(41,182,246,.06);border-radius:10px;padding:8px;font-size:.7rem;color:#7b9ab0;font-style:italic">💡 '+c.fact+'</div>'+
+          '</div>';
+      } else {
+        return'<div style="background:rgba(0,5,16,.5);border:1.5px dashed rgba(41,182,246,.15);border-radius:16px;padding:12px;margin-bottom:8px;opacity:.7">'+
+          '<div style="display:flex;align-items:center;gap:10px">'+
+            '<div style="font-size:2rem;filter:brightness(0)">'+c.emoji+'</div>'+
+            '<div>'+
+              '<div style="font-family:\'Fredoka One\',cursive;font-size:.9rem;color:#2d4a5a">??? Unknown Creature</div>'+
+              '<div style="font-size:.65rem;color:#2d4a5a;margin-top:3px">Feed Splash a '+c.feedEmoji+' '+c.feedName+' to discover this creature...</div>'+
+            '</div>'+
+            '<div style="margin-left:auto;font-size:1rem">🔒</div>'+
+          '</div>'+
+          '</div>';
+      }
+    }).join('')+
+
+    // Hunt log discovery hint
+    '<div style="background:rgba(41,182,246,.05);border:1px solid rgba(41,182,246,.15);border-radius:14px;padding:10px 12px;margin-top:4px;text-align:center">'+
+      '<div style="font-size:.75rem;color:#4a90a0">🔍 Go to the Pod tab and feed Splash different prey to unlock more creatures!</div>'+
+    '</div>';
+
+  el.innerHTML=html;
 }
+
 
 // Check for pending pet unlocks
 // ═══════════════════════════════════════
@@ -3500,7 +3630,7 @@ function renderAbyss(){
       '<div style="font-size:.68rem;color:#64b5f6">'+fact.s+'</div>'+
     '</div>'+
     '<div style="font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#546e7a;margin:14px 0 8px">🌑 Life in the Abyss</div>'+
-    ABYSS_FACTS.map(function(f){
+    ABYSS_FACTS.filter(function(f,i){return i!==factIdx;}).map(function(f){
       return'<div style="background:rgba(0,2,8,.8);border:1px solid rgba(100,181,246,.1);border-radius:14px;padding:10px 12px;margin-bottom:8px">'+
         '<div style="font-size:.78rem;color:#cfd8dc;line-height:1.5;margin-bottom:4px">'+f.text+'</div>'+
         '<div style="font-size:.65rem;color:#64b5f6">'+f.s+'</div>'+
