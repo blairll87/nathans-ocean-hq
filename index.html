@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.0.25">
+<meta name="version" content="3.0.26">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.0.25';
+  var v='3.0.26';
   if(window.location.href.indexOf('v=')===-1){
     window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
   }
@@ -1288,12 +1288,18 @@ body.theme-night {
       <div class="admin-panel" id="ap-extrapractice">
         <div class="admin-section">
           <div class="admin-section-title">Extra Practice Tasks</div>
-          <div style="font-size:.72rem;color:var(--dim);margin-bottom:10px">Edit star values, delete tasks, or add new ones. Nathan can tap each task up to 5 times per day.</div>
+          <div style="font-size:.72rem;color:var(--dim);margin-bottom:10px">Use ↑↓ to reorder. Tap an emoji to set it. Nathan can tap each task up to 5 times per day.</div>
           <div id="adminEPList"></div>
           <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px">
             <div class="admin-section-title">Add New Task</div>
-            <input class="admin-input" type="text" id="epNewEmoji" placeholder="Emoji (e.g. 📖)" style="width:80px;display:inline-block;margin-right:6px">
-            <input class="admin-input" type="text" id="epNewName" placeholder="Task name" style="width:calc(100% - 92px);display:inline-block">
+            <div style="font-size:.7rem;color:var(--dim);margin-bottom:6px">Pick an emoji:</div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px">
+              ${['📝','📖','📚','🎧','📰','🗣️','🎵','✍️','📱','🎨','🔢','🧠','🌍','🎯','📐','🖊️','📓','🔤','💬','🗺️','🎤','📺','🎮','⭐','🏅','💡','🔬','🧩'].map(e=>
+                `<button onclick="setEPNewEmoji('${e}')" style="font-size:1.3rem;background:rgba(128,128,128,.08);border:1px solid var(--border);border-radius:8px;padding:4px 7px;cursor:pointer">${e}</button>`
+              ).join('')}
+            </div>
+            <input class="admin-input" type="text" id="epNewEmoji" placeholder="Selected emoji" style="width:80px;display:inline-block;margin-right:6px;text-align:center" readonly>
+            <input class="admin-input" type="text" id="epNewName" placeholder="Task name" style="width:calc(100% - 96px);display:inline-block">
             <input class="admin-input" type="number" id="epNewStars" placeholder="Stars (e.g. 3)" min="1" max="20">
             <button class="admin-btn" onclick="addEPTask()">+ Add Task</button>
           </div>
@@ -4115,21 +4121,49 @@ function tapEPTask(id){
   showToast(task.emoji+' +'+task.stars+' ⭐ Show Mom or Dad to check your work!');
 }
 
-// Admin EP functions
+var EP_EMOJIS=['📝','📖','📚','🎧','📰','🗣️','🎵','✍️','📱','🎨','🔢','🧠','🌍','🎯','📐','🖊️','📓','🔤','💬','🗺️','🎤','📺','🎮','⭐','🏅','💡','🔬','🧩'];
+
 function renderAdminEP(){
   var el=document.getElementById('adminEPList');if(!el)return;
   var tasks=getEPTasks();
   el.innerHTML=tasks.map(function(t,i){
-    return'<div style="display:flex;gap:6px;margin-bottom:8px;align-items:center">'
-      +'<input class="admin-input" style="width:52px;margin:0;text-align:center" value="'+t.emoji+'" onchange="updateEPEmoji('+i+',this.value)">'
+    var btnStyle='font-size:1.1rem;background:rgba(128,128,128,.08);border:1px solid var(--border);border-radius:6px;padding:3px 5px;cursor:pointer';
+    return'<div style="background:rgba(128,128,128,.04);border-radius:12px;padding:10px;margin-bottom:8px">'
+      // Row 1: reorder + emoji display + name + stars + delete
+      +'<div style="display:flex;gap:5px;align-items:center;margin-bottom:6px">'
+      +'<div style="display:flex;flex-direction:column;gap:2px">'
+      +(i>0?'<button onclick="moveEPTask('+i+',-1)" style="background:rgba(128,128,128,.1);border:none;border-radius:5px;padding:1px 6px;cursor:pointer;font-size:.75rem">↑</button>':'<div style="height:20px"></div>')
+      +(i<tasks.length-1?'<button onclick="moveEPTask('+i+',1)" style="background:rgba(128,128,128,.1);border:none;border-radius:5px;padding:1px 6px;cursor:pointer;font-size:.75rem">↓</button>':'<div style="height:20px"></div>')
+      +'</div>'
+      +'<div style="font-size:1.4rem;width:32px;text-align:center" id="epEmojiDisplay_'+i+'">'+t.emoji+'</div>'
       +'<input class="admin-input" style="flex:1;margin:0" value="'+t.name+'" onchange="updateEPName('+i+',this.value)">'
-      +'<input class="admin-input" style="width:54px;margin:0;text-align:center" type="number" value="'+t.stars+'" onchange="updateEPStars('+i+',this.value)">'
-      +'<button onclick="deleteEPTask('+i+')" style="background:rgba(239,68,68,.1);border:none;border-radius:8px;padding:6px 10px;cursor:pointer;color:#ef4444;font-size:.8rem;flex-shrink:0">✕</button>'
+      +'<input class="admin-input" style="width:52px;margin:0;text-align:center" type="number" value="'+t.stars+'" onchange="updateEPStars('+i+',this.value)">'
+      +'<button onclick="deleteEPTask('+i+')" style="background:rgba(239,68,68,.1);border:none;border-radius:8px;padding:6px 9px;cursor:pointer;color:#ef4444;font-size:.8rem;flex-shrink:0">✕</button>'
+      +'</div>'
+      // Row 2: emoji picker
+      +'<div style="display:flex;flex-wrap:wrap;gap:4px">'
+      +EP_EMOJIS.map(function(e){
+        return'<button onclick="updateEPEmoji('+i+',\''+e+'\')" style="'+btnStyle+'">'+e+'</button>';
+      }).join('')
+      +'</div>'
       +'</div>';
   }).join('');
 }
+
+function moveEPTask(i,dir){
+  initEPTasks();
+  var j=i+dir;
+  if(j<0||j>=S.epTasks.length)return;
+  var tmp=S.epTasks[i];S.epTasks[i]=S.epTasks[j];S.epTasks[j]=tmp;
+  save();renderAdminEP();renderExtraPractice();
+}
+function setEPNewEmoji(e){var inp=document.getElementById('epNewEmoji');if(inp)inp.value=e;}
 function initEPTasks(){if(!S.epTasks||!S.epTasks.length)S.epTasks=JSON.parse(JSON.stringify(DEFAULT_EP_TASKS));}
-function updateEPEmoji(i,v){initEPTasks();S.epTasks[i].emoji=v;save();}
+function updateEPEmoji(i,v){
+  initEPTasks();S.epTasks[i].emoji=v;save();
+  var disp=document.getElementById('epEmojiDisplay_'+i);if(disp)disp.textContent=v;
+  renderExtraPractice();
+}
 function updateEPName(i,v){initEPTasks();S.epTasks[i].name=v;save();renderExtraPractice();}
 function updateEPStars(i,v){initEPTasks();S.epTasks[i].stars=parseInt(v)||1;save();}
 function deleteEPTask(i){initEPTasks();S.epTasks.splice(i,1);save();renderAdminEP();renderExtraPractice();}
@@ -4532,9 +4566,11 @@ window.deleteReminder=deleteReminder;
 window.tapEPTask=tapEPTask;
 window.addEPTask=addEPTask;
 window.deleteEPTask=deleteEPTask;
+window.moveEPTask=moveEPTask;
 window.updateEPEmoji=updateEPEmoji;
 window.updateEPName=updateEPName;
 window.updateEPStars=updateEPStars;
+window.setEPNewEmoji=setEPNewEmoji;
 window.addReward=addReward;
 window.deleteReward=deleteReward;
 window.updateRewardName=updateRewardName;
