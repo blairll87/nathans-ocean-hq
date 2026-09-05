@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.0.23">
+<meta name="version" content="3.0.24">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.0.23';
+  var v='3.0.24';
   if(window.location.href.indexOf('v=')===-1){
     window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
   }
@@ -2047,6 +2047,23 @@ function renderTimeContent(){
 
 function renderMorningContent(el){
   var today=new Date().toDateString();
+  var dow=new Date().getDay();
+  var todayKey=getDateKey(new Date());
+  var noSchool=dow===0||dow===6||!!NO_SCHOOL_DAYS[todayKey];
+
+  // Weekend / no-school morning — skip checklist
+  if(noSchool){
+    var msg=NO_SCHOOL_DAYS[todayKey];
+    var html=renderMoodCard();
+    html+='<div style="background:rgba(255,213,79,.1);border:1.5px solid rgba(255,213,79,.3);border-radius:16px;padding:16px;text-align:center;margin-bottom:10px">'
+      +'<div style="font-size:2.5rem;margin-bottom:6px">'+(msg?msg.emoji:'🌊')+'</div>'
+      +'<div style="font-family:\'Fredoka One\',cursive;font-size:1rem;color:var(--gold)">'+(msg?msg.msg:'No school today — enjoy your morning!')+'</div>'
+      +'<div style="font-size:.75rem;color:var(--dim);margin-top:8px">Scroll down for bonus star tasks ⭐</div>'
+      +'</div>';
+    el.innerHTML=html;
+    return;
+  }
+
   if(!S.morningDone)S.morningDone={};
   var doneCount=MORNING_TASKS.filter(function(t){return S.morningDone[t.id+'_'+today];}).length;
   var pct=Math.round(doneCount/MORNING_TASKS.length*100);
