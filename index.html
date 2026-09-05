@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.0.24">
+<meta name="version" content="3.0.25">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.0.24';
+  var v='3.0.25';
   if(window.location.href.indexOf('v=')===-1){
     window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
   }
@@ -1224,8 +1224,22 @@ body.theme-night {
       <div class="admin-panel" id="ap-rewards">
         <div class="admin-section">
           <div class="admin-section-title">Reward Shop</div>
+          <div style="font-size:.72rem;color:var(--dim);margin-bottom:10px">Edit emoji, name, and star cost for each reward.</div>
           <div id="adminRewardList"></div>
-          <button class="admin-btn" onclick="addReward()">+ Add Reward</button>
+          <div style="border-top:1px solid var(--border);padding-top:12px;margin-top:4px">
+            <div class="admin-section-title">Add New Reward</div>
+            <div style="display:flex;gap:6px;margin-bottom:6px">
+              <input class="admin-input" type="text" id="newRewardEmoji" placeholder="Emoji" style="width:64px;margin:0;text-align:center">
+              <input class="admin-input" type="text" id="newRewardName" placeholder="Reward name" style="flex:1;margin:0">
+              <input class="admin-input" type="number" id="newRewardCost" placeholder="⭐" style="width:60px;margin:0" min="1">
+            </div>
+            <div id="rewardEmojiPicker" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+              ${['🎮','🎯','🎬','🍕','🍦','🧁','🍫','🎲','🎳','🏊','🎨','✏️','📚','🎤','🎧','🛹','🚴','🏖️','🎡','🎠','🧸','🪀','🎁','🛍️','💎','⭐','🌟','🏆'].map(e=>
+                `<button onclick="setNewRewardEmoji('${e}')" style="background:rgba(128,128,128,.08);border:none;border-radius:8px;padding:5px 7px;cursor:pointer;font-size:1.1rem">${e}</button>`
+              ).join('')}
+            </div>
+            <button class="admin-btn" onclick="addReward()">+ Add Reward</button>
+          </div>
         </div>
       </div>
 
@@ -4157,21 +4171,40 @@ function renderAdminRewards(){
   var el=document.getElementById('adminRewardList');if(!el)return;
   var rewards=S.rewards||DEFAULT_REWARDS;
   el.innerHTML=rewards.map(function(r,i){
-    return'<div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">'
+    return'<div style="margin-bottom:10px">'
+      +'<div style="display:flex;gap:6px;margin-bottom:4px;align-items:center">'
+      +'<input class="admin-input" style="width:52px;margin:0;text-align:center" value="'+(r.icon||'🎁')+'" id="rewardIcon_'+i+'" onchange="updateRewardIcon('+i+',this.value)">'
       +'<input class="admin-input" style="flex:1;margin:0" value="'+r.name+'" onchange="updateRewardName('+i+',this.value)">'
       +'<input class="admin-input" style="width:60px;margin:0" type="number" value="'+r.cost+'" onchange="updateRewardCost('+i+',this.value)">'
-      +'<button onclick="deleteReward('+i+')" style="background:rgba(239,68,68,.1);border:none;border-radius:8px;padding:6px 10px;cursor:pointer;color:#ef4444;font-size:.8rem">✕</button>'
+      +'<button onclick="deleteReward('+i+')" style="background:rgba(239,68,68,.1);border:none;border-radius:8px;padding:6px 10px;cursor:pointer;color:#ef4444;font-size:.8rem;flex-shrink:0">✕</button>'
+      +'</div>'
+      +'<div style="display:flex;flex-wrap:wrap;gap:4px;padding-left:2px">'
+      +['🎮','🎯','🎬','🍕','🍦','🧁','🍫','🎲','🎳','🏊','🎨','✏️','📚','🎤','🎧','🛹','🚴','🏖️','🎡','🎠','🧸','🪀','🎁','🛍️','💎','⭐','🌟','🏆'].map(function(e){
+        return'<button onclick="updateRewardIcon('+i+',\''+e+'\')" style="background:rgba(128,128,128,.08);border:none;border-radius:6px;padding:3px 5px;cursor:pointer;font-size:.95rem">'+e+'</button>';
+      }).join('')
+      +'</div>'
       +'</div>';
   }).join('');
 }
 
+function updateRewardIcon(i,v){var r=S.rewards||JSON.parse(JSON.stringify(DEFAULT_REWARDS));if(r[i])r[i].icon=v;S.rewards=r;save();
+  var inp=document.getElementById('rewardIcon_'+i);if(inp)inp.value=v;
+  renderRewards();}
 function updateRewardName(i,v){var r=S.rewards||DEFAULT_REWARDS;if(r[i])r[i].name=v;S.rewards=r;save();}
 function updateRewardCost(i,v){var r=S.rewards||DEFAULT_REWARDS;if(r[i])r[i].cost=parseInt(v)||0;S.rewards=r;save();}
 function deleteReward(i){if(!S.rewards)S.rewards=JSON.parse(JSON.stringify(DEFAULT_REWARDS));S.rewards.splice(i,1);save();renderAdminRewards();renderRewards();}
+function setNewRewardEmoji(e){var inp=document.getElementById('newRewardEmoji');if(inp)inp.value=e;}
 function addReward(){
   if(!S.rewards)S.rewards=JSON.parse(JSON.stringify(DEFAULT_REWARDS));
-  S.rewards.push({id:'r_'+Date.now(),icon:'🎁',name:'New Reward',cost:20,desc:'A special reward!'});
+  var emoji=document.getElementById('newRewardEmoji')&&document.getElementById('newRewardEmoji').value.trim()||'🎁';
+  var name=document.getElementById('newRewardName')&&document.getElementById('newRewardName').value.trim()||'New Reward';
+  var cost=parseInt(document.getElementById('newRewardCost')&&document.getElementById('newRewardCost').value)||20;
+  S.rewards.push({id:'r_'+Date.now(),icon:emoji,name:name,cost:cost,desc:'A special reward!'});
   save();renderAdminRewards();renderRewards();
+  document.getElementById('newRewardEmoji').value='';
+  document.getElementById('newRewardName').value='';
+  document.getElementById('newRewardCost').value='';
+  showToast('Reward added!');
 }
 
 // Admin pets
@@ -4503,6 +4536,11 @@ window.updateEPEmoji=updateEPEmoji;
 window.updateEPName=updateEPName;
 window.updateEPStars=updateEPStars;
 window.addReward=addReward;
+window.deleteReward=deleteReward;
+window.updateRewardName=updateRewardName;
+window.updateRewardCost=updateRewardCost;
+window.updateRewardIcon=updateRewardIcon;
+window.setNewRewardEmoji=setNewRewardEmoji;
 window.updateRewardName=updateRewardName;
 window.updateRewardCost=updateRewardCost;
 window.deleteReward=deleteReward;
