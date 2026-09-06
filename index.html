@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.0.26">
+<meta name="version" content="3.0.27">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.0.26';
+  var v='3.0.27';
   if(window.location.href.indexOf('v=')===-1){
     window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
   }
@@ -2785,7 +2785,7 @@ async function submitReadingLog(){
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:200,
+        model:'claude-sonnet-4-6',max_tokens:200,
         system:'You are Splash, a friendly orca who is Nathan\'s best friend. Nathan is 10 and working on summarizing skills — giving the main idea concisely without rambling. Rate his summary 1-3 (1=needs work on conciseness, 2=pretty good, 3=excellent). His self-rating: main idea='+((_readingFormState.selfEval[1])?'yes':'no')+', kept it short='+((_readingFormState.selfEval[2])?'yes':'no')+', understandable='+((_readingFormState.selfEval[3])?'yes':'no')+'. Respond ONLY as JSON with no markdown: {"stars":1-3,"feedback":"one encouraging sentence from Splash in first person, mention his name"}',
         messages:[{role:'user',content:'Book: '+_readingFormState.title+'\nSummary: '+_readingFormState.summaryText}]
       })
@@ -2877,12 +2877,15 @@ async function lookupWord(){
   if(resultEl){resultEl.style.display='block';resultEl.innerHTML='<div style="font-size:.78rem;color:var(--dim);padding:8px">Looking up "'+word+'"...</div>';}
   try{
     var apiKey=getAnthropicKey();
-    if(!apiKey){aiStars=1;feedbackText='Add your Anthropic API key in Parent Mode → Email to enable AI feedback!';document.getElementById('readingFeedbackText').textContent=feedbackText;document.getElementById('readingStarsAwarded').textContent='🌟 +'+(5+selfStars)+' stars earned!';addStars(5+selfStars);save();updateStars();renderReadingHistory();return;}
+    if(!apiKey){
+      if(resultEl)resultEl.innerHTML='<div style="font-size:.78rem;color:var(--coral);padding:8px">⚠️ Add your Anthropic API key in Parent Mode → Email to enable word lookups!</div>';
+      return;
+    }
     var resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:200,
+        model:'claude-sonnet-4-6',max_tokens:200,
         system:'You help Nathan, a 10-year-old, learn vocabulary. Give a simple definition and one example sentence using the word naturally. The language is '+_dictLang+'. Respond ONLY as JSON with no markdown: {"word":"the word","definition":"simple definition a 10-year-old understands","sentence":"example sentence using the word"}',
         messages:[{role:'user',content:'Define this word: '+word}]
       })
