@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.0.28">
+<meta name="version" content="3.0.4">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.0.28';
+  var v='3.0.4';
   if(window.location.href.indexOf('v=')===-1){
     window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
   }
@@ -332,9 +332,9 @@ body{
   border-radius:18px;padding:13px 15px;margin-bottom:10px;
 }
 .fact-eyebrow{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--accent);margin-bottom:5px;}
-.fact-text{font-size:.88rem;color:var(--text);line-height:1.5;margin-bottom:10px;font-weight:700;}
-.fact-source{font-size:.68rem;color:var(--accent);margin-bottom:8px;font-weight:700;}
-.fact-instruction{font-size:.72rem;color:var(--text);margin-bottom:8px;font-style:italic;opacity:.8;}
+.fact-text{font-size:.88rem;color:var(--text);line-height:1.5;margin-bottom:10px;font-weight:600;}
+.fact-source{font-size:.68rem;color:var(--dim);margin-bottom:8px;}
+.fact-instruction{font-size:.72rem;color:var(--dim);margin-bottom:8px;font-style:italic;}
 .fact-btns{display:flex;gap:8px;}
 .fact-btn{
   flex:1;font-family:'Fredoka One',cursive;font-size:.8rem;
@@ -624,41 +624,6 @@ body{
    ANIMATIONS
 ═══════════════════════════════════════ */
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-
-/* ═══════════════════════════════════════
-   CHALLENGES TAB
-═══════════════════════════════════════ */
-.challenge-card{
-  background:var(--card);border-radius:18px;padding:14px 15px;
-  margin-bottom:10px;box-shadow:0 3px 12px var(--card-shadow);
-  border-left:4px solid var(--accent);
-}
-.challenge-card.complete{border-left-color:#10b981;}
-.challenge-card.locked{opacity:.5;border-left-color:var(--dimmer);}
-.challenge-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.challenge-icon{font-size:1.6rem;flex-shrink:0;}
-.challenge-title{font-family:'Fredoka One',cursive;font-size:.95rem;color:var(--accent);flex:1;}
-.challenge-card.complete .challenge-title{color:#10b981;}
-.challenge-goal{font-size:.75rem;color:var(--dim);margin-bottom:8px;font-weight:700;}
-.challenge-progress-track{height:8px;background:rgba(128,128,128,.12);border-radius:99px;overflow:hidden;margin-bottom:8px;}
-.challenge-progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s;}
-.challenge-card.complete .challenge-progress-fill{background:linear-gradient(90deg,#10b981,#34d399);}
-.challenge-progress-label{font-size:.68rem;color:var(--dim);margin-bottom:8px;text-align:right;}
-.challenge-hint{
-  background:rgba(128,128,128,.06);border-radius:12px;
-  padding:10px 12px;font-size:.75rem;color:var(--text);
-  line-height:1.5;font-style:italic;
-}
-.challenge-hint.warm{background:rgba(255,152,0,.08);color:var(--text);}
-.challenge-hint.hot{background:rgba(239,68,68,.08);color:var(--text);}
-.challenge-hint.complete{background:rgba(16,185,129,.1);font-style:normal;font-weight:700;color:#10b981;}
-.challenge-come-back{font-size:.65rem;color:var(--dimmer);margin-top:6px;text-align:center;}
-.challenge-badge{
-  font-size:.65rem;font-weight:800;padding:3px 8px;border-radius:20px;
-  background:rgba(128,128,128,.1);color:var(--dim);
-}
-.challenge-badge.part2{background:rgba(255,152,0,.12);color:#f59e0b;}
-
 /* ═══════════════════════════════════════
    ANIMATED BACKGROUNDS - TIME OF DAY
 ═══════════════════════════════════════ */
@@ -755,33 +720,6 @@ body.theme-night {
 @keyframes swell-d{0%{transform:translateX(-30px) scaleY(1.2)}40%{transform:translateX(40px) scaleY(.6)}70%{transform:translateX(-20px) scaleY(1.5)}100%{transform:translateX(-30px) scaleY(1.2)}}
 @keyframes swell-e{0%{transform:translateX(25px) translateY(10px) scaleY(1)}45%{transform:translateX(-50px) translateY(-20px) scaleY(1.7)}75%{transform:translateX(30px) translateY(15px) scaleY(.8)}100%{transform:translateX(25px) translateY(10px) scaleY(1)}}
 /* Evening sparse bioluminescence */
-
-/* Midnight Zone dive mechanic */
-.depth-tabs{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;}
-.depth-tab{
-  flex:1;font-family:'Fredoka One',cursive;font-size:.75rem;
-  padding:8px 6px;border-radius:12px;text-align:center;cursor:pointer;
-  border:1.5px solid rgba(41,182,246,.2);
-  background:rgba(0,10,30,.5);color:#4a90a0;transition:all .2s;
-}
-.depth-tab.active{background:linear-gradient(135deg,#001e42,#0288d1);color:#fff;border-color:rgba(41,182,246,.4);}
-.midnight-particle{position:absolute;border-radius:50%;pointer-events:none;animation:midnight-drift ease-in-out infinite;}
-@keyframes midnight-drift{
-  0%{transform:translate(0,0) scale(1);opacity:0}
-  30%{opacity:.8}
-  70%{opacity:.4}
-  100%{transform:translate(0,-40px) scale(1.5);opacity:0}
-}
-@keyframes midnight-drift-left{
-  0%{transform:translate(0,0) scale(1);opacity:0}
-  30%{opacity:.7}70%{opacity:.3}
-  100%{transform:translate(-30px,-30px) scale(1.4);opacity:0}
-}
-@keyframes midnight-drift-right{
-  0%{transform:translate(0,0) scale(1);opacity:0}
-  30%{opacity:.9}70%{opacity:.4}
-  100%{transform:translate(30px,-35px) scale(1.6);opacity:0}
-}
 .bg-eve-particle{position:fixed;border-radius:50%;pointer-events:none;z-index:0;animation:eve-glow ease-in-out infinite;}
 @keyframes eve-glow{0%,100%{opacity:0;transform:scale(1)}50%{opacity:.6;transform:scale(1.8)}}
 .bg-particle {
@@ -880,25 +818,8 @@ body.theme-night {
     <!-- Reminder cards -->
     <div id="reminderCards"></div>
 
-    <!-- Goals stats strip -->
-    <div id="homeGoalsStrip" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;"></div>
-
     <!-- Time-based content -->
     <div id="timeContent"></div>
-
-    <!-- Extra Practice banner (no-school nudge) -->
-    <div id="extraPracticeNudge" style="display:none;background:linear-gradient(135deg,rgba(255,213,79,.15),rgba(10,22,40,.9));border:2px solid rgba(255,213,79,.4);border-radius:16px;padding:14px;margin-bottom:10px;text-align:center">
-      <div style="font-size:2rem;margin-bottom:4px">⭐</div>
-      <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--gold)">No school today!</div>
-      <div style="font-size:.75rem;color:var(--dim);margin-top:4px">Scroll down for bonus star tasks 👇</div>
-    </div>
-
-    <!-- Extra Practice section -->
-    <div style="margin-top:8px">
-      <div style="font-family:'Fredoka One',cursive;font-size:.95rem;color:var(--accent);margin-bottom:6px">⭐ Extra Practice</div>
-      <div style="font-size:.72rem;color:var(--dim);margin-bottom:8px">Tap a task and show Mom or Dad when you're done!</div>
-      <div id="extraPracticeList"></div>
-    </div>
   </div>
 
   <!-- ─── GOALS PANEL ─── -->
@@ -1046,22 +967,6 @@ body.theme-night {
     <div id="readingHistory"></div>
   </div>
 
-
-  <!-- ─── CHALLENGES PANEL ─── -->
-  <div id="panel-challenges" style="display:none">
-    <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--accent);margin-bottom:4px;margin-top:4px">🏆 Secret Challenges</div>
-    <div style="font-size:.75rem;color:var(--dim);margin-bottom:12px">Complete challenges to unlock secrets hidden in the deep ocean! The hints get better the closer you get. 👀</div>
-    <div id="challengesList"></div>
-  </div>
-
-  <!-- ─── ABYSS PANEL ─── -->
-  <div id="panel-abyss" style="display:none;background:linear-gradient(180deg,#000208,#000510);min-height:100%;padding:12px 14px 80px">
-  </div>
-
-  <!-- ─── MIDNIGHT ZONE PANEL ─── -->
-  <div id="panel-midnight" style="display:none;background:linear-gradient(180deg,#000510,#001e42);min-height:100%;padding:12px 14px 80px">
-  </div>
-
   <!-- ─── POD PANEL ─── -->
   <div id="panel-pod" style="display:none">
     <div class="pet-tabs-row" id="petTabsRow"></div>
@@ -1076,12 +981,6 @@ body.theme-night {
     <div class="slabel">🎯 Hunting Journal</div>
     <div style="font-size:.72rem;color:var(--dim);margin-bottom:8px" id="huntingCount">Start feeding Splash to build your collection!</div>
     <div id="huntingJournalList"></div>
-
-    <!-- Secret Zones — appear when unlocked -->
-    <div id="secretZonesSection" style="display:none">
-      <div class="slabel">🌑 Secret Ocean Zones</div>
-      <div id="secretZonesList"></div>
-    </div>
   </div>
 
   <!-- ─── REWARDS PANEL ─── -->
@@ -1106,13 +1005,13 @@ body.theme-night {
     <div class="nav-icon">🏠</div>
     <div class="nav-lbl">Home</div>
   </div>
+  <div class="nav-item" id="nav-goals" onclick="showPanel('goals',this)">
+    <div class="nav-icon">🎯</div>
+    <div class="nav-lbl">Goals</div>
+  </div>
   <div class="nav-item" id="nav-reading" onclick="showPanel('reading',this)">
     <div class="nav-icon">📖</div>
     <div class="nav-lbl">Reading</div>
-  </div>
-  <div class="nav-item" id="nav-challenges" onclick="showPanel('challenges',this)">
-    <div class="nav-icon">🏆</div>
-    <div class="nav-lbl">Challenges</div>
   </div>
   <div class="nav-item" id="nav-pod" onclick="showPanel('pod',this)">
     <div class="nav-icon">🐋</div>
@@ -1147,7 +1046,6 @@ body.theme-night {
         <div class="admin-tab" onclick="showAdminTab('pets',this)">🐋 Pets</div>
         <div class="admin-tab" onclick="showAdminTab('jiji',this)">📏 JiJi</div>
         <div class="admin-tab" onclick="showAdminTab('email',this)">📧 Email</div>
-        <div class="admin-tab" onclick="showAdminTab('extrapractice',this)">⭐ Extra Practice</div>
         <div class="admin-tab" onclick="showAdminTab('backup',this)">💾 Backup</div>
       </div>
 
@@ -1163,21 +1061,6 @@ body.theme-night {
             <button class="admin-btn" onclick="previewTheme('night')" style="flex:1;font-size:.75rem;padding:8px 6px">🌙 Night</button>
             <button class="admin-btn admin-btn-secondary" onclick="previewTheme('auto')" style="flex:1;font-size:.75rem;padding:8px 6px">🔄 Auto</button>
           </div>
-        </div>
-        <div class="admin-section">
-          <div class="admin-section-title">Give Nathan Stars ⭐</div>
-          <div style="font-size:.72rem;color:var(--dim);margin-bottom:8px">Add bonus stars directly to Nathan's account.</div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <input class="admin-input" type="number" id="giveStarsInput" placeholder="# of stars" min="1" style="margin:0;flex:1">
-            <button class="admin-btn" onclick="giveStars()" style="margin:0;white-space:nowrap">Give Stars ⭐</button>
-          </div>
-          <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-            <button class="admin-btn admin-btn-secondary" onclick="quickGiveStars(5)" style="flex:1;font-size:.72rem;padding:6px">+5 ⭐</button>
-            <button class="admin-btn admin-btn-secondary" onclick="quickGiveStars(10)" style="flex:1;font-size:.72rem;padding:6px">+10 ⭐</button>
-            <button class="admin-btn admin-btn-secondary" onclick="quickGiveStars(25)" style="flex:1;font-size:.72rem;padding:6px">+25 ⭐</button>
-            <button class="admin-btn admin-btn-secondary" onclick="quickGiveStars(50)" style="flex:1;font-size:.72rem;padding:6px">+50 ⭐</button>
-          </div>
-          <div style="font-size:.72rem;color:var(--dim);margin-top:6px">Current stars: <strong id="currentStarsDisplay">0</strong> ⭐</div>
         </div>
         <div class="admin-section">
           <div class="admin-section-title">Weekly Star Goal</div>
@@ -1197,22 +1080,7 @@ body.theme-night {
           <div class="admin-section-title">Add a Reminder</div>
           <div style="font-size:.72rem;color:var(--dim);margin-bottom:6px">Nathan will see this on the home screen on or before the date.</div>
           <input class="admin-input" type="date" id="reminderDate">
-          <div style="font-size:.72rem;color:var(--dim);margin-bottom:4px">Emoji — tap one or type your own:</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-            <button onclick="setReminderEmoji('📸')" style="font-size:1.4rem;background:rgba(128,128,128,.08);border:1px solid var(--border);border-radius:8px;padding:4px 8px;cursor:pointer">📸</button>
-            <button onclick="setReminderEmoji('🎉')" style="font-size:1.4rem;background:rgba(128,128,128,.08);border:1px solid var(--border);border-radius:8px;padding:4px 8px;cursor:pointer">🎉</button>
-            <button onclick="setReminderEmoji('🌊')" style="font-size:1.4rem;background:rgba(128,128,128,.08);border:1px solid var(--border);border-radius:8px;padding:4px 8px;cursor:pointer">🌊</button>
-            <button onclick="setReminderEmoji('🏫')" style="font-size:1.4rem;background:rgba(128,128,128,.08);border:1px solid var(--border);border-radius:8px;padding:4px 8px;cursor:pointer">🏫</button>
-            <button onclick="setReminderEmoji('⚠️')" style="font-size:1.4rem;background:rgba(128,128,128,.08);border:1px solid var(--border);border-radius:8px;padding:4px 8px;cursor:pointer">⚠️</button>
-            <button onclick="setReminderEmoji('🎒')" style="font-size:1.4rem;background:rgba(128,128,128,.08);border:1px solid var(--border);border-radius:8px;padding:4px 8px;cursor:pointer">🎒</button>
-            <button onclick="setReminderEmoji('🏥')" style="font-size:1.4rem;background:rgba(128,128,128,.08);border:1px solid var(--border);border-radius:8px;padding:4px 8px;cursor:pointer">🏥</button>
-            <button onclick="setReminderEmoji('🎭')" style="font-size:1.4rem;background:rgba(128,128,128,.08);border:1px solid var(--border);border-radius:8px;padding:4px 8px;cursor:pointer">🎭</button>
-            <button onclick="setReminderEmoji('🏆')" style="font-size:1.4rem;background:rgba(128,128,128,.08);border:1px solid var(--border);border-radius:8px;padding:4px 8px;cursor:pointer">🏆</button>
-            <button onclick="setReminderEmoji('❄️')" style="font-size:1.4rem;background:rgba(128,128,128,.08);border:1px solid var(--border);border-radius:8px;padding:4px 8px;cursor:pointer">❄️</button>
-            <button onclick="setReminderEmoji('🌸')" style="font-size:1.4rem;background:rgba(128,128,128,.08);border:1px solid var(--border);border-radius:8px;padding:4px 8px;cursor:pointer">🌸</button>
-            <button onclick="setReminderEmoji('🇺🇸')" style="font-size:1.4rem;background:rgba(128,128,128,.08);border:1px solid var(--border);border-radius:8px;padding:4px 8px;cursor:pointer">🇺🇸</button>
-          </div>
-          <input class="admin-input" type="text" id="reminderEmoji" placeholder="Selected emoji shows here...">
+          <input class="admin-input" type="text" id="reminderEmoji" placeholder="Emoji (e.g. 📸)">
           <input class="admin-input" type="text" id="reminderText" placeholder="Message (e.g. Picture day today!)">
           <button class="admin-btn" onclick="addReminder()">Add Reminder</button>
           <div class="admin-section-title" style="margin-top:10px">Current Reminders</div>
@@ -1224,22 +1092,8 @@ body.theme-night {
       <div class="admin-panel" id="ap-rewards">
         <div class="admin-section">
           <div class="admin-section-title">Reward Shop</div>
-          <div style="font-size:.72rem;color:var(--dim);margin-bottom:10px">Edit emoji, name, and star cost for each reward.</div>
           <div id="adminRewardList"></div>
-          <div style="border-top:1px solid var(--border);padding-top:12px;margin-top:4px">
-            <div class="admin-section-title">Add New Reward</div>
-            <div style="display:flex;gap:6px;margin-bottom:6px">
-              <input class="admin-input" type="text" id="newRewardEmoji" placeholder="Emoji" style="width:64px;margin:0;text-align:center">
-              <input class="admin-input" type="text" id="newRewardName" placeholder="Reward name" style="flex:1;margin:0">
-              <input class="admin-input" type="number" id="newRewardCost" placeholder="⭐" style="width:60px;margin:0" min="1">
-            </div>
-            <div id="rewardEmojiPicker" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-              ${['🎮','🎯','🎬','🍕','🍦','🧁','🍫','🎲','🎳','🏊','🎨','✏️','📚','🎤','🎧','🛹','🚴','🏖️','🎡','🎠','🧸','🪀','🎁','🛍️','💎','⭐','🌟','🏆'].map(e=>
-                `<button onclick="setNewRewardEmoji('${e}')" style="background:rgba(128,128,128,.08);border:none;border-radius:8px;padding:5px 7px;cursor:pointer;font-size:1.1rem">${e}</button>`
-              ).join('')}
-            </div>
-            <button class="admin-btn" onclick="addReward()">+ Add Reward</button>
-          </div>
+          <button class="admin-btn" onclick="addReward()">+ Add Reward</button>
         </div>
       </div>
 
@@ -1284,28 +1138,6 @@ body.theme-night {
         </div>
       </div>
 
-      <!-- Extra Practice -->
-      <div class="admin-panel" id="ap-extrapractice">
-        <div class="admin-section">
-          <div class="admin-section-title">Extra Practice Tasks</div>
-          <div style="font-size:.72rem;color:var(--dim);margin-bottom:10px">Use ↑↓ to reorder. Tap an emoji to set it. Nathan can tap each task up to 5 times per day.</div>
-          <div id="adminEPList"></div>
-          <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px">
-            <div class="admin-section-title">Add New Task</div>
-            <div style="font-size:.7rem;color:var(--dim);margin-bottom:6px">Pick an emoji:</div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px">
-              ${['📝','📖','📚','🎧','📰','🗣️','🎵','✍️','📱','🎨','🔢','🧠','🌍','🎯','📐','🖊️','📓','🔤','💬','🗺️','🎤','📺','🎮','⭐','🏅','💡','🔬','🧩'].map(e=>
-                `<button onclick="setEPNewEmoji('${e}')" style="font-size:1.3rem;background:rgba(128,128,128,.08);border:1px solid var(--border);border-radius:8px;padding:4px 7px;cursor:pointer">${e}</button>`
-              ).join('')}
-            </div>
-            <input class="admin-input" type="text" id="epNewEmoji" placeholder="Selected emoji" style="width:80px;display:inline-block;margin-right:6px;text-align:center" readonly>
-            <input class="admin-input" type="text" id="epNewName" placeholder="Task name" style="width:calc(100% - 96px);display:inline-block">
-            <input class="admin-input" type="number" id="epNewStars" placeholder="Stars (e.g. 3)" min="1" max="20">
-            <button class="admin-btn" onclick="addEPTask()">+ Add Task</button>
-          </div>
-        </div>
-      </div>
-
       <!-- Backup -->
       <div class="admin-panel" id="ap-backup">
         <div class="admin-section">
@@ -1328,19 +1160,15 @@ import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstat
 
 const firebaseConfig = {
   apiKey: "AIzaSyCFPPvFNiTF-Tc9e53Tp52oPw99cEGUYoA",
+  authDomain: "nathans-ocean-hq.firebaseapp.com",
   projectId: "nathans-ocean-hq",
   storageBucket: "nathans-ocean-hq.firebasestorage.app",
   messagingSenderId: "25258496859",
   appId: "1:25258496859:web:2928e69ab8f73d559bc07e"
 };
 
-var fbApp, db;
-try {
-  fbApp = initializeApp(firebaseConfig);
-  db = getFirestore(fbApp);
-} catch(e) {
-  console.log('Firebase init error:', e);
-}
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
 
 // ═══════════════════════════════════════
 // DATA CONSTANTS
@@ -1356,11 +1184,10 @@ const PROGRESS_KEYS = [
   'readingLog','readingGoalEng','readingGoalEsp','readingMins',
   'dictionary','jijiSessions','jijiPct','jijiPctDate',
   'oceanFactsLearned','oceanFactToday','factIndexToday',
-  'overrideReminders','emailSettings','weeklyStarGoal','weekStart','weeklyStarsEarned','challengesCompleted','challengeBaselines','challengesPopupSeen','pendingPetUnlock','unlockedLegendaryFoods','midnightZoneUnlocked','goldenSplashUnlocked','goldenSplashActive','abyssUnlocked','midnightCreaturesUnlocked',
+  'overrideReminders','emailSettings','weeklyStarGoal','weekStart','weeklyStarsEarned',
   'pin','adminUnlocked','lastEmailDate',
   'summerProgress','choreDone','spanishTasks','spanishState',
-  'spanishArchive','summerBooks','summerReadingGoal','orcalusWelcomed',
-  'epTasks','epDone'
+  'spanishArchive','summerBooks','summerReadingGoal','orcalusWelcomed'
 ];
 
 // School calendar - hardcoded
@@ -1414,74 +1241,72 @@ const NO_SCHOOL_DAYS = {
 };
 
 // Weekly schedule
-var WEEKLY_SCHEDULE = {
+const WEEKLY_SCHEDULE = {
   1: [ // Monday
     {time:'3:15 PM', emoji:'🏫', label:'Picked up from school'},
-    {time:'3:45 PM', emoji:'🍎', label:'Snack in the car'},
+    {time:'3:15 PM', emoji:'🍎', label:'Snack in the car'},
     {time:'4:15 PM', emoji:'🤸', label:'Gymnastics'},
     {time:'5:45 PM', emoji:'🏠', label:'Home & settled'},
-    {time:'6:00 PM', emoji:'📖', label:'Reading (25 min)'},
-    {time:'6:25 PM', emoji:'🎮', label:'Break (10 min)'},
-    {time:'6:35 PM', emoji:'📏', label:'JiJi (25 min)'},
-    {time:'7:00 PM', emoji:'🍔', label:'Dinner'},
-    {time:'7:30 PM', emoji:'🎮', label:'Free time'},
+    {time:'5:45 PM', emoji:'🎮', label:'Break (30 min)'},
+    {time:'6:15 PM', emoji:'📖', label:'Reading (30 min)'},
+    {time:'6:45 PM', emoji:'📏', label:'JiJi (30 min)'},
+    {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
+    {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'8:30 PM', emoji:'🚿', label:'Shower'},
-    {time:'9:00 PM', emoji:'🥤', label:'Sleep latte'},
     {time:'10:30 PM', emoji:'💤', label:'Bedtime'},
   ],
-  2: [ // Tuesday - heavy homework day
+  2: [ // Tuesday - double round day
     {time:'1:30 PM', emoji:'🏫', label:'Picked up from school (short day!)'},
-    {time:'2:00 PM', emoji:'🍎', label:'Snack & decompress (90 min)'},
-    {time:'3:30 PM', emoji:'📖', label:'Reading block 1 (25 min)'},
-    {time:'3:55 PM', emoji:'🎮', label:'Break (10 min)'},
-    {time:'4:05 PM', emoji:'📏', label:'JiJi (25 min)'},
-    {time:'4:30 PM', emoji:'🎮', label:'Break (10 min)'},
-    {time:'4:40 PM', emoji:'📖', label:'Reading block 2 (25 min)'},
-    {time:'5:05 PM', emoji:'🎮', label:'Break (10 min)'},
-    {time:'5:15 PM', emoji:'📚', label:'Other homework (25 min)'},
-    {time:'5:40 PM', emoji:'🎮', label:'Free time'},
-    {time:'7:00 PM', emoji:'🍔', label:'Dinner'},
-    {time:'7:30 PM', emoji:'🎮', label:'Free time'},
+    {time:'2:00 PM', emoji:'🏠', label:'Home'},
+    {time:'2:00 PM', emoji:'🎮', label:'Break (1 hr)'},
+    {time:'3:00 PM', emoji:'📖', label:'Reading block 1 (30 min)'},
+    {time:'3:30 PM', emoji:'🎮', label:'Break (15 min)'},
+    {time:'3:45 PM', emoji:'📏', label:'JiJi block 1 (30 min)'},
+    {time:'4:15 PM', emoji:'🎮', label:'Break (1 hr)'},
+    {time:'5:15 PM', emoji:'📖', label:'Reading block 2 (30 min)'},
+    {time:'5:45 PM', emoji:'🎮', label:'Break (15 min)'},
+    {time:'6:00 PM', emoji:'📏', label:'JiJi block 2 (30 min)'},
+    {time:'6:30 PM', emoji:'🎮', label:'Break (15 min)'},
+    {time:'6:45 PM', emoji:'📚', label:'Extra homework (30 min, if needed)'},
+    {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
+    {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'8:30 PM', emoji:'🚿', label:'Shower'},
-    {time:'9:00 PM', emoji:'🥤', label:'Sleep latte'},
     {time:'10:30 PM', emoji:'💤', label:'Bedtime'},
   ],
-  3: [ // Wednesday - tutoring
-    {time:'4:15 PM', emoji:'📝', label:'Tutoring with Ms. Tanya'},
+  3: [ // Wednesday - tutoring day
+    {time:'4:15 PM', emoji:'📝', label:'Tutoring with Ms. Tanya (reading + JiJi)'},
     {time:'5:15 PM', emoji:'🚗', label:'Heading home'},
     {time:'5:45 PM', emoji:'🏠', label:'Home'},
-    {time:'6:00 PM', emoji:'🎮', label:'Free time'},
-    {time:'7:00 PM', emoji:'🍔', label:'Dinner'},
-    {time:'7:30 PM', emoji:'🎮', label:'Free time'},
+    {time:'5:45 PM', emoji:'🎮', label:'Break (1 hr)'},
+    {time:'6:45 PM', emoji:'📏', label:'JiJi (30 min)'},
+    {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
+    {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'8:30 PM', emoji:'🚿', label:'Shower'},
-    {time:'9:00 PM', emoji:'🥤', label:'Sleep latte'},
     {time:'10:30 PM', emoji:'💤', label:'Bedtime'},
   ],
-  4: [ // Thursday - tutoring
-    {time:'4:15 PM', emoji:'📝', label:'Tutoring with Ms. Tanya'},
+  4: [ // Thursday - tutoring day
+    {time:'4:15 PM', emoji:'📝', label:'Tutoring with Ms. Tanya (reading + JiJi)'},
     {time:'5:15 PM', emoji:'🚗', label:'Heading home'},
     {time:'5:45 PM', emoji:'🏠', label:'Home'},
-    {time:'6:00 PM', emoji:'🎮', label:'Free time'},
-    {time:'7:00 PM', emoji:'🍔', label:'Dinner'},
-    {time:'7:30 PM', emoji:'🎮', label:'Free time'},
+    {time:'5:45 PM', emoji:'🎮', label:'Break (1 hr)'},
+    {time:'6:45 PM', emoji:'📏', label:'JiJi (30 min)'},
+    {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
+    {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'8:30 PM', emoji:'🚿', label:'Shower'},
-    {time:'9:00 PM', emoji:'🥤', label:'Sleep latte'},
     {time:'10:30 PM', emoji:'💤', label:'Bedtime'},
   ],
-  5: [ // Friday - free!
-    {time:'3:15 PM', emoji:'🏫', label:'Picked up from school'},
-    {time:'3:45 PM', emoji:'🏠', label:'Home'},
-    {time:'4:00 PM', emoji:'🎮', label:'Free time!'},
-    {time:'7:00 PM', emoji:'🍔', label:'Dinner'},
-    {time:'7:30 PM', emoji:'🎮', label:'Free time'},
+  5: [ // Friday - free day!
+    {time:'3:45 PM', emoji:'🏫', label:'Picked up from school'},
+    {time:'3:45 PM', emoji:'🎮', label:'Free time! No homework 🎉'},
+    {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
+    {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'8:30 PM', emoji:'🚿', label:'Shower'},
-    {time:'10:30 PM', emoji:'🥤', label:'Sleep latte (optional)'},
     {time:'12:00 AM', emoji:'💤', label:'Bedtime — no school tomorrow! 🎉'},
   ],
 };
 
 // Morning routine
-var MORNING_TASKS = [
+const MORNING_TASKS = [
   {id:'m1', emoji:'🛏️', name:'Wake up', stars:1},
   {id:'m2', emoji:'👕', name:'Get dressed', stars:2},
   {id:'m3', emoji:'👓', name:'Put on glasses ⭐ IMPORTANT', stars:2},
@@ -1497,11 +1322,10 @@ var MORNING_TASKS = [
 ];
 
 // Bedtime routine
-var BEDTIME_TASKS = [
+const BEDTIME_TASKS = [
   {id:'n1', emoji:'🚿', name:'Shower', stars:2},
   {id:'n2', emoji:'🌙', name:'Put on pajamas', stars:1},
   {id:'n3', emoji:'🧴', name:'Comb hair', stars:1},
-  {id:'n4', emoji:'🥤', name:'Drink sleep latte', stars:2},
   {id:'n5', emoji:'🦷', name:'Brush teeth', stars:2},
   {id:'n6', emoji:'👓', name:'Put glasses somewhere safe', stars:2},
   {id:'n7', emoji:'⭐', name:'Tuck in pets in pod', stars:2},
@@ -1510,7 +1334,7 @@ var BEDTIME_TASKS = [
 ];
 
 // Tuesday homework tasks
-var TUESDAY_TASKS = [
+const TUESDAY_TASKS = [
   {id:'t1', emoji:'📖', name:'Reading block 1 (25 min)', stars:5},
   {id:'t2', emoji:'📏', name:'JiJi (25 min)', stars:5},
   {id:'t3', emoji:'📖', name:'Reading block 2 (25 min)', stars:5},
@@ -1518,13 +1342,13 @@ var TUESDAY_TASKS = [
 ];
 
 // Monday tasks
-var MONDAY_TASKS = [
+const MONDAY_TASKS = [
   {id:'mo1', emoji:'📖', name:'Reading (25 min)', stars:5},
   {id:'mo2', emoji:'📏', name:'JiJi (25 min)', stars:5},
 ];
 
 // Ocean facts
-var FACTS = [
+const FACTS = [
   {t:"Orcas are the largest members of the dolphin family and can swim up to 35 miles per hour!", s:"🐋 Orca"},
   {t:"Orcas live in tight family pods and have their own unique language of clicks and whistles!", s:"🐋 Orca"},
   {t:"A baby orca is called a calf — and orca moms stay with their calves their entire lives!", s:"🐋 Orca"},
@@ -1570,7 +1394,7 @@ const AFFIRMATIONS = [
   "A little effort every day adds up to something HUGE. You're building something great! 🌟",
 ];
 
-var OCEAN_RANKS = [
+const OCEAN_RANKS = [
   {min:0,    title:'Tide Pool Explorer',  badge:'🌊', color:'#81d4fa'},
   {min:50,   title:'Reef Navigator',      badge:'🐠', color:'#29b6f6'},
   {min:120,  title:'Open Ocean Swimmer',  badge:'🐬', color:'#0288d1'},
@@ -1581,7 +1405,7 @@ var OCEAN_RANKS = [
   {min:1000, title:'Master of the Deep', badge:'🌍', color:'#ff69b4'},
 ];
 
-var SPLASH_FOODS = [
+const SPLASH_FOODS = [
   {id:'f1',emoji:'🐟',name:'Salmon',     cost:1, hunger:20, msg:"Pacific salmon — Splash's #1 favorite! Pacific Northwest orcas eat up to 30 salmon a day! 🐟"},
   {id:'f2',emoji:'🐟',name:'Herring',    cost:1, hunger:18, msg:"Norwegian orcas herd thousands of herring into a ball, then slap them with their tails to stun them! 🌀"},
   {id:'f3',emoji:'🦦',name:'Seal',       cost:3, hunger:35, msg:"Orcas will WAVE-WASH seals — they work as a team to make waves and knock seals off ice floes! 🌊"},
@@ -1593,7 +1417,7 @@ var SPLASH_FOODS = [
   {id:'f9',emoji:'🐋',name:'Baby Whale', cost:8, hunger:80, msg:"The ultimate orca hunt! Pods work together for HOURS to separate a baby whale from its mom. Apex predators! 👑"},
 ];
 
-var TOY_ITEMS = [
+const TOY_ITEMS = [
   {id:'tennis',   emoji:'🎾', name:'Tennis Ball',    cost:8,  happBonus:15, desc:'Classic fetch toy! Bouncy ball animation.'},
   {id:'beachball',emoji:'🏐', name:'Beach Ball',     cost:8,  happBonus:15, desc:'Splash loves ocean toys!'},
   {id:'plushorca',emoji:'🧸', name:'Plush Orca',     cost:15, happBonus:20, desc:'A snuggly orca friend for ALL pets!'},
@@ -1666,27 +1490,7 @@ function save(){
 }
 
 function loadFromCloud(){
-  // If Firebase failed to initialize, load offline immediately
-  if(!db){
-    console.log('Firebase not initialized — loading offline');
-    _cloudLoaded=true;
-    document.getElementById('offlineBanner').classList.add('show');
-    onLoad();
-    return;
-  }
-
-  // Timeout fallback — if Firebase doesn't respond in 8 seconds, load anyway
-  var timeout=setTimeout(function(){
-    if(!_cloudLoaded){
-      _cloudLoaded=true;
-      console.log('Firebase timeout — loading in offline mode');
-      document.getElementById('offlineBanner').classList.add('show');
-      onLoad();
-    }
-  },8000);
-
   onSnapshot(doc(db,'nathanhq','progress'),function(snap){
-    clearTimeout(timeout);
     if(snap.exists()){
       var cd=snap.data();
       // Safety: don't wipe arrays with empty arrays
@@ -1702,7 +1506,6 @@ function loadFromCloud(){
       onLoad();
     }
   },function(err){
-    clearTimeout(timeout);
     console.log('Firebase error:',err);
     if(!_cloudLoaded){
       _cloudLoaded=true;
@@ -1733,12 +1536,8 @@ function onLoad(){
   renderToyShop();
   renderRewardLog();
   renderReadingTab();
-  renderGoalsTab();renderHomeGoalsStrip();
-  renderExtraPractice();
+  renderGoalsTab();
   checkOrcalusWelcome();
-  try{checkChallengesPopup()}catch(e){}
-  try{checkPendingPetUnlocks()}catch(e){}
-  try{checkChallengeCompletions()}catch(e){}
   startMidnightCheck();
   startThemeCheck();
   checkFridayEmail();
@@ -1764,7 +1563,6 @@ function initState(){
   if(!S.overrideReminders)S.overrideReminders=[];
   if(!S.emailSettings)S.emailSettings={};
   if(!S.pin)S.pin='1234';
-  if(!S.epDone)S.epDone={};
   initPods();
 }
 
@@ -2067,23 +1865,6 @@ function renderTimeContent(){
 
 function renderMorningContent(el){
   var today=new Date().toDateString();
-  var dow=new Date().getDay();
-  var todayKey=getDateKey(new Date());
-  var noSchool=dow===0||dow===6||!!NO_SCHOOL_DAYS[todayKey];
-
-  // Weekend / no-school morning — skip checklist
-  if(noSchool){
-    var msg=NO_SCHOOL_DAYS[todayKey];
-    var html=renderMoodCard();
-    html+='<div style="background:rgba(255,213,79,.1);border:1.5px solid rgba(255,213,79,.3);border-radius:16px;padding:16px;text-align:center;margin-bottom:10px">'
-      +'<div style="font-size:2.5rem;margin-bottom:6px">'+(msg?msg.emoji:'🌊')+'</div>'
-      +'<div style="font-family:\'Fredoka One\',cursive;font-size:1rem;color:var(--gold)">'+(msg?msg.msg:'No school today — enjoy your morning!')+'</div>'
-      +'<div style="font-size:.75rem;color:var(--dim);margin-top:8px">Scroll down for bonus star tasks ⭐</div>'
-      +'</div>';
-    el.innerHTML=html;
-    return;
-  }
-
   if(!S.morningDone)S.morningDone={};
   var doneCount=MORNING_TASKS.filter(function(t){return S.morningDone[t.id+'_'+today];}).length;
   var pct=Math.round(doneCount/MORNING_TASKS.length*100);
@@ -2419,7 +2200,7 @@ function logJiJi(){
   }
   S.jijiSessions.push({date:today,ts:Date.now()});
   addStars(5);
-  save();updateStars();renderTimeContent();renderGoalsTab();renderHomeGoalsStrip();
+  save();updateStars();renderTimeContent();renderGoalsTab();
   confetti();confetti();showToast('📏 +5 ⭐ JiJi session logged! Keep it up!');
 }
 
@@ -2444,7 +2225,7 @@ function logFact(isNew){
     S.oceanFactsLearned=(S.oceanFactsLearned||0)+1;
     addStars(1);
     
-    save();updateStars();renderGoalsTab();renderHomeGoalsStrip();
+    save();updateStars();renderGoalsTab();
     showToast('🤯 +1 ⭐ New ocean fact learned! You now know '+(S.oceanFactsLearned||0)+'!');
     confetti();
   } else {
@@ -2458,49 +2239,9 @@ function logFact(isNew){
 // ═══════════════════════════════════════
 // POD TAB
 // ═══════════════════════════════════════
-function renderSecretZones(){
-  var section=document.getElementById('secretZonesSection');
-  var list=document.getElementById('secretZonesList');
-  if(!section||!list)return;
-  var zones=[];
-  if(S.midnightZoneUnlocked){
-    zones.push({
-      id:'midnight',
-      emoji:'🌑',
-      name:'The Midnight Zone',
-      desc:'200-1,000m deep · Where orcas hunt in darkness · Bioluminescence everywhere',
-      color:'linear-gradient(135deg,#001e42,#0288d1)',
-      glow:'rgba(41,182,246,.3)',
-    });
-  }
-  if(S.abyssUnlocked){
-    zones.push({
-      id:'abyss',
-      emoji:'🌑',
-      name:'The Abyss',
-      desc:'4,000-6,000m deep · No light has ever reached here · Alien creatures glow in the dark',
-      color:'linear-gradient(135deg,#000208,#0d47a1)',
-      glow:'rgba(100,181,246,.2)',
-    });
-  }
-  if(zones.length===0){section.style.display='none';return;}
-  section.style.display='block';
-  list.innerHTML=zones.map(function(z){
-    return'<div onclick="showPanel(\''+z.id+'\',null)" style="background:'+z.color+';border:1.5px solid '+z.glow+';border-radius:16px;padding:14px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:12px;box-shadow:0 4px 16px '+z.glow+'">'
-      +'<div style="font-size:2.2rem">'+z.emoji+'</div>'
-      +'<div>'
-        +'<div style="font-family:\'Fredoka One\',cursive;font-size:.95rem;color:#fff;margin-bottom:3px">'+z.name+'</div>'
-        +'<div style="font-size:.68rem;color:rgba(255,255,255,.65)">'+z.desc+'</div>'
-      +'</div>'
-      +'<div style="margin-left:auto;font-size:1.2rem;opacity:.6">›</div>'
-      +'</div>';
-  }).join('');
-}
-
 function renderPodTab(){
   renderPetTabs();
   renderPetCard();
-  renderSecretZones();
 }
 
 function renderPetTabs(){
@@ -2530,8 +2271,7 @@ function renderPetCard(){
   var hunger=Math.max(0,Math.min(100,p.hunger||70));
   var happy=Math.max(0,Math.min(100,p.happiness||80));
   var health=Math.max(0,Math.min(100,p.health||100));
-  var isGolden=p.species==='orca'&&S.goldenSplashActive&&S.goldenSplashUnlocked;
-var svg=isGolden?getGoldenOrcaSvg(64):getPetSvg(p.species,64);
+  var svg=getPetSvg(p.species,64);
   var isTucked=p.lastTucked===today;
   var isWashed=p.lastWashed===today;
 
@@ -2551,13 +2291,7 @@ var svg=isGolden?getGoldenOrcaSvg(64):getPetSvg(p.species,64);
     +'<div class="sbar-row"><div class="sbar-lbl">🐟 Hunger</div><div class="sbar-track"><div class="sbar-fill" style="width:'+hunger+'%;background:#29b6f6"></div></div><div class="sbar-pct">'+hunger+'%</div></div>'
     +'<div class="sbar-row"><div class="sbar-lbl">😊 Happy</div><div class="sbar-track"><div class="sbar-fill" style="width:'+happy+'%;background:#66bb6a"></div></div><div class="sbar-pct">'+happy+'%</div></div>'
     +'<div class="sbar-row"><div class="sbar-lbl">❤️ Health</div><div class="sbar-track"><div class="sbar-fill" style="width:'+health+'%;background:#ef5350"></div></div><div class="sbar-pct">'+health+'%</div></div>'
-    +'<div style="margin-bottom:10px">'+
-      (p.species==='orca'&&S.goldenSplashUnlocked?
-        '<button onclick="toggleGoldenSplash()" style="width:100%;font-family:\'Fredoka One\',cursive;font-size:.8rem;padding:9px;border-radius:12px;border:1.5px solid rgba(255,213,79,.4);background:rgba(255,213,79,.1);color:#f59e0b;cursor:pointer">'+
-        (S.goldenSplashActive?'✨ Golden Form ON — tap to switch back':'✨ Toggle Golden Form')+
-        '</button>':'')+
-      '</div>'+
-      '<div class="pet-actions-grid">'
+    +'<div class="pet-actions-grid">'
       +'<div class="pet-act-btn" onclick="petFeed('+_activePetIndex+')">'
         +'<div class="pet-act-icon">🐟</div>'
         +'<div class="pet-act-name">Feed</div>'
@@ -2645,9 +2379,7 @@ function checkLevelUp(p){
 
 function renderFoodGrid(){
   var el=document.getElementById('foodGrid');if(!el)return;
-  var unlocked=S.unlockedLegendaryFoods||[];
-  var allFoods=SPLASH_FOODS.concat(LEGENDARY_FOODS.filter(function(f){return unlocked.includes(f.id);}));
-  el.innerHTML=allFoods.map(function(f){
+  el.innerHTML=SPLASH_FOODS.map(function(f){
     return'<div class="food-item" onclick="feedSplashFood(\''+f.id+'\')">'
       +'<div class="food-emoji">'+f.emoji+'</div>'
       +'<div class="food-name">'+f.name+'</div>'
@@ -2657,7 +2389,7 @@ function renderFoodGrid(){
 }
 
 function feedSplashFood(foodId){
-  var food=SPLASH_FOODS.find(function(f){return f.id===foodId;})||LEGENDARY_FOODS.find(function(f){return f.id===foodId;});
+  var food=SPLASH_FOODS.find(function(f){return f.id===foodId;});
   if(!food)return;
   if((S.stars||0)<food.cost){showToast('Not enough stars!');return;}
   if(!S.pods||!S.pods[0])return;
@@ -2676,12 +2408,10 @@ function feedSplashFood(foodId){
   }
   if(!S.foodCounts)S.foodCounts={};
   S.foodCounts[food.id]=(S.foodCounts[food.id]||0)+1;
-  // Unlock Midnight Zone creature if applicable
-  unlockMidnightCreature(food.id);
   save();updateStars();
   if(_activePetIndex===0)renderPetCard();
   renderHuntingJournal();
-  renderGoalsTab();renderHomeGoalsStrip();
+  renderGoalsTab();
   confetti();
   showToast(food.emoji+' '+food.msg.substring(0,40)+'...');
 }
@@ -2785,7 +2515,7 @@ async function submitReadingLog(){
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
-        model:'claude-sonnet-5',max_tokens:200,
+        model:'claude-sonnet-4-20250514',max_tokens:200,
         system:'You are Splash, a friendly orca who is Nathan\'s best friend. Nathan is 10 and working on summarizing skills — giving the main idea concisely without rambling. Rate his summary 1-3 (1=needs work on conciseness, 2=pretty good, 3=excellent). His self-rating: main idea='+((_readingFormState.selfEval[1])?'yes':'no')+', kept it short='+((_readingFormState.selfEval[2])?'yes':'no')+', understandable='+((_readingFormState.selfEval[3])?'yes':'no')+'. Respond ONLY as JSON with no markdown: {"stars":1-3,"feedback":"one encouraging sentence from Splash in first person, mention his name"}',
         messages:[{role:'user',content:'Book: '+_readingFormState.title+'\nSummary: '+_readingFormState.summaryText}]
       })
@@ -2820,7 +2550,7 @@ async function submitReadingLog(){
       S.readingGoalEsp=Math.min(2,(S.readingGoalEsp||0)+1);
     }
   }
-  save();updateStars();renderGoalsTab();renderHomeGoalsStrip();renderReadingHistory();
+  save();updateStars();renderGoalsTab();renderReadingHistory();
   document.getElementById('readingFeedbackText').textContent=feedbackText;
   document.getElementById('readingStarsAwarded').textContent='🌟 +'+totalStars+' stars earned!';
   confetti();confetti();
@@ -2877,15 +2607,12 @@ async function lookupWord(){
   if(resultEl){resultEl.style.display='block';resultEl.innerHTML='<div style="font-size:.78rem;color:var(--dim);padding:8px">Looking up "'+word+'"...</div>';}
   try{
     var apiKey=getAnthropicKey();
-    if(!apiKey){
-      if(resultEl)resultEl.innerHTML='<div style="font-size:.78rem;color:var(--coral);padding:8px">⚠️ Add your Anthropic API key in Parent Mode → Email to enable word lookups!</div>';
-      return;
-    }
+    if(!apiKey){aiStars=1;feedbackText='Add your Anthropic API key in Parent Mode → Email to enable AI feedback!';document.getElementById('readingFeedbackText').textContent=feedbackText;document.getElementById('readingStarsAwarded').textContent='🌟 +'+(5+selfStars)+' stars earned!';addStars(5+selfStars);save();updateStars();renderReadingHistory();return;}
     var resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
-        model:'claude-sonnet-5',max_tokens:200,
+        model:'claude-sonnet-4-20250514',max_tokens:200,
         system:'You help Nathan, a 10-year-old, learn vocabulary. Give a simple definition and one example sentence using the word naturally. The language is '+_dictLang+'. Respond ONLY as JSON with no markdown: {"word":"the word","definition":"simple definition a 10-year-old understands","sentence":"example sentence using the word"}',
         messages:[{role:'user',content:'Define this word: '+word}]
       })
@@ -2914,7 +2641,7 @@ function saveDictWord(encoded){
     var already=S.dictionary[lang].some(function(w){return w.word.toLowerCase()===parsed.word.toLowerCase();});
     if(already){showToast('Already in your dictionary!');return;}
     S.dictionary[lang].push({word:parsed.word,definition:parsed.definition,sentence:parsed.sentence,date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'})});
-    save();renderDictCollection();renderGoalsTab();renderHomeGoalsStrip();
+    save();renderDictCollection();renderGoalsTab();
     showToast('📚 "'+parsed.word+'" added to your dictionary!');confetti();
     var input=document.getElementById('dictWordInput');if(input)input.value='';
     var result=document.getElementById('dictResult');if(result)result.style.display='none';
@@ -3113,34 +2840,8 @@ function checkOrcalusWelcome(){
 // ═══════════════════════════════════════
 // PANEL NAVIGATION
 // ═══════════════════════════════════════
-function renderHomeGoalsStrip(){
-  var el=document.getElementById('homeGoalsStrip');
-  if(!el)return;
-  var jijiPct=S.jijiPct||0;
-  var sessions=S.jijiSessions||[];
-  var log=S.readingLog||[];
-  var dict=S.dictionary||{english:[],spanish:[]};
-  var totalWords=(dict.english||[]).length+(dict.spanish||[]).length;
-  var huntCount=(S.huntingJournal||[]).length;
-  var readMins=S.readingMins||0;
-  function sc(emoji,value,label,sub,barPct,barColor){
-    return'<div class="stat-card" style="padding:11px 10px">'
-      +'<div style="font-size:1.1rem;margin-bottom:2px">'+emoji+'</div>'
-      +'<div style="font-family:\'Fredoka One\',cursive;font-size:1.3rem;color:var(--coral);line-height:1">'+value+'</div>'
-      +'<div style="font-size:.6rem;font-weight:800;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;margin-top:2px">'+label+'</div>'
-      +(sub?'<div style="font-size:.58rem;color:var(--dimmer);margin-top:2px">'+sub+'</div>':'')
-      +(barPct!==undefined?'<div style="height:4px;background:rgba(128,128,128,.15);border-radius:99px;overflow:hidden;margin-top:6px"><div style="width:'+Math.min(100,barPct)+'%;height:100%;background:'+barColor+';border-radius:99px;transition:width .5s"></div></div>':'')
-      +'</div>';
-  }
-  el.innerHTML=
-    sc('📏',jijiPct+'%','JiJi',sessions.length+' sessions',jijiPct,'linear-gradient(90deg,#43a047,#66bb6a)')
-    +sc('📖',readMins+'m','Reading',log.length+' sessions',Math.min(100,readMins/500*100),'linear-gradient(90deg,#1565c0,#29b6f6)')
-    +sc('📚',totalWords,'Dict Words',(dict.english||[]).length+'EN · '+(dict.spanish||[]).length+'ES',Math.min(100,totalWords/50*100),'linear-gradient(90deg,#7b1fa2,#ab47bc)')
-    +sc('🌊',huntCount+'/50','Facts',(S.oceanFactsLearned||0)+' daily',huntCount/50*100,'linear-gradient(90deg,#0077a8,#29b6f6)');
-}
-
 function showPanel(name,navEl){
-  var panels=['home','goals','challenges','midnight','abyss','reading','pod','rewards'];
+  var panels=['home','goals','reading','pod','rewards'];
   panels.forEach(function(p){
     var el=document.getElementById('panel-'+p);
     if(el)el.style.display=p===name?'block':'none';
@@ -3151,19 +2852,14 @@ function showPanel(name,navEl){
   document.getElementById('mainScroll').scrollTop=0;
   if(name==='pod'){renderPodTab();}
   if(name==='reading'){renderReadingTab();}
-  if(name==='goals'){renderGoalsTab();renderHomeGoalsStrip();}
-  if(name==='challenges'){renderChallengesTab();}
-  if(name==='midnight'){renderMidnightZone();}
-  if(name==='abyss'){renderAbyss();}
+  if(name==='goals'){renderGoalsTab();}
   if(name==='rewards'){renderRewards();renderToyShop();renderRewardLog();}
-  if(name==='home')renderTimeContent();
 }
 
 // ═══════════════════════════════════════
 // PARENT MODE
 // ═══════════════════════════════════════
 var _themeOverride=null;
-var _midnightDepth=0; // 0=200m, 1=500m, 2=1000m
 function previewTheme(block){
   if(block==='auto'){
     _themeOverride=null;
@@ -3180,745 +2876,6 @@ function previewTheme(block){
     showToast('Previewing '+block+' theme!');
   }
 }
-// ═══════════════════════════════════════
-// CHALLENGES SYSTEM
-// ═══════════════════════════════════════
-var CHALLENGES=[
-  // PART 1s
-  {
-    id:'morning_p1',part:1,group:'morning',
-    icon:'🌅',title:'Morning Routine — Part 1',
-    goal:'Complete your morning routine 5 weekdays in a row',
-    type:'morning_streak',target:5,
-    hints:[
-      {threshold:0,  text:'Something legendary is hiding in the deep ocean... complete this challenge to get a clue. Come back as you get closer for a better hint! 👀',level:'cold'},
-      {threshold:3,  text:'Getting warmer! Hint: Splash is going to eat very well when you finish this... 🐟',level:'warm'},
-      {threshold:5,  text:'UNLOCKED! Check Splash\'s food store — something legendary just appeared! 🎉',level:'complete'},
-    ],
-    reward:'food_legendary',
-    unlockMsg:'🎉 Challenge complete! Check the food store — something new and legendary just appeared!',
-  },
-  {
-    id:'jiji_p1',part:1,group:'jiji',
-    icon:'📏',title:'JiJi Journey — Part 1',
-    goal:'Log 3 JiJi sessions',
-    type:'jiji_sessions',target:3,
-    hints:[
-      {threshold:0, text:'A mysterious reward is locked behind this challenge... keep going and come back for a better hint! 👀',level:'cold'},
-      {threshold:2, text:'Almost there! Hint: Splash hasn\'t eaten THIS before... something from the very deep 🦑',level:'warm'},
-      {threshold:3, text:'UNLOCKED! Two challenges down — check the food store for something new! 🎉',level:'complete'},
-    ],
-    reward:'food_legendary',
-    unlockMsg:'🎉 JiJi Part 1 complete! More legendary food appeared in the store!',
-  },
-  {
-    id:'reading_p1',part:1,group:'reading',
-    icon:'📖',title:'Reading — Part 1',
-    goal:'Log 3 reading sessions',
-    type:'reading_sessions',target:3,
-    hints:[
-      {threshold:0, text:'A creature that has never been seen in the pod is waiting... come back as you get closer for a better hint! 👀',level:'cold'},
-      {threshold:2, text:'Almost! Hint: this creature has a very long... something. On its head. 🌀',level:'warm'},
-      {threshold:3, text:'UNLOCKED! A mysterious new creature wants to join the pod — go check! 🦄',level:'complete'},
-    ],
-    reward:'pet_narwhal',
-    unlockMsg:'🦄 A narwhal has appeared! Go to the pod to meet your new friend and give them a name!',
-  },
-  {
-    id:'stars_p1',part:1,group:'stars',
-    icon:'⭐',title:'Star Collector — Part 1',
-    goal:'Earn 100 stars in one week',
-    type:'weekly_stars',target:100,
-    hints:[
-      {threshold:0,  text:'Something incredible is hiding at the bottom of the ocean... earn stars to get closer to the secret! 👀',level:'cold'},
-      {threshold:50, text:'So close! Hint: this creature swam with the dinosaurs and never really left... 🦷',level:'warm'},
-      {threshold:100,text:'UNLOCKED! The narwhal has joined the pod! Go name your new friend! 🦄',level:'complete'},
-    ],
-    reward:'pet_narwhal',
-    unlockMsg:'🦄 Stars Part 1 complete! The narwhal is now in your pod — go give them a name!',
-  },
-  // PART 2s — unlocked after their Part 1 is complete
-  {
-    id:'morning_p2',part:2,group:'morning',
-    icon:'🌅',title:'Morning Routine — Part 2',
-    goal:'Complete your morning routine 10 weekdays in a row',
-    type:'morning_streak',target:10,
-    requiresComplete:'morning_p1',
-    hints:[
-      {threshold:0, text:'You proved you can do 5 — now prove you can do 10. Something with 8 arms is watching... 👀',level:'cold'},
-      {threshold:5, text:'More than halfway! Hint: this creature is one of the smartest animals on Earth. It can open jars. 🫙',level:'warm'},
-      {threshold:9, text:'ONE MORE DAY! Tomorrow you meet something incredible... 🐙',level:'hot'},
-      {threshold:10,text:'UNLOCKED! A new creature wants to join the pod — go meet them and choose a name! 🐙',level:'complete'},
-    ],
-    reward:'pet_octopus',
-    unlockMsg:'🐙 An octopus has appeared in the pod! Go give them a name!',
-  },
-  {
-    id:'jiji_p2',part:2,group:'jiji',
-    icon:'📏',title:'JiJi Journey — Part 2',
-    goal:'Log 6 JiJi sessions',
-    type:'jiji_sessions',target:6,
-    requiresComplete:'jiji_p1',
-    hints:[
-      {threshold:0, text:'You\'re building something big. A legendary food item from millions of years ago is locked here... 👀',level:'cold'},
-      {threshold:4, text:'Almost! Hint: this creature was 60 feet long, had 7-inch teeth, and made great white sharks look small... 🦷',level:'warm'},
-      {threshold:6, text:'UNLOCKED! The Megalodon has been added to the food store! Feed it to Splash! 🦷',level:'complete'},
-    ],
-    reward:'food_megalodon',
-    unlockMsg:'🦷 The Megalodon just appeared in the food store! Feed it to Splash for an incredible fact!',
-  },
-  {
-    id:'reading_p2',part:2,group:'reading',
-    icon:'📖',title:'Reading — Part 2',
-    goal:'Log 5 reading sessions',
-    type:'reading_sessions',target:5,
-    requiresComplete:'reading_p1',
-    hints:[
-      {threshold:0, text:'A secret place in the ocean that almost no one knows about is locked here... keep reading and come back! 👀',level:'cold'},
-      {threshold:3, text:'So close! Hint: it\'s so deep that sunlight never reaches it. But living things glow there on their own... 🌊',level:'warm'},
-      {threshold:5, text:'UNLOCKED! A new creature with 8 arms just joined the pod! Go name them! 🐙',level:'complete'},
-    ],
-    reward:'pet_octopus',
-    unlockMsg:'🐙 Reading Part 2 complete! The octopus has joined the pod — go give them a name!',
-  },
-  {
-    id:'stars_p2',part:2,group:'stars',
-    icon:'⭐',title:'Star Collector — Part 2',
-    goal:'Earn 150 stars in one week',
-    type:'weekly_stars',target:150,
-    requiresComplete:'stars_p1',
-    hints:[
-      {threshold:0,   text:'The biggest unlock of all is behind this challenge. Something no one in the pod has ever seen... 👀',level:'cold'},
-      {threshold:75,  text:'You\'re in the home stretch! Hint: it\'s 200 to 1,000 meters deep. Orcas hunt there. Completely dark except for living lights... 🌑',level:'warm'},
-      {threshold:150, text:'UNLOCKED! The Midnight Zone is open — go explore the deepest secret in Nathan\'s Ocean HQ! 🌑',level:'complete'},
-    ],
-    reward:'midnight_zone',
-    unlockMsg:'🌑 THE MIDNIGHT ZONE HAS BEEN DISCOVERED! A new secret section just appeared in your app!',
-  },
-
-  // PART 3s — baseline tracking, unlocked after Part 2 complete
-  {
-    id:'morning_p3',part:3,group:'morning',
-    icon:'🌅',title:'Morning Routine — Part 3',
-    goal:'Complete your morning routine 15 weekdays in a row',
-    type:'morning_streak',target:15,
-    requiresComplete:'morning_p2',
-    hints:[
-      {threshold:0, text:"You've proven you're consistent. Now prove you're legendary. Something magical is happening to Splash... 👀",level:'cold'},
-      {threshold:6, text:"Halfway! Hint: it's not a new pet. It's something that happens TO Splash himself... ✨",level:'warm'},
-      {threshold:11,text:"Almost there! Splash is starting to glow... 🌟",level:'hot'},
-      {threshold:15,text:"UNLOCKED! Splash has a secret golden form — go to the pod to toggle it! ✨",level:'complete'},
-    ],
-    reward:'golden_splash',
-    unlockMsg:'✨ Golden Splash unlocked! Go to the pod and tap Splash to toggle his golden form!',
-  },
-  {
-    id:'jiji_p3',part:3,group:'jiji',
-    icon:'📏',title:'JiJi Journey — Part 3',
-    goal:'Log 10 JiJi sessions after completing Part 2',
-    type:'jiji_sessions_baseline',target:10,
-    requiresComplete:'jiji_p2',
-    hints:[
-      {threshold:0, text:"Something enormous is waiting in the deep. The biggest animal that has ever lived... 👀",level:'cold'},
-      {threshold:4, text:"Getting closer! Hint: it's 100 feet long. Its heart is the size of a car. 🐋",level:'warm'},
-      {threshold:8, text:"ONE or TWO more sessions! The giant is almost here... 🐋",level:'hot'},
-      {threshold:10,text:"UNLOCKED! A blue whale has joined the pod! Go name the largest animal ever! 🐋",level:'complete'},
-    ],
-    reward:'pet_blue_whale',
-    unlockMsg:'🐋 A blue whale has appeared in the pod! The largest animal ever lived — go give them a name!',
-  },
-  {
-    id:'reading_p3',part:3,group:'reading',
-    icon:'📖',title:'Reading — Part 3',
-    goal:'Log 8 reading sessions after completing Part 2',
-    type:'reading_sessions_baseline',target:8,
-    requiresComplete:'reading_p2',
-    hints:[
-      {threshold:0, text:"There's a place deeper than the Midnight Zone. So deep even orcas don't go. Something is down there... 👀",level:'cold'},
-      {threshold:3, text:"Deeper! Hint: below 4,000 meters. Crushing pressure. Alien creatures. Complete darkness. 🌑",level:'warm'},
-      {threshold:6, text:"Almost in the Abyss! One or two more sessions and a new secret section appears... 🌑",level:'hot'},
-      {threshold:8, text:"UNLOCKED! THE ABYSS is now open — deeper than the Midnight Zone. Something extraordinary awaits! 🌑",level:'complete'},
-    ],
-    reward:'abyss',
-    unlockMsg:'🌑 THE ABYSS HAS BEEN DISCOVERED! A new secret section just appeared — deeper than the Midnight Zone!',
-  },
-  {
-    id:'stars_p3',part:3,group:'stars',
-    icon:'⭐',title:'Star Collector — Part 3',
-    goal:'Earn 200 stars in one week',
-    type:'weekly_stars',target:200,
-    requiresComplete:'stars_p2',
-    hints:[
-      {threshold:0,   text:"A creature that dives 3km deep and battles giant squid in the dark is waiting... earn stars to get closer! 👀",level:'cold'},
-      {threshold:75,  text:"More than a third there! Hint: it has the largest brain of any animal ever. It clicks so loud it can stun prey. 🐳",level:'warm'},
-      {threshold:150, text:"SO close! One final push and a legendary creature joins Splash's food store... 🐳",level:'hot'},
-      {threshold:200, text:"UNLOCKED! The Sperm Whale has appeared in the food store — feed it to Splash for the most incredible fact yet! 🐳",level:'complete'},
-    ],
-    reward:'food_sperm_whale',
-    unlockMsg:'🐳 The Sperm Whale just appeared in the food store! Feed it to Splash for an incredible fact!',
-  },
-];
-
-// Legendary food items that unlock
-var LEGENDARY_FOODS=[
-  {id:'giant_squid',  emoji:'🦑',name:'Giant Squid',   cost:4, hunger:40, msg:'Giant squid live in the Midnight Zone — 200 to 1,000 meters deep! Orcas dive down to hunt them in complete darkness using echolocation! 🌑'},
-  {id:'blue_whale',   emoji:'🐋',name:'Blue Whale',    cost:6, hunger:60, msg:'Orcas hunt blue whale calves in coordinated pod attacks! The blue whale is the largest animal ever — 100 feet long — but orca pods can take them down! 👑'},
-  {id:'megalodon',    emoji:'🦷',name:'Megalodon',     cost:10,hunger:100,msg:'The Megalodon was 60 feet long with 7-inch teeth and went extinct 3.6 million years ago. Some scientists think its descendants still influence modern shark behavior! 🦷'},
-  {id:'sperm_whale',  emoji:'🐳',name:'Sperm Whale',   cost:12,hunger:90, msg:'Sperm whales dive 3 KILOMETERS into the abyss to battle giant squid in total darkness! They have the largest brain of any animal ever and make clicks so loud they can stun prey! 🐳'},
-];
-
-var ABYSS_FACTS=[
-  {text:"The Abyss (4,000-6,000m deep) has pressure 600 times greater than at the surface — enough to crush a submarine! Yet life thrives here.",s:"🌑 The Abyss"},
-  {text:"Anglerfish live in the Abyss and dangle a glowing lure from their heads to attract prey in total darkness. The light is made by bacteria living inside them!",s:"🎣 Anglerfish"},
-  {text:"The vampire squid isn't actually a squid or an octopus — it's its own unique creature that lives in the Abyss and feeds on marine snow!",s:"🧛 Vampire Squid"},
-  {text:"Giant isopods — deep sea pill bugs up to 2.5 feet long — roam the Abyss floor eating whatever falls from above. They can go years without food!",s:"🦞 Giant Isopod"},
-  {text:"Sperm whales dive from the surface all the way to the Abyss — 3 kilometers down — to hunt giant squid. They hold their breath for 90 minutes!",s:"🐳 Sperm Whale"},
-  {text:"Marine snow — tiny particles of dead creatures — slowly falls from the surface to the Abyss like an endless underwater snowstorm, feeding everything below!",s:"❄️ Marine Snow"},
-  {text:"The Dumbo octopus lives in the Abyss and flaps ear-like fins to swim. It's the deepest-living octopus ever found — 7km down!",s:"🐙 Dumbo Octopus"},
-  {text:"Scientists have only explored about 5% of the ocean. The Abyss is one of the least known places on Earth — there are likely creatures there no human has ever seen!",s:"🔬 Unknown Depths"},
-];
-var MIDNIGHT_ZONE_FACTS=[
-  {text:"The Midnight Zone (200-1,000m deep) is completely dark — no sunlight reaches this far. But it's full of life that makes its OWN light! 🌑",s:"🌑 Midnight Zone"},
-  {text:"Orcas regularly dive to 300 meters into the Midnight Zone to hunt giant squid and deep-sea fish. They navigate in total darkness using echolocation!",s:"🐋 Orca Hunting"},
-  {text:"90% of all creatures in the Midnight Zone are bioluminescent — they produce their own light to communicate, hunt, and hide!",s:"✨ Bioluminescence"},
-  {text:"The pressure in the Midnight Zone is 20-100 times greater than at the surface. Orca bodies are specially adapted to handle this pressure!",s:"🌊 Deep Pressure"},
-  {text:"Giant squid — up to 43 feet long — live in the Midnight Zone. Their eyes are the size of dinner plates to see in the darkness!",s:"🦑 Giant Squid"},
-  {text:"Lanternfish are the most common fish in the Midnight Zone and one of orcas' favorite deep-sea snacks. They migrate up at night to feed!",s:"🐟 Lanternfish"},
-  {text:"The anglerfish lives in the Midnight Zone and uses a glowing lure on its head to attract prey in the darkness!",s:"🎣 Anglerfish"},
-  {text:"Some creatures in the Midnight Zone have never been seen by humans. Scientists estimate we've only explored 5% of the ocean!",s:"🔬 Deep Mysteries"},
-];
-
-function getChallengeProgress(challenge){
-  var today=new Date();
-  var completed=S.challengesCompleted||{};
-  if(completed[challenge.id])return{value:challenge.target,done:true};
-
-  if(challenge.type==='morning_streak'){
-    // Count consecutive weekday mornings
-    var streak=0;
-    for(var i=0;i<30;i++){
-      var d=new Date(today);d.setDate(today.getDate()-i);
-      var dow=d.getDay();if(dow===0||dow===6)continue;
-      var ds=d.toDateString();
-      if(S.morningDone&&Object.keys(S.morningDone).some(function(k){return k.endsWith(ds);})){
-        // Check if ALL morning tasks done that day
-        var tasksForDay=MORNING_TASKS.filter(function(t){return S.morningDone[t.id+'_'+ds];});
-        if(tasksForDay.length>=MORNING_TASKS.length*0.8)streak++;
-        else if(i>0)break;
-      } else if(i>0)break;
-    }
-    return{value:Math.min(streak,challenge.target),done:streak>=challenge.target};
-  }
-
-  if(challenge.type==='jiji_sessions'){
-    var sessions=(S.jijiSessions||[]).length;
-    // For Part 2, subtract Part 1 baseline if it exists
-    var baseline=challenge.part===2&&S.challengeBaselines&&S.challengeBaselines.jiji?S.challengeBaselines.jiji:0;
-    var progress=Math.max(0,sessions-baseline);
-    return{value:Math.min(progress,challenge.target),done:progress>=challenge.target};
-  }
-
-  if(challenge.type==='jiji_sessions_baseline'){
-    var sessions=(S.jijiSessions||[]).length;
-    var baseline=S.challengeBaselines&&S.challengeBaselines.jiji_p3?S.challengeBaselines.jiji_p3:sessions;
-    var progress=Math.max(0,sessions-baseline);
-    return{value:Math.min(progress,challenge.target),done:progress>=challenge.target};
-  }
-
-  if(challenge.type==='reading_sessions'){
-    var sessions=(S.readingLog||[]).length;
-    var baseline=challenge.part===2&&S.challengeBaselines&&S.challengeBaselines.reading?S.challengeBaselines.reading:0;
-    var progress=Math.max(0,sessions-baseline);
-    return{value:Math.min(progress,challenge.target),done:progress>=challenge.target};
-  }
-
-  if(challenge.type==='reading_sessions_baseline'){
-    var sessions=(S.readingLog||[]).length;
-    var baseline=S.challengeBaselines&&S.challengeBaselines.reading_p3?S.challengeBaselines.reading_p3:sessions;
-    var progress=Math.max(0,sessions-baseline);
-    return{value:Math.min(progress,challenge.target),done:progress>=challenge.target};
-  }
-
-  if(challenge.type==='weekly_stars'){
-    var weekly=S.weeklyStarsEarned||0;
-    return{value:Math.min(weekly,challenge.target),done:weekly>=challenge.target};
-  }
-
-  return{value:0,done:false};
-}
-
-function getChallengeHint(challenge,progress){
-  var hints=challenge.hints.slice().reverse();
-  for(var i=0;i<hints.length;i++){
-    if(progress>=hints[i].threshold)return hints[i];
-  }
-  return challenge.hints[0];
-}
-
-function isChallengeVisible(challenge){
-  if(!challenge.requiresComplete)return true;
-  var completed=S.challengesCompleted||{};
-  return!!completed[challenge.requiresComplete];
-}
-
-function completeChallenge(challenge){
-  if(!S.challengesCompleted)S.challengesCompleted={};
-  if(S.challengesCompleted[challenge.id])return;
-  S.challengesCompleted[challenge.id]=true;
-  // Save baseline for Part 2 baseline challenges
-  if(!S.challengeBaselines)S.challengeBaselines={};
-  if(challenge.id==='jiji_p1'){S.challengeBaselines.jiji=(S.jijiSessions||[]).length;}
-  if(challenge.id==='jiji_p2'){S.challengeBaselines.jiji_p3=(S.jijiSessions||[]).length;}
-  if(challenge.id==='reading_p1'){S.challengeBaselines.reading=(S.readingLog||[]).length;}
-  if(challenge.id==='reading_p2'){S.challengeBaselines.reading_p3=(S.readingLog||[]).length;}
-  if(challenge.id==='morning_p2'){S.challengeBaselines.morning_p3_start=new Date().toISOString();}
-
-  // Apply reward
-  if(challenge.reward==='food_legendary'){
-    if(!S.unlockedLegendaryFoods)S.unlockedLegendaryFoods=[];
-    LEGENDARY_FOODS.forEach(function(f){
-      if(f.id!=='megalodon'&&!S.unlockedLegendaryFoods.includes(f.id)){
-        S.unlockedLegendaryFoods.push(f.id);
-      }
-    });
-  }
-  if(challenge.reward==='food_megalodon'){
-    if(!S.unlockedLegendaryFoods)S.unlockedLegendaryFoods=[];
-    if(!S.unlockedLegendaryFoods.includes('megalodon'))S.unlockedLegendaryFoods.push('megalodon');
-  }
-  if(challenge.reward==='pet_narwhal'){
-    if(!(S.pods||[]).some(function(p){return p.species==='narwhal';})){
-      if(!S.pendingPetUnlock)S.pendingPetUnlock=[];
-      if(!S.pendingPetUnlock.includes('narwhal'))S.pendingPetUnlock.push('narwhal');
-    }
-  }
-  if(challenge.reward==='pet_octopus'){
-    if(!(S.pods||[]).some(function(p){return p.species==='octopus';})){
-      if(!S.pendingPetUnlock)S.pendingPetUnlock=[];
-      if(!S.pendingPetUnlock.includes('octopus'))S.pendingPetUnlock.push('octopus');
-    }
-  }
-  if(challenge.reward==='midnight_zone'){
-    S.midnightZoneUnlocked=true;
-  }
-  if(challenge.reward==='golden_splash'){
-    S.goldenSplashUnlocked=true;
-  }
-  if(challenge.reward==='pet_blue_whale'){
-    if(!(S.pods||[]).some(function(p){return p.species==='blue_whale';})){
-      if(!S.pendingPetUnlock)S.pendingPetUnlock=[];
-      if(!S.pendingPetUnlock.includes('blue_whale'))S.pendingPetUnlock.push('blue_whale');
-    }
-  }
-  if(challenge.reward==='abyss'){
-    S.abyssUnlocked=true;
-  }
-  if(challenge.reward==='food_sperm_whale'){
-    if(!S.unlockedLegendaryFoods)S.unlockedLegendaryFoods=[];
-    if(!S.unlockedLegendaryFoods.includes('sperm_whale'))S.unlockedLegendaryFoods.push('sperm_whale');
-  }
-
-  save();
-  // Show celebration
-  confetti();confetti();confetti();
-  showToast(challenge.unlockMsg);
-  setTimeout(function(){renderChallengesTab();renderFoodGrid();renderPodTab();},500);
-}
-
-function checkChallengeCompletions(){
-  CHALLENGES.forEach(function(c){
-    if(!isChallengeVisible(c))return;
-    if(S.challengesCompleted&&S.challengesCompleted[c.id])return;
-    var prog=getChallengeProgress(c);
-    if(prog.done)completeChallenge(c);
-  });
-}
-
-function renderChallengesTab(){
-  var el=document.getElementById('challengesList');if(!el)return;
-  checkChallengeCompletions();
-  var completed=S.challengesCompleted||{};
-  var visible=CHALLENGES.filter(function(c){return isChallengeVisible(c);});
-  var html='';
-
-  visible.forEach(function(c){
-    var prog=getChallengeProgress(c);
-    var isDone=!!completed[c.id];
-    var hint=getChallengeHint(c,prog.value);
-    var pct=Math.min(100,Math.round(prog.value/c.target*100));
-
-    html+='<div class="challenge-card'+(isDone?' complete':'')+'">'+
-      '<div class="challenge-header">'+
-        '<div class="challenge-icon">'+c.icon+'</div>'+
-        '<div>'+
-          '<div class="challenge-title">'+c.title+
-            '<span class="challenge-badge'+(c.part===2?' part2':'')+'"> Part '+c.part+'</span>'+
-          '</div>'+
-          '<div class="challenge-goal">'+c.goal+'</div>'+
-        '</div>'+
-      '</div>'+
-      '<div class="challenge-progress-track">'+
-        '<div class="challenge-progress-fill" style="width:'+pct+'%"></div>'+
-      '</div>'+
-      '<div class="challenge-progress-label">'+prog.value+' / '+c.target+(isDone?' ✅':'')+'</div>'+
-      '<div class="challenge-hint '+hint.level+'">'+
-        (isDone?'🎉 ':'🔒 ')+hint.text+
-      '</div>'+
-      (!isDone?'<div class="challenge-come-back">Keep going — the hint gets better the closer you get! 👀</div>':'')+
-      '</div>';
-  });
-
-  // Show locked part 2s
-  var locked=CHALLENGES.filter(function(c){return c.requiresComplete&&!isChallengeVisible(c);});
-  if(locked.length>0){
-    html+='<div style="margin-top:16px"><div class="slabel">🔒 Locked — complete Part 1 first</div>';
-    locked.forEach(function(c){
-      html+='<div class="challenge-card locked">'+
-        '<div class="challenge-header">'+
-          '<div class="challenge-icon">'+c.icon+'</div>'+
-          '<div>'+
-            '<div class="challenge-title">'+c.title+
-              '<span class="challenge-badge part2"> Part 2</span>'+
-            '</div>'+
-            '<div class="challenge-goal">'+c.goal+'</div>'+
-          '</div>'+
-        '</div>'+
-        '<div style="font-size:.72rem;color:var(--dimmer);font-style:italic">Complete Part 1 to unlock this challenge...</div>'+
-        '</div>';
-    });
-    html+='</div>';
-  }
-
-  // Midnight Zone preview if unlocked
-  if(S.midnightZoneUnlocked){
-    html+='<div style="background:linear-gradient(135deg,#000510,#001e42);border:1.5px solid rgba(41,182,246,.3);border-radius:18px;padding:14px;margin-top:16px;text-align:center">'+
-      '<div style="font-size:2rem;margin-bottom:6px">🌑</div>'+
-      '<div style="font-family:\'Fredoka One\',cursive;font-size:1rem;color:#29b6f6;margin-bottom:6px">The Midnight Zone</div>'+
-      '<div style="font-size:.75rem;color:#7b9ab0;margin-bottom:10px">You discovered the deepest secret in Nathan\'s Ocean HQ!</div>'+
-      '<button onclick="showPanel(\'midnight\',null)" style="font-family:\'Fredoka One\',cursive;font-size:.82rem;padding:10px 20px;border-radius:14px;border:none;background:linear-gradient(135deg,#001e42,#29b6f6);color:#fff;cursor:pointer">Enter the Midnight Zone 🌑</button>'+
-      '</div>';
-  // Show Abyss button if unlocked
-  if(S.abyssUnlocked){
-    html+='<div style="background:linear-gradient(135deg,#000208,#001030);border:1.5px solid rgba(100,181,246,.2);border-radius:18px;padding:14px;margin-top:10px;text-align:center">'+
-      '<div style="font-size:2rem;margin-bottom:6px">🌑</div>'+
-      '<div style="font-family:\'Fredoka One\',cursive;font-size:1rem;color:#64b5f6;margin-bottom:6px">The Abyss</div>'+
-      '<div style="font-size:.75rem;color:#546e7a;margin-bottom:10px">Below 4,000 meters — deeper than any orca dares to go!</div>'+
-      '<button onclick="showPanel(\'abyss\',null)" style="font-family:\'Fredoka One\',cursive;font-size:.82rem;padding:10px 20px;border-radius:14px;border:none;background:linear-gradient(135deg,#000510,#64b5f6);color:#fff;cursor:pointer">Enter the Abyss 🌑</button>'+
-      '</div>';
-  }
-  }
-
-  el.innerHTML=html;
-}
-
-// ═══════════════════════════════════════
-// MIDNIGHT ZONE TAB
-// ═══════════════════════════════════════
-// Midnight Zone creature data
-var MIDNIGHT_CREATURES=[
-  // Pre-populated
-  {id:'giant_squid',  emoji:'🦑', name:'Giant Squid',       depth:'200-1000m', unlocked:true,
-   bio:'Up to 43 feet long with eyes the size of dinner plates! Lives in total darkness and is one of orcas\' favorite prey.',
-   fact:'Their huge eyes evolved to spot the faint bioluminescent glow of predators in the dark!',
-   threat:'⚡⚡⚡', feedItem:null},
-  {id:'lanternfish',  emoji:'🐟', name:'Lanternfish',        depth:'200-1000m', unlocked:true,
-   bio:'The most common fish in the Midnight Zone — they migrate UP at night to feed at the surface, then dive back down at dawn.',
-   fact:'There are so many lanternfish they show up on sonar as a "phantom seafloor"!',
-   threat:'⚡', feedItem:null},
-  {id:'anglerfish',   emoji:'🎣', name:'Anglerfish',         depth:'200-4000m', unlocked:true,
-   bio:'Dangles a glowing lure from its head to attract prey in total darkness. The light comes from bacteria living inside the lure!',
-   fact:'Female anglerfish are huge — males are tiny and permanently fuse to the female\'s body!',
-   threat:'⚡⚡⚡', feedItem:null},
-  // Unlock by feeding Splash
-  {id:'deep_shark',   emoji:'🦈', name:'Deep Sea Shark',     depth:'200-1000m', unlocked:false,
-   bio:'Several shark species hunt in the Midnight Zone including the goblin shark, which has a jaw that shoots forward to catch prey!',
-   fact:'The goblin shark has barely changed in 125 million years — it\'s a living fossil!',
-   threat:'⚡⚡⚡⚡', feedItem:'f8', feedEmoji:'🦈', feedName:'Shark'},
-  {id:'emp_penguin',  emoji:'🐧', name:'Emperor Penguin',    depth:'200-500m',  unlocked:false,
-   bio:'Emperor penguins dive up to 1,850 feet into the Midnight Zone to hunt fish and squid — holding their breath for 22 minutes!',
-   fact:'Their bones are denser than most birds so they can sink faster and dive deeper!',
-   threat:'⚡⚡', feedItem:'f5', feedEmoji:'🐧', feedName:'Penguin'},
-  {id:'weddell_seal', emoji:'🦦', name:'Weddell Seal',       depth:'200-600m',  unlocked:false,
-   bio:'Weddell seals dive up to 2,000 feet into the Midnight Zone and can hold their breath for 80 minutes — longer than almost any mammal!',
-   fact:'They echolocate like dolphins to navigate under Antarctic ice in complete darkness!',
-   threat:'⚡⚡', feedItem:'f3', feedEmoji:'🦦', feedName:'Seal'},
-  {id:'sea_lion',     emoji:'🦭', name:'California Sea Lion', depth:'200-900m', unlocked:false,
-   bio:'California sea lions regularly dive into the Midnight Zone to hunt squid at night, sometimes making over 50 dives in a single night!',
-   fact:'They can sleep underwater by "logging" at the surface between dives!',
-   threat:'⚡⚡', feedItem:'f4', feedEmoji:'🦭', feedName:'Sea Lion'},
-  {id:'dolphin_deep', emoji:'🐬', name:'Bottlenose Dolphin',  depth:'200-500m', unlocked:false,
-   bio:'Bottlenose dolphins make surprisingly deep dives into the Midnight Zone, using echolocation clicks to hunt in complete darkness.',
-   fact:'Dolphins can make up to 1,000 clicks per second — their echolocation is more precise than any human technology!',
-   threat:'⚡⚡⚡', feedItem:'f7', feedEmoji:'🐬', feedName:'Dolphin'},
-  {id:'sperm_whale',  emoji:'🐳', name:'Sperm Whale',         depth:'200-3000m', unlocked:false,
-   bio:'Sperm whales make the deepest dives of any toothed whale — 3 kilometers into the darkness — to battle giant squid. They hold their breath for 90 minutes!',
-   fact:'Their clicks are so loud they can stun or even kill prey — the loudest sound produced by any animal!',
-   threat:'⚡⚡⚡⚡⚡', feedItem:'f9', feedEmoji:'🐋', feedName:'Baby Whale'},
-];
-
-
-var MIDNIGHT_DEPTHS=[
-  {
-    depth:'200m',label:'200m — Twilight Edge',color:'#0288d1',
-    emoji:'🌊',
-    desc:'The last traces of sunlight disappear here. Your eyes would see nothing. But life is everywhere.',
-    creatures:['giant_squid','lanternfish','emp_penguin','sea_lion','dolphin_deep'],
-    fact:'At 200m the water temperature drops to near freezing and the pressure is 20x greater than at the surface.',
-  },
-  {
-    depth:'500m',label:'500m — Dark Waters',color:'#01579b',
-    emoji:'🌑',
-    desc:'Pitch black. No sunlight has ever reached this depth. Creatures here make their own light to survive.',
-    creatures:['anglerfish','weddell_seal','deep_shark'],
-    fact:'The pressure here would crush a human instantly — but creatures like the anglerfish thrive because their bodies have no air pockets to compress.',
-  },
-  {
-    depth:'1000m',label:'1000m — The Deep',color:'#001e42',
-    emoji:'🌑',
-    desc:'The deepest orcas ever dive. Below this point even they cannot follow. What lurks beyond is unknown.',
-    creatures:['sperm_whale','giant_squid'],
-    fact:'Orca pods have been recorded diving to 1,000m — but sperm whales go 3x deeper still, into the complete unknown.',
-  },
-];
-function getMidnightCreatureUnlocks(){
-  var unlocked=S.midnightCreaturesUnlocked||[];
-  return MIDNIGHT_CREATURES.map(function(c){
-    return Object.assign({},c,{unlocked:c.unlocked||unlocked.includes(c.id)});
-  });
-}
-
-function unlockMidnightCreature(foodId){
-  var creature=MIDNIGHT_CREATURES.find(function(c){return c.feedItem===foodId;});
-  if(!creature||creature.unlocked)return;
-  var unlocked=S.midnightCreaturesUnlocked||[];
-  if(unlocked.includes(creature.id))return;
-  unlocked.push(creature.id);
-  S.midnightCreaturesUnlocked=unlocked;
-  save();
-  setTimeout(function(){
-    showToast('🌑 New Midnight Zone creature discovered! Check the Midnight Zone! '+creature.emoji);
-    confetti();confetti();
-  },500);
-}
-
-function diveToDepth(d){
-  _midnightDepth=d;
-  renderMidnightZone();
-}
-
-function renderMidnightZone(){
-  var el=document.getElementById('panel-midnight');if(!el)return;
-  var factIdx=new Date().getDate()%MIDNIGHT_ZONE_FACTS.length;
-  var fact=MIDNIGHT_ZONE_FACTS[factIdx];
-  var creatures=getMidnightCreatureUnlocks();
-  var unlockedCount=creatures.filter(function(c){return c.unlocked;}).length;
-  var depth=MIDNIGHT_DEPTHS[_midnightDepth];
-
-  // Build bioluminescent particles for atmosphere
-  var particles='';
-  var pColors=['rgba(41,182,246,','rgba(100,220,255,','rgba(0,200,255,','rgba(64,196,255,'];
-  var pAnims=['midnight-drift','midnight-drift-left','midnight-drift-right'];
-  for(var i=0;i<25;i++){
-    var sz=1+Math.random()*4;
-    var col=pColors[Math.floor(Math.random()*pColors.length)];
-    var anim=pAnims[Math.floor(Math.random()*pAnims.length)];
-    particles+='<div class="midnight-particle" style="width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*100)+'%;top:'+(10+Math.random()*80)+'%;background:'+col+(0.5+Math.random()*.5)+');box-shadow:0 0 '+(sz*3)+'px '+col+'0.7);animation-name:'+anim+';animation-duration:'+(4+Math.random()*8)+'s;animation-delay:-'+(Math.random()*8)+'s;animation-timing-function:ease-in-out;animation-iteration-count:infinite;"></div>';
-  }
-
-  var html=
-    // Floating particles atmosphere
-    '<div style="position:relative;overflow:hidden;border-radius:18px;margin-bottom:10px;background:linear-gradient(180deg,#000d20,#001530,#000510);padding:16px;min-height:120px">'+
-      particles+
-      '<div style="position:relative;z-index:1;text-align:center">'+
-        '<div style="font-size:2.5rem;margin-bottom:4px;animation:float 3s ease-in-out infinite">🌑</div>'+
-        '<div style="font-family:\'Fredoka One\',cursive;font-size:1.2rem;color:#29b6f6;margin-bottom:2px">The Midnight Zone</div>'+
-        '<div style="font-size:.68rem;color:#7b9ab0;margin-bottom:4px">200 - 1,000 meters deep · Where orcas hunt in darkness</div>'+
-        '<div style="font-size:.62rem;color:#4a90a0;font-weight:700">'+unlockedCount+' / '+creatures.length+' creatures discovered</div>'+
-      '</div>'+
-    '</div>'+
-
-    // Dive deeper tabs
-    '<div style="font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#7b9ab0;margin-bottom:8px">🤿 Dive Deeper</div>'+
-    '<div class="depth-tabs">'+
-    MIDNIGHT_DEPTHS.map(function(d,i){
-      return'<div class="depth-tab'+(i===_midnightDepth?' active':'')+'" onclick="diveToDepth('+i+')">'+d.emoji+' '+d.label+'</div>';
-    }).join('')+
-    '</div>'+
-
-    // Current depth info
-    '<div style="background:linear-gradient(135deg,rgba(0,10,30,.8),rgba(0,30,66,.6));border:1.5px solid rgba(41,182,246,.25);border-radius:16px;padding:12px;margin-bottom:10px">'+
-      '<div style="font-family:\'Fredoka One\',cursive;font-size:.9rem;color:'+depth.color+';margin-bottom:4px">'+depth.emoji+' '+depth.label+'</div>'+
-      '<div style="font-size:.78rem;color:#b0d4e8;line-height:1.5;margin-bottom:6px">'+depth.desc+'</div>'+
-      '<div style="font-size:.68rem;color:#546e7a;font-style:italic">💡 '+depth.fact+'</div>'+
-    '</div>'+
-
-    // Creatures at this depth
-    '<div style="font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#7b9ab0;margin:10px 0 8px">🌑 Creatures at this depth</div>'+
-    creatures.filter(function(c){return depth.creatures.includes(c.id);}).map(function(c){
-      if(c.unlocked){
-        return'<div style="background:rgba(0,10,30,.7);border:1.5px solid rgba(41,182,246,.2);border-radius:16px;padding:12px;margin-bottom:8px">'+
-          '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">'+
-            '<div style="font-size:2rem">'+c.emoji+'</div>'+
-            '<div>'+
-              '<div style="font-family:\'Fredoka One\',cursive;font-size:.88rem;color:#29b6f6">'+c.name+'</div>'+
-              '<div style="font-size:.6rem;color:#7b9ab0">📍 '+c.depth+' · Threat: '+c.threat+'</div>'+
-            '</div>'+
-          '</div>'+
-          '<div style="font-size:.74rem;color:#b0d4e8;line-height:1.5;margin-bottom:6px">'+c.bio+'</div>'+
-          '<div style="background:rgba(41,182,246,.06);border-radius:10px;padding:7px 10px;font-size:.68rem;color:#7b9ab0;font-style:italic">💡 '+c.fact+'</div>'+
-          '</div>';
-      } else {
-        return'<div style="background:rgba(0,5,16,.5);border:1.5px dashed rgba(41,182,246,.12);border-radius:16px;padding:12px;margin-bottom:8px">'+
-          '<div style="display:flex;align-items:center;gap:10px">'+
-            '<div style="font-size:2rem;filter:brightness(0) opacity(.3)">'+c.emoji+'</div>'+
-            '<div>'+
-              '<div style="font-family:\'Fredoka One\',cursive;font-size:.88rem;color:#1e3040">??? Unknown Creature</div>'+
-              '<div style="font-size:.63rem;color:#1e3040;margin-top:3px">Feed Splash '+c.feedEmoji+' '+c.feedName+' to discover this creature...</div>'+
-            '</div>'+
-            '<div style="margin-left:auto;font-size:1rem">🔒</div>'+
-          '</div>'+
-          '</div>';
-      }
-    }).join('')+
-
-    // Depth tracker
-    '<div style="background:rgba(0,5,16,.7);border:1.5px solid rgba(41,182,246,.15);border-radius:16px;padding:12px;margin-bottom:10px">'+
-      '<div style="font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#29b6f6;margin-bottom:10px">📏 How Deep Is 1,000m?</div>'+
-      [
-        {label:'🏊 Olympic Pool',    depth:2,    color:'#81d4fa'},
-        {label:'🗽 Statue of Liberty',depth:93,  color:'#4fc3f7'},
-        {label:'🌑 Midnight Zone starts',depth:200,color:'#29b6f6'},
-        {label:'🌑 Midnight Zone ends', depth:1000,color:'#0077b6'},
-        {label:'🏔️ Everest (flipped!)',  depth:8849,color:'#01579b'},
-        {label:'✈️ Airplane flies UP',   depth:10668,color:'#0d47a1'},
-      ].map(function(d){
-        var barPct=Math.min(100,Math.round(d.depth/107));
-        return'<div style="margin-bottom:7px">'+
-          '<div style="display:flex;justify-content:space-between;font-size:.63rem;color:#546e7a;margin-bottom:2px">'+
-            '<span>'+d.label+'</span>'+
-            '<span style="color:#29b6f6;font-weight:800">'+d.depth.toLocaleString()+'m</span>'+
-          '</div>'+
-          '<div style="height:5px;background:rgba(41,182,246,.08);border-radius:99px;overflow:hidden">'+
-            '<div style="height:100%;width:'+barPct+'%;background:'+d.color+';border-radius:99px"></div>'+
-          '</div>'+
-          '</div>';
-      }).join('')+
-      '<div style="font-size:.63rem;color:#2d4a5a;margin-top:6px;font-style:italic">💡 Flip Everest upside down and its peak would still be inside the Midnight Zone!</div>'+
-    '</div>'+
-
-    // General facts
-    '<div style="font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#7b9ab0;margin:10px 0 8px">🔬 Midnight Zone Facts</div>'+
-    MIDNIGHT_ZONE_FACTS.filter(function(f,i){return i!==factIdx;}).map(function(f){
-      return'<div style="background:rgba(0,5,16,.6);border:1px solid rgba(41,182,246,.12);border-radius:14px;padding:10px 12px;margin-bottom:8px">'+
-        '<div style="font-size:.74rem;color:#e8f4fd;line-height:1.5;margin-bottom:4px">'+f.text+'</div>'+
-        '<div style="font-size:.63rem;color:#29b6f6">'+f.s+'</div>'+
-        '</div>';
-    }).join('')+
-
-    // Today's highlighted fact
-    '<div style="background:rgba(41,182,246,.08);border:1.5px solid rgba(41,182,246,.2);border-radius:16px;padding:12px;margin-bottom:10px">'+
-      '<div style="font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#29b6f6;margin-bottom:5px">🔬 Today\'s Fact</div>'+
-      '<div style="font-size:.82rem;color:#e8f4fd;font-weight:700;line-height:1.5;margin-bottom:4px">'+fact.text+'</div>'+
-      '<div style="font-size:.63rem;color:#29b6f6">'+fact.s+'</div>'+
-    '</div>'+
-
-    // Discovery hint
-    '<div style="background:rgba(41,182,246,.05);border:1px solid rgba(41,182,246,.12);border-radius:14px;padding:10px 12px;margin-top:4px;text-align:center">'+
-      '<div style="font-size:.72rem;color:#4a90a0">🔍 Feed Splash different prey in the Pod tab to discover hidden creatures!</div>'+
-    '</div>';
-
-  el.innerHTML=html;
-}
-
-// ═══════════════════════════════════════
-// THE ABYSS TAB
-// ═══════════════════════════════════════
-function renderAbyss(){
-  var el=document.getElementById('panel-abyss');if(!el)return;
-  var factIdx=new Date().getDate()%ABYSS_FACTS.length;
-  var fact=ABYSS_FACTS[factIdx];
-  el.innerHTML=
-    '<div style="text-align:center;padding:20px 0 10px">'+
-      '<div style="font-size:3rem;margin-bottom:8px;animation:float 4s ease-in-out infinite">🌑</div>'+
-      '<div style="font-family:\'Fredoka One\',cursive;font-size:1.3rem;color:#64b5f6;margin-bottom:4px">The Abyss</div>'+
-      '<div style="font-size:.72rem;color:#546e7a;margin-bottom:16px">4,000 - 6,000 meters deep · Where no light has ever reached</div>'+
-    '</div>'+
-    '<div style="background:rgba(100,181,246,.06);border:1.5px solid rgba(100,181,246,.15);border-radius:18px;padding:14px;margin-bottom:10px">'+
-      '<div style="font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#64b5f6;margin-bottom:5px">🔬 Abyss Fact</div>'+
-      '<div style="font-size:.88rem;color:#cfd8dc;font-weight:700;line-height:1.5;margin-bottom:6px">'+fact.text+'</div>'+
-      '<div style="font-size:.68rem;color:#64b5f6">'+fact.s+'</div>'+
-    '</div>'+
-    '<div style="font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:#546e7a;margin:14px 0 8px">🌑 Life in the Abyss</div>'+
-    ABYSS_FACTS.filter(function(f,i){return i!==factIdx;}).map(function(f){
-      return'<div style="background:rgba(0,2,8,.8);border:1px solid rgba(100,181,246,.1);border-radius:14px;padding:10px 12px;margin-bottom:8px">'+
-        '<div style="font-size:.78rem;color:#cfd8dc;line-height:1.5;margin-bottom:4px">'+f.text+'</div>'+
-        '<div style="font-size:.65rem;color:#64b5f6">'+f.s+'</div>'+
-        '</div>';
-    }).join('');
-}
-
-// Golden Splash toggle
-function toggleGoldenSplash(){
-  S.goldenSplashActive=!S.goldenSplashActive;
-  save();renderPetCard();
-  showToast(S.goldenSplashActive?'✨ Golden Splash activated! 🌟':'Splash is back to normal! 🐋');
-}
-
-function checkPendingPetUnlocks(){
-  var pending=S.pendingPetUnlock||[];
-  if(pending.length===0)return;
-  var petToUnlock=pending[0];
-  var petNames={narwhal:'narwhal',octopus:'octopus'};
-  var petEmojis={narwhal:'🦄',octopus:'🐙'};
-  var petMsgs={
-    narwhal:'A narwhal has appeared from the deep ocean! Narwhals are real — their spiral tusk is actually a giant tooth up to 10 feet long! Give your new friend a name!',
-    octopus:'An octopus has crawled into the pod! Octopuses have three hearts, blue blood, and can change color in under a second! Give your new friend a name!',
-    blue_whale:'A BLUE WHALE has joined the pod! The largest animal ever to live on Earth — up to 100 feet long and 200 tons! Give your new friend a name!',
-  };
-  setTimeout(function(){
-    var name=prompt(petEmojis[petToUnlock]+' '+petMsgs[petToUnlock]+'\n\nWhat would you like to name your new '+petToUnlock+'?');
-    if(!name)name=petToUnlock.charAt(0).toUpperCase()+petToUnlock.slice(1);
-    if(!S.pods)S.pods=[];
-    S.pods.push({
-      id:petToUnlock+'_'+Date.now(),
-      species:petToUnlock,
-      name:name,
-      hunger:90,happiness:100,health:100,
-      level:1,xp:0,
-      lastFed:'',lastPlayed:'',lastWashed:'',lastTucked:'',
-      birthday:new Date().toISOString().slice(0,10)
-    });
-    S.pendingPetUnlock=pending.slice(1);
-    save();renderPodTab();
-    confetti();confetti();confetti();
-    showToast(petEmojis[petToUnlock]+' Welcome '+name+' to the pod!');
-  },1000);
-}
-
-// New challenge tab popup (shows once)
-function checkChallengesPopup(){
-  if(S.challengesPopupSeen)return;
-  setTimeout(function(){
-    S.challengesPopupSeen=true;save();
-    showToast('🏆 NEW! Check the Challenges tab — 8 secret challenges are waiting for you!');
-    // Flash the challenges nav item
-    var navEl=document.getElementById('nav-challenges');
-    if(navEl){
-      var flashes=0;
-      var flash=setInterval(function(){
-        navEl.style.background=flashes%2===0?'rgba(255,213,79,.3)':'';
-        flashes++;if(flashes>8)clearInterval(flash);
-      },300);
-    }
-  },3000);
-}
-
-// Add narwhal and octopus to PET_SPECIES
-PET_SPECIES.narwhal={emoji:'🦄',species:'Narwhal',food:'🦑 Squid',foodCost:2,personality:'mysterious and magical'};
-PET_SPECIES.blue_whale={emoji:'🐋',species:'Blue Whale',food:'🦐 Krill',foodCost:1,personality:'gentle giant of the ocean'};
-PET_SPECIES.octopus={emoji:'🐙',species:'Octopus',food:'🦐 Shrimp',foodCost:1,personality:'clever and curious'};
-PET_SPECIES.octopus={emoji:'🐙',species:'Octopus',food:'🦐 Shrimp',foodCost:1,personality:'clever and curious'};
-
 function saveAnthropicKey(){
   var key=document.getElementById('anthropicKeyInput').value.trim();
   if(!key||!key.startsWith('sk-ant-')){showToast('Invalid key — should start with sk-ant-');return;}
@@ -3974,8 +2931,6 @@ function showAdminTab(name,el){
 }
 
 function loadAdminSettings(){
-  var disp=document.getElementById('currentStarsDisplay');
-  if(disp)disp.textContent=S.stars||0;
   var wg=document.getElementById('weeklyGoalInput');if(wg)wg.value=S.weeklyStarGoal||100;
   // API key
   var ak=document.getElementById('anthropicKeyInput');
@@ -3997,26 +2952,8 @@ function loadAdminSettings(){
   renderAdminReminders();
   renderAdminRewards();
   renderAdminPets();
-  renderAdminEP();
 }
 
-function giveStars(){
-  var v=parseInt(document.getElementById('giveStarsInput').value)||0;
-  if(v<1){showToast('Enter a number of stars to give!');return;}
-  addStars(v);save();updateStars();
-  var disp=document.getElementById('currentStarsDisplay');
-  if(disp)disp.textContent=S.stars||0;
-  document.getElementById('giveStarsInput').value='';
-  showToast('⭐ +'+v+' stars given to Nathan!');
-  confetti();
-}
-function quickGiveStars(v){
-  addStars(v);save();updateStars();
-  var disp=document.getElementById('currentStarsDisplay');
-  if(disp)disp.textContent=S.stars||0;
-  showToast('⭐ +'+v+' stars given to Nathan!');
-  confetti();
-}
 function saveWeeklyGoal(){
   var v=parseInt(document.getElementById('weeklyGoalInput').value)||100;
   S.weeklyStarGoal=v;save();renderStarsBar();
@@ -4034,7 +2971,7 @@ function saveJijiPct(){
   v=Math.min(100,Math.max(0,v));
   S.jijiPct=v;
   S.jijiPctDate=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'});
-  save();renderGoalsTab();renderHomeGoalsStrip();
+  save();renderGoalsTab();
   var jl=document.getElementById('jijiLastUpdated');if(jl)jl.textContent='Last updated: '+S.jijiPctDate;
   showToast('JiJi updated to '+v+'%!');
 }
@@ -4050,138 +2987,6 @@ function renderAdminReminders(){
       +'<button class="override-del" onclick="deleteReminder('+i+')">✕</button>'
       +'</div>';
   }).join('');
-}
-
-function setReminderEmoji(emoji){
-  var el=document.getElementById('reminderEmoji');
-  if(el)el.value=emoji;
-}
-// ═══════════════════════════════════════
-// EXTRA PRACTICE
-// ═══════════════════════════════════════
-var DEFAULT_EP_TASKS=[
-  {id:'ep1',emoji:'📝',name:'English word search',stars:3},
-  {id:'ep2',emoji:'📝',name:'Spanish word search',stars:3},
-  {id:'ep3',emoji:'📱',name:'Extra Duolingo session',stars:3},
-  {id:'ep4',emoji:'📖',name:'Extra reading session',stars:5},
-  {id:'ep5',emoji:'📚',name:'Look up a new English word',stars:2},
-  {id:'ep6',emoji:'📚',name:'Look up a new Spanish word',stars:2},
-  {id:'ep7',emoji:'🎧',name:'Listen to an audiobook (15 min)',stars:4},
-  {id:'ep8',emoji:'📰',name:'Read something interesting online',stars:3},
-  {id:'ep9',emoji:'🗣️',name:'Tell Mom or Dad about something you read',stars:3},
-  {id:'ep10',emoji:'🎵',name:'Watch a YouTube video in Spanish',stars:3},
-  {id:'ep11',emoji:'🗣️',name:'5-minute Spanish conversation with Dad',stars:5},
-  {id:'ep12',emoji:'✍️',name:'Write 3 sentences in Spanish',stars:4},
-];
-
-function getEPTasks(){return S.epTasks&&S.epTasks.length?S.epTasks:JSON.parse(JSON.stringify(DEFAULT_EP_TASKS));}
-
-function renderExtraPractice(){
-  // Nudge on no-school / weekend days
-  var nudge=document.getElementById('extraPracticeNudge');
-  if(nudge){
-    var dow=new Date().getDay();
-    var todayKey=getDateKey(new Date());
-    var noSchool=dow===0||dow===6||!!NO_SCHOOL_DAYS[todayKey];
-    nudge.style.display=noSchool?'block':'none';
-  }
-  var el=document.getElementById('extraPracticeList');
-  if(!el)return;
-  var tasks=getEPTasks();
-  var today=new Date().toDateString();
-  if(!S.epDone)S.epDone={};
-  el.innerHTML=tasks.map(function(t){
-    var key=t.id+'_'+today;
-    var taps=S.epDone[key]||0;
-    var maxTaps=5;
-    var done=taps>=maxTaps;
-    return'<div class="task-pill'+(done?' done':'')+'" onclick="tapEPTask(\''+t.id+'\')" style="opacity:'+(done?.6:1)+'">'
-      +'<div class="task-emoji">'+t.emoji+'</div>'
-      +'<div style="flex:1">'
-      +'<div class="task-name">'+t.name+'</div>'
-      +(taps>0?'<div style="font-size:.62rem;color:var(--dim)">'+taps+' / '+maxTaps+' taps today</div>':'')
-      +'</div>'
-      +(done
-        ?'<div style="font-size:.7rem;color:var(--green);font-weight:700">✅ Max!</div>'
-        :'<div class="task-stars">+'+t.stars+'⭐</div>')
-      +'</div>';
-  }).join('');
-}
-
-function tapEPTask(id){
-  var today=new Date().toDateString();
-  if(!S.epDone)S.epDone={};
-  var key=id+'_'+today;
-  var taps=S.epDone[key]||0;
-  if(taps>=5){showToast('Max taps for today! Come back tomorrow!');return;}
-  S.epDone[key]=taps+1;
-  var task=getEPTasks().find(function(t){return t.id===id;});
-  if(!task)return;
-  S.stars=(S.stars||0)+task.stars;
-  S.totalStarsEarned=(S.totalStarsEarned||0)+task.stars;
-  save();updateStars();renderExtraPractice();renderHomeGoalsStrip();
-  confetti();
-  showToast(task.emoji+' +'+task.stars+' ⭐ Show Mom or Dad to check your work!');
-}
-
-var EP_EMOJIS=['📝','📖','📚','🎧','📰','🗣️','🎵','✍️','📱','🎨','🔢','🧠','🌍','🎯','📐','🖊️','📓','🔤','💬','🗺️','🎤','📺','🎮','⭐','🏅','💡','🔬','🧩'];
-
-function renderAdminEP(){
-  var el=document.getElementById('adminEPList');if(!el)return;
-  var tasks=getEPTasks();
-  el.innerHTML=tasks.map(function(t,i){
-    var btnStyle='font-size:1.1rem;background:rgba(128,128,128,.08);border:1px solid var(--border);border-radius:6px;padding:3px 5px;cursor:pointer';
-    return'<div style="background:rgba(128,128,128,.04);border-radius:12px;padding:10px;margin-bottom:8px">'
-      // Row 1: reorder + emoji display + name + stars + delete
-      +'<div style="display:flex;gap:5px;align-items:center;margin-bottom:6px">'
-      +'<div style="display:flex;flex-direction:column;gap:2px">'
-      +(i>0?'<button onclick="moveEPTask('+i+',-1)" style="background:rgba(128,128,128,.1);border:none;border-radius:5px;padding:1px 6px;cursor:pointer;font-size:.75rem">↑</button>':'<div style="height:20px"></div>')
-      +(i<tasks.length-1?'<button onclick="moveEPTask('+i+',1)" style="background:rgba(128,128,128,.1);border:none;border-radius:5px;padding:1px 6px;cursor:pointer;font-size:.75rem">↓</button>':'<div style="height:20px"></div>')
-      +'</div>'
-      +'<div style="font-size:1.4rem;width:32px;text-align:center" id="epEmojiDisplay_'+i+'">'+t.emoji+'</div>'
-      +'<input class="admin-input" style="flex:1;margin:0" value="'+t.name+'" onchange="updateEPName('+i+',this.value)">'
-      +'<input class="admin-input" style="width:52px;margin:0;text-align:center" type="number" value="'+t.stars+'" onchange="updateEPStars('+i+',this.value)">'
-      +'<button onclick="deleteEPTask('+i+')" style="background:rgba(239,68,68,.1);border:none;border-radius:8px;padding:6px 9px;cursor:pointer;color:#ef4444;font-size:.8rem;flex-shrink:0">✕</button>'
-      +'</div>'
-      // Row 2: emoji picker
-      +'<div style="display:flex;flex-wrap:wrap;gap:4px">'
-      +EP_EMOJIS.map(function(e){
-        return'<button onclick="updateEPEmoji('+i+',\''+e+'\')" style="'+btnStyle+'">'+e+'</button>';
-      }).join('')
-      +'</div>'
-      +'</div>';
-  }).join('');
-}
-
-function moveEPTask(i,dir){
-  initEPTasks();
-  var j=i+dir;
-  if(j<0||j>=S.epTasks.length)return;
-  var tmp=S.epTasks[i];S.epTasks[i]=S.epTasks[j];S.epTasks[j]=tmp;
-  save();renderAdminEP();renderExtraPractice();
-}
-function setEPNewEmoji(e){var inp=document.getElementById('epNewEmoji');if(inp)inp.value=e;}
-function initEPTasks(){if(!S.epTasks||!S.epTasks.length)S.epTasks=JSON.parse(JSON.stringify(DEFAULT_EP_TASKS));}
-function updateEPEmoji(i,v){
-  initEPTasks();S.epTasks[i].emoji=v;save();
-  var disp=document.getElementById('epEmojiDisplay_'+i);if(disp)disp.textContent=v;
-  renderExtraPractice();
-}
-function updateEPName(i,v){initEPTasks();S.epTasks[i].name=v;save();renderExtraPractice();}
-function updateEPStars(i,v){initEPTasks();S.epTasks[i].stars=parseInt(v)||1;save();}
-function deleteEPTask(i){initEPTasks();S.epTasks.splice(i,1);save();renderAdminEP();renderExtraPractice();}
-function addEPTask(){
-  var emoji=document.getElementById('epNewEmoji').value.trim()||'⭐';
-  var name=document.getElementById('epNewName').value.trim();
-  var stars=parseInt(document.getElementById('epNewStars').value)||3;
-  if(!name){showToast('Enter a task name!');return;}
-  initEPTasks();
-  S.epTasks.push({id:'ep_'+Date.now(),emoji:emoji,name:name,stars:stars});
-  save();renderAdminEP();renderExtraPractice();
-  document.getElementById('epNewEmoji').value='';
-  document.getElementById('epNewName').value='';
-  document.getElementById('epNewStars').value='';
-  showToast('Task added!');
 }
 
 function addReminder(){
@@ -4208,40 +3013,21 @@ function renderAdminRewards(){
   var el=document.getElementById('adminRewardList');if(!el)return;
   var rewards=S.rewards||DEFAULT_REWARDS;
   el.innerHTML=rewards.map(function(r,i){
-    return'<div style="margin-bottom:10px">'
-      +'<div style="display:flex;gap:6px;margin-bottom:4px;align-items:center">'
-      +'<input class="admin-input" style="width:52px;margin:0;text-align:center" value="'+(r.icon||'🎁')+'" id="rewardIcon_'+i+'" onchange="updateRewardIcon('+i+',this.value)">'
+    return'<div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">'
       +'<input class="admin-input" style="flex:1;margin:0" value="'+r.name+'" onchange="updateRewardName('+i+',this.value)">'
       +'<input class="admin-input" style="width:60px;margin:0" type="number" value="'+r.cost+'" onchange="updateRewardCost('+i+',this.value)">'
-      +'<button onclick="deleteReward('+i+')" style="background:rgba(239,68,68,.1);border:none;border-radius:8px;padding:6px 10px;cursor:pointer;color:#ef4444;font-size:.8rem;flex-shrink:0">✕</button>'
-      +'</div>'
-      +'<div style="display:flex;flex-wrap:wrap;gap:4px;padding-left:2px">'
-      +['🎮','🎯','🎬','🍕','🍦','🧁','🍫','🎲','🎳','🏊','🎨','✏️','📚','🎤','🎧','🛹','🚴','🏖️','🎡','🎠','🧸','🪀','🎁','🛍️','💎','⭐','🌟','🏆'].map(function(e){
-        return'<button onclick="updateRewardIcon('+i+',\''+e+'\')" style="background:rgba(128,128,128,.08);border:none;border-radius:6px;padding:3px 5px;cursor:pointer;font-size:.95rem">'+e+'</button>';
-      }).join('')
-      +'</div>'
+      +'<button onclick="deleteReward('+i+')" style="background:rgba(239,68,68,.1);border:none;border-radius:8px;padding:6px 10px;cursor:pointer;color:#ef4444;font-size:.8rem">✕</button>'
       +'</div>';
   }).join('');
 }
 
-function updateRewardIcon(i,v){var r=S.rewards||JSON.parse(JSON.stringify(DEFAULT_REWARDS));if(r[i])r[i].icon=v;S.rewards=r;save();
-  var inp=document.getElementById('rewardIcon_'+i);if(inp)inp.value=v;
-  renderRewards();}
 function updateRewardName(i,v){var r=S.rewards||DEFAULT_REWARDS;if(r[i])r[i].name=v;S.rewards=r;save();}
 function updateRewardCost(i,v){var r=S.rewards||DEFAULT_REWARDS;if(r[i])r[i].cost=parseInt(v)||0;S.rewards=r;save();}
 function deleteReward(i){if(!S.rewards)S.rewards=JSON.parse(JSON.stringify(DEFAULT_REWARDS));S.rewards.splice(i,1);save();renderAdminRewards();renderRewards();}
-function setNewRewardEmoji(e){var inp=document.getElementById('newRewardEmoji');if(inp)inp.value=e;}
 function addReward(){
   if(!S.rewards)S.rewards=JSON.parse(JSON.stringify(DEFAULT_REWARDS));
-  var emoji=document.getElementById('newRewardEmoji')&&document.getElementById('newRewardEmoji').value.trim()||'🎁';
-  var name=document.getElementById('newRewardName')&&document.getElementById('newRewardName').value.trim()||'New Reward';
-  var cost=parseInt(document.getElementById('newRewardCost')&&document.getElementById('newRewardCost').value)||20;
-  S.rewards.push({id:'r_'+Date.now(),icon:emoji,name:name,cost:cost,desc:'A special reward!'});
+  S.rewards.push({id:'r_'+Date.now(),icon:'🎁',name:'New Reward',cost:20,desc:'A special reward!'});
   save();renderAdminRewards();renderRewards();
-  document.getElementById('newRewardEmoji').value='';
-  document.getElementById('newRewardName').value='';
-  document.getElementById('newRewardCost').value='';
-  showToast('Reward added!');
 }
 
 // Admin pets
@@ -4299,10 +3085,10 @@ function buildEmailReport(){
   };
 }
 
-async function sendWeeklyEmail(force){
+async function sendWeeklyEmail(){
   var es=S.emailSettings||{};
+  if(!es.serviceId||!es.templateId||!es.publicKey){return;}
   if(!es.email1&&!es.email2){return;}
-  if(!force&&S.lastEmailDate===new Date().toDateString()){return;}
   var report=buildEmailReport();
   // Load EmailJS
   try{
@@ -4312,29 +3098,19 @@ async function sendWeeklyEmail(force){
         s.src='https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js';
         s.onload=res;s.onerror=rej;document.head.appendChild(s);
       });
-      if(!window.emailjs._initialized){window.emailjs.init(es.publicKey||'2PjOHL2Qq4MezKsNA');window.emailjs._initialized=true;}
+      window.emailjs.init(es.publicKey);
     }
-    var serviceId=es.serviceId||'service_xwugg88';
-    var templateId=es.templateId||'template_6kwn0q9';
-    var publicKey=es.publicKey||'2PjOHL2Qq4MezKsNA';
-    if(!window.emailjs._initialized){window.emailjs.init(publicKey);window.emailjs._initialized=true;}
     var emails=[es.email1,es.email2].filter(Boolean);
     for(var i=0;i<emails.length;i++){
-      await window.emailjs.send(serviceId,templateId,Object.assign({to_email:emails[i]},report));
+      await window.emailjs.send(es.serviceId,es.templateId,Object.assign({to_email:emails[i]},report));
     }
     S.lastEmailDate=new Date().toDateString();save();
-    showToast('📧 Report sent to '+emails.length+' email'+(emails.length>1?'s':'')+'! Check your inbox.');
-  }catch(e){
-    console.log('Email error:',e);
-    showToast('❌ Email failed — check Parent Mode email settings and try again.');
-  }
+    showToast('📧 Weekly report sent!');
+  }catch(e){console.log('Email error:',e);}
 }
 
 async function sendTestEmail(){
-  showToast('📧 Sending test report...');
-  var es=S.emailSettings||{};
-  if(!es.email1&&!es.email2){showToast('❌ Add your email in Parent Mode → Email tab first!');return;}
-  await sendWeeklyEmail(true);
+  await sendWeeklyEmail();
 }
 
 function checkFridayEmail(){
@@ -4406,23 +3182,6 @@ function startMidnightCheck(){
 // ═══════════════════════════════════════
 // SVG FUNCTIONS
 // ═══════════════════════════════════════
-function getGoldenOrcaSvg(s){
-  return'<svg viewBox="0 0 100 100" style="width:'+s+'px;height:'+s+'px;animation:float 3s ease-in-out infinite;filter:drop-shadow(0 3px 12px rgba(255,213,79,.8))">'
-    +'<ellipse cx="50" cy="55" rx="35" ry="22" fill="#b8860b"/>'
-    +'<ellipse cx="50" cy="62" rx="22" ry="14" fill="#ffd700"/>'
-    +'<ellipse cx="68" cy="48" rx="9" ry="7" fill="#ffd700"/>'
-    +'<circle cx="70" cy="48" r="3" fill="#b8860b"/>'
-    +'<circle cx="71" cy="47" r="1" fill="#fff8dc"/>'
-    +'<path d="M50,33 L58,48 L42,48 Z" fill="#b8860b"/>'
-    +'<path d="M18,55 Q10,45 6,50 Q10,58 18,60 Z" fill="#b8860b"/>'
-    +'<path d="M18,55 Q10,62 6,58 Q10,50 18,53 Z" fill="#b8860b"/>'
-    +'<path d="M38,62 Q28,72 24,68 Q30,60 38,60 Z" fill="#b8860b"/>'
-    +'<path d="M55,60 Q60,63 65,60" stroke="#ffd700" stroke-width="1.5" fill="none" stroke-linecap="round"/>'
-    +'<circle cx="20" cy="30" r="3" fill="rgba(255,213,79,.6)" style="animation:pulse 2s ease-in-out infinite"/>'
-    +'<circle cx="75" cy="25" r="2" fill="rgba(255,213,79,.5)" style="animation:pulse 2.5s ease-in-out infinite"/>'
-    +'<circle cx="45" cy="20" r="2.5" fill="rgba(255,213,79,.7)" style="animation:pulse 1.8s ease-in-out infinite"/>'
-    +'</svg>';
-}
 function getOrcaSvg(s){
   return'<svg viewBox="0 0 100 100" style="width:'+s+'px;height:'+s+'px;animation:float 3s ease-in-out infinite;filter:drop-shadow(0 3px 6px rgba(0,0,0,.3))">'
     +'<ellipse cx="50" cy="55" rx="35" ry="22" fill="#1a1a2e"/>'
@@ -4538,15 +3297,6 @@ function confetti(){
 // ═══════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════
-window.setReminderEmoji=setReminderEmoji;
-window.giveStars=giveStars;
-window.renderChallengesTab=renderChallengesTab;
-window.toggleGoldenSplash=toggleGoldenSplash;
-window.renderAbyss=renderAbyss;
-window.renderSecretZones=renderSecretZones;
-window.diveToDepth=diveToDepth;
-window.renderMidnightZone=renderMidnightZone;
-window.quickGiveStars=quickGiveStars;
 window.saveAnthropicKey=saveAnthropicKey;
 window.previewTheme=previewTheme;
 window.showPanel=showPanel;
@@ -4566,20 +3316,7 @@ window.savePin=savePin;
 window.saveJijiPct=saveJijiPct;
 window.addReminder=addReminder;
 window.deleteReminder=deleteReminder;
-window.tapEPTask=tapEPTask;
-window.addEPTask=addEPTask;
-window.deleteEPTask=deleteEPTask;
-window.moveEPTask=moveEPTask;
-window.updateEPEmoji=updateEPEmoji;
-window.updateEPName=updateEPName;
-window.updateEPStars=updateEPStars;
-window.setEPNewEmoji=setEPNewEmoji;
 window.addReward=addReward;
-window.deleteReward=deleteReward;
-window.updateRewardName=updateRewardName;
-window.updateRewardCost=updateRewardCost;
-window.updateRewardIcon=updateRewardIcon;
-window.setNewRewardEmoji=setNewRewardEmoji;
 window.updateRewardName=updateRewardName;
 window.updateRewardCost=updateRewardCost;
 window.deleteReward=deleteReward;
