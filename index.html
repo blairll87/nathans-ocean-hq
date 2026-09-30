@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.0.9">
+<meta name="version" content="3.1.1">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.0.9';
+  var v='3.1.1';
   if(window.location.href.indexOf('v=')===-1){
     window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
   }
@@ -886,7 +886,7 @@ body.theme-night {
     <!-- Splash header -->
     <div class="card" style="text-align:center;margin-top:4px">
       <div id="readingSplashSvg" class="float" style="margin-bottom:8px"></div>
-      <div style="font-family:'Fredoka One',cursive;font-size:.95rem;color:var(--accent)" id="readingSplashMsg">Splash loves story time!</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:.95rem;color:var(--accent)" id="readingSplashMsg">Orcalus loves story time!</div>
     </div>
 
     <button class="reading-log-btn" onclick="showReadingForm()">📖 Log a Reading Session!</button>
@@ -916,8 +916,8 @@ body.theme-night {
         </div>
         <div style="background:rgba(41,182,246,.06);border:1.5px solid rgba(41,182,246,.15);border-radius:14px;padding:12px;margin-bottom:10px;text-align:center">
           <div style="font-size:1.4rem;margin-bottom:4px">🐋</div>
-          <div style="font-family:'Fredoka One',cursive;font-size:.85rem;color:var(--accent);margin-bottom:3px">Splash wants to know!</div>
-          <div style="font-size:.74rem;color:var(--dim);margin-bottom:8px">Tell Splash what happened in your book — just the big stuff, 3 to 5 sentences!</div>
+          <div style="font-family:'Fredoka One',cursive;font-size:.85rem;color:var(--accent);margin-bottom:3px">Orcalus wants to know!</div>
+          <div style="font-size:.74rem;color:var(--dim);margin-bottom:8px">Tell Orcalus what happened in your book — just the big stuff, 3 to 5 sentences!</div>
           <div style="font-size:.68rem;color:var(--accent);margin-bottom:6px">🎤 Tap the box, then tap the mic on your keyboard!</div>
           <textarea class="reading-textarea" id="readingSummaryInput" rows="4" placeholder="Type or speak your summary..." oninput="updateReadingSummary(this.value)"></textarea>
         </div>
@@ -927,7 +927,7 @@ body.theme-night {
           <div class="self-eval-q"><span>Did I keep it short and not ramble?</span><div class="eval-btns"><button class="eval-btn" id="evalQ2yes" onclick="setSelfEval(2,true)">Yes</button><button class="eval-btn" id="evalQ2no" onclick="setSelfEval(2,false)">No</button></div></div>
           <div class="self-eval-q"><span>Could someone who never read it understand?</span><div class="eval-btns"><button class="eval-btn" id="evalQ3yes" onclick="setSelfEval(3,true)">Yes</button><button class="eval-btn" id="evalQ3no" onclick="setSelfEval(3,false)">No</button></div></div>
         </div>
-        <button class="submit-btn" onclick="submitReadingLog()">Submit &amp; Get Splash's Feedback! 🐋</button>
+        <button class="submit-btn" onclick="submitReadingLog()">Submit &amp; Get Orcalus's Feedback! 🐋</button>
         <button class="cancel-btn" onclick="cancelReadingForm()">Cancel</button>
       </div>
     </div>
@@ -935,10 +935,10 @@ body.theme-night {
     <!-- AI Feedback -->
     <div id="readingFeedbackSection" style="display:none" class="feedback-card">
       <div style="font-size:2rem;margin-bottom:6px">🐋</div>
-      <div style="font-family:'Fredoka One',cursive;font-size:.95rem;color:var(--accent);margin-bottom:6px">Splash's Feedback</div>
-      <div style="font-size:.82rem;color:var(--text);line-height:1.6" id="readingFeedbackText">Splash is thinking...</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:.95rem;color:var(--accent);margin-bottom:6px">Orcalus's Feedback</div>
+      <div style="font-size:.82rem;color:var(--text);line-height:1.6" id="readingFeedbackText">Orcalus is thinking...</div>
       <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--gold);margin-top:8px" id="readingStarsAwarded"></div>
-      <button onclick="dismissReadingFeedback()" style="margin-top:10px;font-family:'Fredoka One',cursive;font-size:.8rem;padding:8px 16px;border-radius:12px;border:none;background:rgba(41,182,246,.15);color:var(--accent);cursor:pointer">Thanks Splash! 🌊</button>
+      <button onclick="dismissReadingFeedback()" style="margin-top:10px;font-family:'Fredoka One',cursive;font-size:.8rem;padding:8px 16px;border-radius:12px;border:none;background:rgba(41,182,246,.15);color:var(--accent);cursor:pointer">Thanks Orcalus! 🌊</button>
     </div>
 
     <!-- Dictionary -->
@@ -2054,8 +2054,8 @@ function renderWorkBlock(blockId, today, doneKey){
   return'<div class="task-pill'+(done?' done':'')+'" style="flex-direction:column;align-items:flex-start;gap:6px;padding:12px 14px">'
     +'<div style="font-size:.72rem;font-weight:700;color:'+(done?'var(--green)':'var(--dim)')+';">'+(done?(choice==='reading'?'📖 Reading done ✓':'📏 JiJi done ✓'):'Choose what you did:'  )+'</div>'
     +'<div style="display:flex;gap:8px;width:100%">'
-    +'<button onclick="logWorkBlock(\''+blockId+'\',\'reading\',\''+doneKey+'\')" style="flex:1;padding:8px;border-radius:10px;border:2px solid '+(choice==='reading'?'#66bb6a':'rgba(255,255,255,.2)')+';background:'+(choice==='reading'?'rgba(102,187,106,.2)':'rgba(255,255,255,.07)')+';color:#fff;font-size:.8rem;cursor:pointer">📖 Reading</button>'
-    +'<button onclick="logWorkBlock(\''+blockId+'\',\'jiji\',\''+doneKey+'\')" style="flex:1;padding:8px;border-radius:10px;border:2px solid '+(choice==='jiji'?'#66bb6a':'rgba(255,255,255,.2)')+';background:'+(choice==='jiji'?'rgba(102,187,106,.2)':'rgba(255,255,255,.07)')+';color:#fff;font-size:.8rem;cursor:pointer">📏 JiJi</button>'
+    +'<button onclick="logWorkBlock(\''+blockId+'\',\'reading\',\''+doneKey+'\')" style="flex:1;padding:8px;border-radius:10px;border:2px solid '+(choice==='reading'?'#43a047':'#90caf9')+';background:'+(choice==='reading'?'#c8e6c9':'#e3f2fd')+';color:#1a237e;font-size:.8rem;font-weight:700;cursor:pointer">📖 Reading</button>'
+    +'<button onclick="logWorkBlock(\''+blockId+'\',\'jiji\',\''+doneKey+'\')" style="flex:1;padding:8px;border-radius:10px;border:2px solid '+(choice==='jiji'?'#43a047':'#ffcc80')+';background:'+(choice==='jiji'?'#c8e6c9':'#fff3e0')+';color:#1a237e;font-size:.8rem;font-weight:700;cursor:pointer">📏 JiJi</button>'
     +'</div>'
     +'<div style="font-size:.65rem;color:var(--dim)">+5 ⭐ when done</div>'
     +'</div>';
@@ -2488,7 +2488,7 @@ function renderReadingTab(){
   // Splash SVG
   var el=document.getElementById('readingSplashSvg');
   if(el)el.innerHTML=getOrcaSvg(64);
-  var msgs=['Splash loves story time! 📖','Tell Splash what you\'re reading! 🐋','Reading makes your brain as powerful as an orca! 🌊','What adventures did you read about? Tell Splash!'];
+  var msgs=['Orcalus loves story time! 📖','Tell Orcalus what you\'re reading! 🐋','Reading makes your brain as powerful as an orca! 🌊','What adventures did you read about? Tell Orcalus!'];
   var msg=document.getElementById('readingSplashMsg');
   if(msg)msg.textContent=msgs[new Date().getDate()%msgs.length];
   renderReadingHistory();
@@ -2550,14 +2550,14 @@ async function submitReadingLog(){
   var si=document.getElementById('readingSummaryInput');
   if(ti&&ti.value)_readingFormState.title=ti.value.trim();
   if(si&&si.value)_readingFormState.summaryText=si.value.trim();
-  if(!_readingFormState.title){showToast('Tell Splash what book you read! 📚');return;}
-  if(!_readingFormState.summaryText){showToast('Tell Splash what happened — type or speak your summary! 🐋');return;}
+  if(!_readingFormState.title){showToast('Tell Orcalus what book you read! 📚');return;}
+  if(!_readingFormState.summaryText){showToast('Tell Orcalus what happened — type or speak your summary! 🐋');return;}
   var selfStars=Object.values(_readingFormState.selfEval).filter(function(v){return v===true;}).length;
   document.getElementById('readingFormSection').style.display='none';
   document.getElementById('readingFeedbackSection').style.display='block';
-  document.getElementById('readingFeedbackText').textContent='Splash is reading your summary...';
+  document.getElementById('readingFeedbackText').textContent='Orcalus is reading your summary...';
   document.getElementById('readingStarsAwarded').textContent='';
-  var aiStars=0;var feedbackText='Great job logging your reading today, Nathan! Splash is so proud! 🐋';
+  var aiStars=0;var feedbackText='Great job logging your reading today, Nathan! Orcalus is so proud! 🐋';
   try{
     var apiKey=getAnthropicKey();
     if(!apiKey){aiStars=1;feedbackText='Add your Anthropic API key in Parent Mode → Email to enable AI feedback!';document.getElementById('readingFeedbackText').textContent=feedbackText;document.getElementById('readingStarsAwarded').textContent='🌟 +'+(5+selfStars)+' stars earned!';addStars(5+selfStars);save();updateStars();renderReadingHistory();return;}
@@ -2566,7 +2566,7 @@ async function submitReadingLog(){
       headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
         model:'claude-sonnet-5',max_tokens:200,
-        system:'You are Splash, a friendly orca who is Nathan\'s best friend. Nathan is 10 and working on summarizing skills — giving the main idea concisely without rambling. Rate his summary 1-3 (1=needs work on conciseness, 2=pretty good, 3=excellent). His self-rating: main idea='+((_readingFormState.selfEval[1])?'yes':'no')+', kept it short='+((_readingFormState.selfEval[2])?'yes':'no')+', understandable='+((_readingFormState.selfEval[3])?'yes':'no')+'. Respond ONLY as JSON with no markdown: {"stars":1-3,"feedback":"one encouraging sentence from Splash in first person, mention his name"}',
+        system:'You are Orcalus, a friendly orca who is Nathan\'s best friend. Nathan is 10 and working on summarizing skills — giving the main idea concisely without rambling. Rate his summary 1-3 (1=needs work on conciseness, 2=pretty good, 3=excellent). His self-rating: main idea='+((_readingFormState.selfEval[1])?'yes':'no')+', kept it short='+((_readingFormState.selfEval[2])?'yes':'no')+', understandable='+((_readingFormState.selfEval[3])?'yes':'no')+'. Respond ONLY as JSON with no markdown: {"stars":1-3,"feedback":"one encouraging sentence from Orcalus in first person, mention his name"}',
         messages:[{role:'user',content:'Book: '+_readingFormState.title+'\nSummary: '+_readingFormState.summaryText}]
       })
     });
@@ -3356,6 +3356,7 @@ window.toggleMorningTask=toggleMorningTask;
 window.toggleBedtimeTask=toggleBedtimeTask;
 window.toggleTuesdayTask=toggleTuesdayTask;
 window.logWorkBlock=logWorkBlock;
+window.adminLogJiJi=adminLogJiJi;
 window.setMood=setMood;
 window.logFact=logFact;
 window.logJiJi=logJiJi;
