@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.1.1">
+<meta name="version" content="3.1.3">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.1.1';
+  var v='3.1.3';
   if(window.location.href.indexOf('v=')===-1){
     window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
   }
@@ -1194,7 +1194,8 @@ const PROGRESS_KEYS = [
   'overrideReminders','emailSettings','weeklyStarGoal','weekStart','weeklyStarsEarned',
   'pin','adminUnlocked','lastEmailDate',
   'summerProgress','choreDone','spanishTasks','spanishState',
-  'spanishArchive','summerBooks','summerReadingGoal','orcalusWelcomed'
+  'spanishArchive','summerBooks','summerReadingGoal','orcalusWelcomed',
+  'lastReadingTitle'
 ];
 
 // School calendar - hardcoded
@@ -2487,7 +2488,7 @@ function renderHuntingJournal(){
 function renderReadingTab(){
   // Splash SVG
   var el=document.getElementById('readingSplashSvg');
-  if(el)el.innerHTML=getOrcaSvg(64);
+  if(el)el.innerHTML=getOrcalusSvg(64);
   var msgs=['Orcalus loves story time! 📖','Tell Orcalus what you\'re reading! 🐋','Reading makes your brain as powerful as an orca! 🌊','What adventures did you read about? Tell Orcalus!'];
   var msg=document.getElementById('readingSplashMsg');
   if(msg)msg.textContent=msgs[new Date().getDate()%msgs.length];
@@ -2522,6 +2523,11 @@ function setBookType(type){
     var b=document.getElementById(id);
     if(b)b.className='book-type-btn'+(t===type?' active':'');
   });
+  // Auto-fill title if continuing same book
+  if(type==='same'&&S.lastReadingTitle){
+    var ti=document.getElementById('readingTitleInput');
+    if(ti&&!ti.value){ti.value=S.lastReadingTitle;_readingFormState.title=S.lastReadingTitle;}
+  }
 }
 function setBookLang(lang){
   _readingFormState.lang=lang;
@@ -2566,7 +2572,7 @@ async function submitReadingLog(){
       headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
         model:'claude-sonnet-5',max_tokens:200,
-        system:'You are Orcalus, a friendly orca who is Nathan\'s best friend. Nathan is 10 and working on summarizing skills — giving the main idea concisely without rambling. Rate his summary 1-3 (1=needs work on conciseness, 2=pretty good, 3=excellent). His self-rating: main idea='+((_readingFormState.selfEval[1])?'yes':'no')+', kept it short='+((_readingFormState.selfEval[2])?'yes':'no')+', understandable='+((_readingFormState.selfEval[3])?'yes':'no')+'. Respond ONLY as JSON with no markdown: {"stars":1-3,"feedback":"one encouraging sentence from Orcalus in first person, mention his name"}',
+        system:'You are Orcalus, a friendly orca who is Nathan\'s best reading buddy. Nathan is 10 with ADHD and working on summarizing skills — giving the main idea concisely without rambling. Rate his summary 1-3 (1=needs more detail or is too vague, 2=pretty good, 3=excellent concise summary). His self-rating: main idea='+((_readingFormState.selfEval[1])?'yes':'no')+', kept it short='+((_readingFormState.selfEval[2])?'yes':'no')+', understandable='+((_readingFormState.selfEval[3])?'yes':'no')+'. If rating is 2 or 3, be SPECIFIC about what he did well — name something concrete from his actual summary (a detail he included, how clearly he explained something, what made it easy to understand). If rating is 1, be encouraging and give one simple tip. Keep it to 1-2 sentences max. Respond ONLY as JSON with no markdown: {"stars":1-3,"feedback":"specific encouraging feedback from Orcalus in first person, mention Nathan by name"}',
         messages:[{role:'user',content:'Book: '+_readingFormState.title+'\nSummary: '+_readingFormState.summaryText}]
       })
     });
@@ -2591,6 +2597,7 @@ async function submitReadingLog(){
     date:new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}),ts:Date.now()
   };
   S.readingLog.push(entry);
+  S.lastReadingTitle=_readingFormState.title;
   if(_readingFormState.bookType==='finished'){
     if(_readingFormState.lang==='english'){
       if(!S.readingGoalEng)S.readingGoalEng=0;
@@ -3261,10 +3268,10 @@ function getOrcalusSvg(s){
     +'<path d="M20,56 Q10,63 6,59 Q10,51 20,54 Z" fill="#1a1a2e"/>'
     +'<path d="M40,64 Q28,75 24,70 Q32,62 40,62 Z" fill="#1a1a2e"/>'
     +'<path d="M60,61 Q65,64 70,61" stroke="#555" stroke-width="1.5" fill="none" stroke-linecap="round"/>'
-    +'<ellipse cx="52" cy="68" rx="9" ry="6" fill="#c8a882" opacity=".85"/>'
-    +'<ellipse cx="52" cy="68" rx="7" ry="4.5" fill="#d4b896" opacity=".7"/>'
-    +'<line x1="46" y1="66" x2="58" y2="66" stroke="#b8956a" stroke-width=".8" stroke-dasharray="2,1.5" opacity=".6"/>'
-    +'<line x1="46" y1="69" x2="58" y2="69" stroke="#b8956a" stroke-width=".8" stroke-dasharray="2,1.5" opacity=".6"/>'
+    +'<ellipse cx="48" cy="58" rx="10" ry="6" fill="#c8a882" opacity=".9"/>'
+    +'<ellipse cx="48" cy="58" rx="7.5" ry="4" fill="#d4b896" opacity=".8"/>'
+    +'<line x1="41" y1="56" x2="55" y2="56" stroke="#b8956a" stroke-width=".9" stroke-dasharray="2,1.5" opacity=".7"/>'
+    +'<line x1="41" y1="59" x2="55" y2="59" stroke="#b8956a" stroke-width=".9" stroke-dasharray="2,1.5" opacity=".7"/>'
     +'</svg>';
 }
 
