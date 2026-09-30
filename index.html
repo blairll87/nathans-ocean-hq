@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.0.5">
+<meta name="version" content="3.0.7">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.0.5';
+  var v='3.0.7';
   if(window.location.href.indexOf('v=')===-1){
     window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
   }
@@ -1114,6 +1114,13 @@ body.theme-night {
           <button class="admin-btn" onclick="saveJijiPct()">Update %</button>
           <div style="font-size:.72rem;color:var(--dim);margin-top:6px" id="jijiLastUpdated"></div>
         </div>
+        <div class="admin-section" style="margin-top:12px">
+          <div class="admin-section-title">Log a JiJi Session</div>
+          <div style="font-size:.72rem;color:var(--dim);margin-bottom:8px">Manually add a session for a day Nathan completed JiJi but didn't tap the button.</div>
+          <input class="admin-input" type="date" id="jijiBackfillDate">
+          <button class="admin-btn" onclick="adminLogJiJi()" style="margin-top:6px">Log Session</button>
+          <div style="font-size:.72rem;margin-top:6px" id="jijiBackfillStatus"></div>
+        </div>
       </div>
 
       <!-- Email -->
@@ -1176,7 +1183,7 @@ const db = getFirestore(fbApp);
 
 const PROGRESS_KEYS = [
   'stars','totalStarsEarned','weekStars','weeklyStarGoal',
-  'morningDone','nightDone','morningBonus','nightBonus',
+  'morningDone','nightDone','morningBonus','nightBonus','mondayDone','tuesdayDone',
   'moodHistory','moodToday','moodDate',
   'pods','petShopOwned','eggs','eggsAwarded','lastPodTick',
   'ownedToys','foodCounts','huntingJournal',
@@ -1248,8 +1255,9 @@ const WEEKLY_SCHEDULE = {
     {time:'4:15 PM', emoji:'🤸', label:'Gymnastics'},
     {time:'5:45 PM', emoji:'🏠', label:'Home & settled'},
     {time:'5:45 PM', emoji:'🎮', label:'Break (30 min)'},
-    {time:'6:15 PM', emoji:'📖', label:'Reading (30 min)'},
-    {time:'6:45 PM', emoji:'📏', label:'JiJi (30 min)'},
+    {time:'6:15 PM', emoji:'📚', label:'Work Block 1 — Reading or JiJi (30 min)'},
+    {time:'6:45 PM', emoji:'🎮', label:'Break (15 min)'},
+    {time:'7:00 PM', emoji:'📚', label:'Work Block 2 — Reading or JiJi (30 min)'},
     {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
     {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'8:30 PM', emoji:'🚿', label:'Shower'},
@@ -1334,17 +1342,20 @@ const BEDTIME_TASKS = [
 ];
 
 // Tuesday homework tasks
+// Work blocks — each slot Nathan picks Reading or JiJi
+const TUESDAY_BLOCKS = [
+  {id:'tb1', label:'Work Block 1', time:'3:00 PM', stars:5},
+  {id:'tb2', label:'Work Block 2', time:'3:45 PM', stars:5},
+  {id:'tb3', label:'Work Block 3', time:'5:15 PM', stars:5},
+  {id:'tb4', label:'Work Block 4', time:'6:00 PM', stars:5},
+];
 const TUESDAY_TASKS = [
-  {id:'t1', emoji:'📖', name:'Reading block 1 (25 min)', stars:5},
-  {id:'t2', emoji:'📏', name:'JiJi (25 min)', stars:5},
-  {id:'t3', emoji:'📖', name:'Reading block 2 (25 min)', stars:5},
-  {id:'t4', emoji:'📚', name:'Other homework (25 min)', stars:3},
+  {id:'t4', emoji:'📚', name:'Extra homework (30 min)', stars:3},
 ];
 
-// Monday tasks
-const MONDAY_TASKS = [
-  {id:'mo1', emoji:'📖', name:'Reading (25 min)', stars:5},
-  {id:'mo2', emoji:'📏', name:'JiJi (25 min)', stars:5},
+const MONDAY_BLOCKS = [
+  {id:'mb1', label:'Work Block 1', time:'6:15 PM', stars:5},
+  {id:'mb2', label:'Work Block 2', time:'7:00 PM', stars:5},
 ];
 
 // Ocean facts
@@ -2036,40 +2047,53 @@ function renderJiJiCard(today){
     +'</div>';
 }
 
+function renderWorkBlock(blockId, today, doneKey){
+  if(!S[doneKey])S[doneKey]={};
+  var choice=S[doneKey][blockId+'_'+today]; // 'reading' or 'jiji' or undefined
+  var done=!!choice;
+  return'<div class="task-pill'+(done?' done':'')+'" style="flex-direction:column;align-items:flex-start;gap:6px;padding:12px 14px">'
+    +'<div style="font-size:.72rem;font-weight:700;color:'+(done?'var(--green)':'var(--dim)')+';">'+(done?(choice==='reading'?'📖 Reading done ✓':'📏 JiJi done ✓'):'Choose what you did:'  )+'</div>'
+    +'<div style="display:flex;gap:8px;width:100%">'
+    +'<button onclick="logWorkBlock(\''+blockId+'\',\'reading\',\''+doneKey+'\')" style="flex:1;padding:8px;border-radius:10px;border:2px solid '+(choice==='reading'?'#66bb6a':'rgba(255,255,255,.2)')+';background:'+(choice==='reading'?'rgba(102,187,106,.2)':'rgba(255,255,255,.07)')+';color:#fff;font-family:\'Fredoka One\',cursive;font-size:.8rem;cursor:pointer">📖 Reading</button>'
+    +'<button onclick="logWorkBlock(\''+blockId+'\',\'jiji\',\''+doneKey+'\')" style="flex:1;padding:8px;border-radius:10px;border:2px solid '+(choice==='jiji'?'#66bb6a':'rgba(255,255,255,.2)')+';background:'+(choice==='jiji'?'rgba(102,187,106,.2)':'rgba(255,255,255,.07)')+';color:#fff;font-family:\'Fredoka One\',cursive;font-size:.8rem;cursor:pointer">📏 JiJi</button>'
+    +'</div>'
+    +'<div style="font-size:.65rem;color:var(--dim)">+5 ⭐ when done</div>'
+    +'</div>';
+}
+
 function renderTuesdayTasks(today){
   if(!S.tuesdayDone)S.tuesdayDone={};
-  var doneTasks=TUESDAY_TASKS.filter(function(t){return S.tuesdayDone[t.id+'_'+today];});
-  var doneCount=doneTasks.length;
+  var blocksLogged=TUESDAY_BLOCKS.filter(function(b){return S.tuesdayDone[b.id+'_'+today];}).length;
 
-  var html='<div class="slabel">📚 Today\'s Homework</div>';
+  var html='<div class="slabel">📚 Today\'s Work Blocks</div>';
+  html+='<div class="escape-banner">Complete any 2 of 4 blocks for full stars! 3 = bonus! 4 = maximum! 🌟</div>';
 
-  // Escape hatch banner
-  html+='<div class="escape-banner">Complete any 2 of 4 tasks for full stars! 3 = bonus! 4 = maximum! 🌟</div>';
+  html+=TUESDAY_BLOCKS.map(function(b){
+    return'<div style="font-size:.68rem;color:var(--dim);margin:6px 0 2px;font-weight:700">'+b.time+' — '+b.label+'</div>'
+      +renderWorkBlock(b.id,today,'tuesdayDone');
+  }).join('');
 
-  html+=TUESDAY_TASKS.map(function(t){
+  // Extra homework task
+  html+='<div style="font-size:.68rem;color:var(--dim);margin:10px 0 2px;font-weight:700">6:45 PM — Optional</div>';
+  TUESDAY_TASKS.forEach(function(t){
     var done=!!S.tuesdayDone[t.id+'_'+today];
-    return'<div class="task-pill'+(done?' done':'')+'" onclick="toggleTuesdayTask(\''+t.id+'\')">'
+    html+='<div class="task-pill'+(done?' done':'')+'" onclick="toggleTuesdayTask(\''+t.id+'\')">'
       +'<div class="task-check">'+(done?'✓':'')+'</div>'
       +'<div class="task-emoji">'+t.emoji+'</div>'
       +'<div class="task-name">'+t.name+'</div>'
       +'<div class="task-stars">+'+t.stars+'⭐</div>'
       +'</div>';
-  }).join('');
+  });
 
   return html;
 }
 
 function renderMondayTasks(today){
   if(!S.mondayDone)S.mondayDone={};
-  var html='<div class="slabel">📚 Today\'s Tasks</div>';
-  html+=MONDAY_TASKS.map(function(t){
-    var done=!!S.mondayDone[t.id+'_'+today];
-    return'<div class="task-pill'+(done?' done':'')+'" onclick="toggleMondayTask(\''+t.id+'\')">'
-      +'<div class="task-check">'+(done?'✓':'')+'</div>'
-      +'<div class="task-emoji">'+t.emoji+'</div>'
-      +'<div class="task-name">'+t.name+'</div>'
-      +'<div class="task-stars">+'+t.stars+'⭐</div>'
-      +'</div>';
+  var html='<div class="slabel">📚 Today\'s Work Blocks</div>';
+  html+=MONDAY_BLOCKS.map(function(b){
+    return'<div style="font-size:.68rem;color:var(--dim);margin:6px 0 2px;font-weight:700">'+b.time+' — '+b.label+'</div>'
+      +renderWorkBlock(b.id,today,'mondayDone');
   }).join('');
   return html;
 }
@@ -2142,6 +2166,7 @@ function toggleTuesdayTask(id){
   var today=new Date().toDateString();
   if(!S.tuesdayDone)S.tuesdayDone={};
   var key=id+'_'+today;
+  // Extra homework task (not a work block)
   var task=TUESDAY_TASKS.find(function(t){return t.id===id;});
   if(!task)return;
   if(S.tuesdayDone[key]){
@@ -2150,29 +2175,36 @@ function toggleTuesdayTask(id){
   } else {
     S.tuesdayDone[key]=true;
     addStars(task.stars);
-    confetti();showToast(task.emoji+' +'+task.stars+' ⭐ Keep going!');
-    // Escape hatch rewards
-    var doneCount=TUESDAY_TASKS.filter(function(t){return S.tuesdayDone[t.id+'_'+today];}).length;
-    if(doneCount===2)setTimeout(function(){showToast('🌟 2 blocks done — full stars earned!');confetti();},600);
-    if(doneCount===3)setTimeout(function(){showToast('🔥 3 blocks — bonus stars! +5 ⭐');addStars(5);updateStars();save();},800);
-    if(doneCount===4)setTimeout(function(){showToast('🏆 ALL 4 blocks! Maximum stars! +10 ⭐');addStars(10);updateStars();save();confetti();confetti();confetti();},800);
+    confetti();showToast(task.emoji+' +'+task.stars+' ⭐ Extra credit!');
   }
   save();updateStars();renderTimeContent();
 }
 
-function toggleMondayTask(id){
+function logWorkBlock(blockId, choice, doneKey){
   var today=new Date().toDateString();
-  if(!S.mondayDone)S.mondayDone={};
-  var key=id+'_'+today;
-  var task=MONDAY_TASKS.find(function(t){return t.id===id;});
-  if(!task)return;
-  if(S.mondayDone[key]){
-    S.stars=Math.max(0,(S.stars||0)-task.stars);
-    delete S.mondayDone[key];
-  } else {
-    S.mondayDone[key]=true;
-    addStars(task.stars);
-    confetti();showToast(task.emoji+' +'+task.stars+' ⭐ Great work!');
+  if(!S[doneKey])S[doneKey]={};
+  var key=blockId+'_'+today;
+  var alreadyDone=!!S[doneKey][key];
+  // Toggle off if tapping same choice again
+  if(S[doneKey][key]===choice){
+    delete S[doneKey][key];
+    S.stars=Math.max(0,(S.stars||0)-5);
+    save();updateStars();renderTimeContent();return;
+  }
+  // If switching choice, no star change; if new, award stars
+  if(!alreadyDone){addStars(5);confetti();showToast((choice==='reading'?'📖':'📏')+' +5 ⭐ Nice work!');}
+  S[doneKey][key]=choice;
+  // Tuesday block bonus milestones
+  if(doneKey==='tuesdayDone'){
+    var blocksLogged=TUESDAY_BLOCKS.filter(function(b){return S.tuesdayDone[b.id+'_'+today];}).length;
+    if(blocksLogged===2)setTimeout(function(){showToast('🌟 2 blocks done — full stars earned!');confetti();},600);
+    if(blocksLogged===3)setTimeout(function(){showToast('🔥 3 blocks — bonus! +5 ⭐');addStars(5);updateStars();save();},800);
+    if(blocksLogged===4)setTimeout(function(){showToast('🏆 ALL 4 blocks! Maximum! +10 ⭐');addStars(10);updateStars();save();confetti();confetti();confetti();},800);
+  }
+  // Monday both done bonus
+  if(doneKey==='mondayDone'){
+    var mbDone=MONDAY_BLOCKS.filter(function(b){return S.mondayDone[b.id+'_'+today];}).length;
+    if(mbDone===2)setTimeout(function(){showToast('🏆 Both blocks done! +5 bonus ⭐');addStars(5);updateStars();save();confetti();confetti();},600);
   }
   save();updateStars();renderTimeContent();
 }
@@ -2202,6 +2234,24 @@ function logJiJi(){
   addStars(5);
   save();updateStars();renderTimeContent();renderGoalsTab();
   confetti();confetti();showToast('📏 +5 ⭐ JiJi session logged! Keep it up!');
+}
+
+function adminLogJiJi(){
+  var inp=document.getElementById('jijiBackfillDate');
+  var status=document.getElementById('jijiBackfillStatus');
+  if(!inp.value){status.style.color='#ef5350';status.textContent='Please pick a date.';return;}
+  var d=new Date(inp.value+'T12:00:00'); // noon local to avoid timezone shifts
+  var dateStr=d.toDateString();
+  if(!S.jijiSessions)S.jijiSessions=[];
+  if(S.jijiSessions.some(function(s){return s.date===dateStr;})){
+    status.style.color='#ef5350';status.textContent='Session already logged for that day.';return;
+  }
+  S.jijiSessions.push({date:dateStr,ts:d.getTime()});
+  addStars(5);
+  save();updateStars();renderGoalsTab();
+  status.style.color='#66bb6a';
+  status.textContent='✅ Session logged for '+dateStr+' (+5 ⭐)';
+  inp.value='';
 }
 
 // ═══════════════════════════════════════
@@ -2620,12 +2670,13 @@ async function lookupWord(){
     var data=await resp.json();
     var text=data.content[0].text.replace(/```json|```/g,'').trim();
     var parsed=JSON.parse(text);
+    window._lastDictResult=parsed;
     if(resultEl){
       resultEl.innerHTML='<div class="dict-result">'
         +'<div class="dict-word">'+parsed.word+'</div>'
         +'<div class="dict-def">'+parsed.definition+'</div>'
         +'<div class="dict-sentence">💬 "'+parsed.sentence+'"</div>'
-        +'<button onclick="saveDictWord(\''+encodeURIComponent(JSON.stringify(parsed))+'\')" style="margin-top:8px;font-family:\'Fredoka One\',cursive;font-size:.75rem;padding:7px 14px;border-radius:10px;border:none;background:var(--accent);color:#fff;cursor:pointer">+ Save to my dictionary</button>'
+        +'<button onclick="saveDictWord()" style="margin-top:8px;font-family:\'Fredoka One\',cursive;font-size:.75rem;padding:7px 14px;border-radius:10px;border:none;background:var(--accent);color:#fff;cursor:pointer">+ Save to my dictionary</button>'
         +'</div>';
     }
   }catch(e){
@@ -2633,9 +2684,10 @@ async function lookupWord(){
   }
 }
 
-function saveDictWord(encoded){
+function saveDictWord(){
   try{
-    var parsed=JSON.parse(decodeURIComponent(encoded));
+    var parsed=window._lastDictResult;
+    if(!parsed){showToast('Nothing to save — look up a word first!');return;}
     if(!S.dictionary)S.dictionary={english:[],spanish:[]};
     var lang=_dictLang;
     var already=S.dictionary[lang].some(function(w){return w.word.toLowerCase()===parsed.word.toLowerCase();});
@@ -3304,6 +3356,7 @@ window.toggleMorningTask=toggleMorningTask;
 window.toggleBedtimeTask=toggleBedtimeTask;
 window.toggleTuesdayTask=toggleTuesdayTask;
 window.toggleMondayTask=toggleMondayTask;
+window.logWorkBlock=logWorkBlock;
 window.setMood=setMood;
 window.logFact=logFact;
 window.logJiJi=logJiJi;
