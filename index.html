@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.1.3">
+<meta name="version" content="3.2.0">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.1.3';
+  var v='3.2.0';
   if(window.location.href.indexOf('v=')===-1){
     window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
   }
@@ -800,19 +800,42 @@ body.theme-night {
     </div>
 
     <!-- Stats row -->
-    <div class="stat-row">
+    <div class="stat-row" style="grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
       <div class="stat-card">
-        <div style="font-size:1.4rem;margin-bottom:3px">🔥</div>
-        <div class="stat-big" id="streakCount">0</div>
-        <div class="stat-lbl">Day Streak</div>
-        <div class="stat-sub" id="streakSub">Morning + bedtime</div>
+        <div style="font-size:1.4rem;margin-bottom:3px">🎯</div>
+        <div class="stat-big" id="streakFocus">0</div>
+        <div class="stat-lbl">Focus Streak</div>
+        <div class="stat-sub">Complete a work block</div>
       </div>
       <div class="stat-card">
-        <div style="font-size:1.4rem;margin-bottom:4px" id="rankBadge">🌊</div>
-        <div class="rank-val" id="rankTitle">Tide Pool Explorer</div>
-        <div class="stat-lbl">Ocean Rank</div>
-        <div class="stat-sub" id="rankNext">Earn stars to rank up!</div>
+        <div style="font-size:1.4rem;margin-bottom:3px">📖</div>
+        <div class="stat-big" id="streakReading">0</div>
+        <div class="stat-lbl">Reading Streak</div>
+        <div class="stat-sub">Log a reading session</div>
       </div>
+    </div>
+    <div class="stat-row" style="grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div class="stat-card">
+        <div style="font-size:1.4rem;margin-bottom:3px">🇪🇸</div>
+        <div class="stat-big" id="streakSpanish">0</div>
+        <div class="stat-lbl">Spanish Streak</div>
+        <div class="stat-sub">Do your Spanish workbook</div>
+      </div>
+      <div class="stat-card">
+        <div style="font-size:1.4rem;margin-bottom:3px">🌅</div>
+        <div class="stat-big" id="streakMorning">0</div>
+        <div class="stat-lbl">Morning Streak</div>
+        <div class="stat-sub">Finish morning routine</div>
+      </div>
+    </div>
+    <!-- Rank card -->
+    <div class="stat-card" style="margin-bottom:8px;display:flex;align-items:center;gap:12px;padding:10px 14px">
+      <div style="font-size:1.8rem" id="rankBadge">🌊</div>
+      <div style="flex:1">
+        <div class="rank-val" id="rankTitle" style="font-size:.9rem">Tide Pool Explorer</div>
+        <div class="stat-sub" id="rankNext" style="font-size:.65rem;margin-top:2px">Earn stars to rank up!</div>
+      </div>
+      <div style="font-size:.65rem;color:var(--dim);text-align:right" id="petUnlockHint"></div>
     </div>
 
     <!-- Reminder cards -->
@@ -995,6 +1018,10 @@ body.theme-night {
 
     <div class="slabel">📋 Redemption History</div>
     <div id="rewardLog"></div>
+
+    <div class="slabel">🏅 Achievement Badges</div>
+    <div style="font-size:.72rem;color:var(--dim);margin-bottom:8px">Earn these forever — they never go away!</div>
+    <div id="badgeCollection"></div>
   </div>
 
 </div><!-- end scroll -->
@@ -1184,6 +1211,7 @@ const db = getFirestore(fbApp);
 const PROGRESS_KEYS = [
   'stars','totalStarsEarned','weekStars','weeklyStarGoal',
   'morningDone','nightDone','morningBonus','nightBonus','mondayDone','tuesdayDone',
+  'wednesdayDone','thursdayDone','fridayDone','saturdayDone','sundayDone',
   'moodHistory','moodToday','moodDate',
   'pods','petShopOwned','eggs','eggsAwarded','lastPodTick',
   'ownedToys','foodCounts','huntingJournal',
@@ -1195,7 +1223,8 @@ const PROGRESS_KEYS = [
   'pin','adminUnlocked','lastEmailDate',
   'summerProgress','choreDone','spanishTasks','spanishState',
   'spanishArchive','summerBooks','summerReadingGoal','orcalusWelcomed',
-  'lastReadingTitle'
+  'lastReadingTitle',
+  'petUnlocks','streaks','spanishDone','extraCreditDone','badges',
 ];
 
 // School calendar - hardcoded
@@ -1254,11 +1283,10 @@ const WEEKLY_SCHEDULE = {
     {time:'3:15 PM', emoji:'🏫', label:'Picked up from school'},
     {time:'3:15 PM', emoji:'🍎', label:'Snack in the car'},
     {time:'4:15 PM', emoji:'🤸', label:'Gymnastics'},
-    {time:'5:45 PM', emoji:'🏠', label:'Home & settled'},
-    {time:'5:45 PM', emoji:'🎮', label:'Break (30 min)'},
-    {time:'6:15 PM', emoji:'📚', label:'Work Block 1 — Reading or JiJi (30 min)'},
+    {time:'5:45 PM', emoji:'🏠', label:'Home & break (45 min)'},
+    {time:'6:30 PM', emoji:'🇪🇸', label:'Spanish workbook (15 min)'},
     {time:'6:45 PM', emoji:'🎮', label:'Break (15 min)'},
-    {time:'7:00 PM', emoji:'📚', label:'Work Block 2 — Reading or JiJi (30 min)'},
+    {time:'7:00 PM', emoji:'📏', label:'JiJi (30 min)'},
     {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
     {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'8:30 PM', emoji:'🚿', label:'Shower'},
@@ -1268,15 +1296,15 @@ const WEEKLY_SCHEDULE = {
     {time:'1:30 PM', emoji:'🏫', label:'Picked up from school (short day!)'},
     {time:'2:00 PM', emoji:'🏠', label:'Home'},
     {time:'2:00 PM', emoji:'🎮', label:'Break (1 hr)'},
-    {time:'3:00 PM', emoji:'📖', label:'Reading block 1 (30 min)'},
+    {time:'3:00 PM', emoji:'📚', label:'Work Block 1 — Reading or JiJi (30 min)'},
     {time:'3:30 PM', emoji:'🎮', label:'Break (15 min)'},
-    {time:'3:45 PM', emoji:'📏', label:'JiJi block 1 (30 min)'},
+    {time:'3:45 PM', emoji:'📚', label:'Work Block 2 — Reading or JiJi (30 min)'},
     {time:'4:15 PM', emoji:'🎮', label:'Break (1 hr)'},
-    {time:'5:15 PM', emoji:'📖', label:'Reading block 2 (30 min)'},
+    {time:'5:15 PM', emoji:'📚', label:'Work Block 3 — Reading or JiJi (30 min)'},
     {time:'5:45 PM', emoji:'🎮', label:'Break (15 min)'},
-    {time:'6:00 PM', emoji:'📏', label:'JiJi block 2 (30 min)'},
+    {time:'6:00 PM', emoji:'📚', label:'Work Block 4 — Reading or JiJi (30 min)'},
     {time:'6:30 PM', emoji:'🎮', label:'Break (15 min)'},
-    {time:'6:45 PM', emoji:'📚', label:'Extra homework (30 min, if needed)'},
+    {time:'6:45 PM', emoji:'📚', label:'Extra homework / workbook practice (30 min)'},
     {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
     {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'8:30 PM', emoji:'🚿', label:'Shower'},
@@ -1284,10 +1312,11 @@ const WEEKLY_SCHEDULE = {
   ],
   3: [ // Wednesday - tutoring day
     {time:'4:15 PM', emoji:'📝', label:'Tutoring with Ms. Tanya (reading + JiJi)'},
-    {time:'5:15 PM', emoji:'🚗', label:'Heading home'},
-    {time:'5:45 PM', emoji:'🏠', label:'Home'},
-    {time:'5:45 PM', emoji:'🎮', label:'Break (1 hr)'},
-    {time:'6:45 PM', emoji:'📏', label:'JiJi (30 min)'},
+    {time:'5:15 PM', emoji:'🚗', label:'Picked up from tutoring'},
+    {time:'5:45 PM', emoji:'🏠', label:'Home & break (45 min)'},
+    {time:'6:30 PM', emoji:'🇪🇸', label:'Spanish workbook (15 min)'},
+    {time:'6:45 PM', emoji:'🎮', label:'Break (15 min)'},
+    {time:'7:00 PM', emoji:'📏', label:'JiJi (15 min)'},
     {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
     {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'8:30 PM', emoji:'🚿', label:'Shower'},
@@ -1295,22 +1324,41 @@ const WEEKLY_SCHEDULE = {
   ],
   4: [ // Thursday - tutoring day
     {time:'4:15 PM', emoji:'📝', label:'Tutoring with Ms. Tanya (reading + JiJi)'},
-    {time:'5:15 PM', emoji:'🚗', label:'Heading home'},
-    {time:'5:45 PM', emoji:'🏠', label:'Home'},
-    {time:'5:45 PM', emoji:'🎮', label:'Break (1 hr)'},
-    {time:'6:45 PM', emoji:'📏', label:'JiJi (30 min)'},
+    {time:'5:15 PM', emoji:'🚗', label:'Picked up from tutoring'},
+    {time:'5:45 PM', emoji:'🏠', label:'Home & break (45 min)'},
+    {time:'6:30 PM', emoji:'🇪🇸', label:'Spanish workbook (15 min)'},
+    {time:'6:45 PM', emoji:'🎮', label:'Break (15 min)'},
+    {time:'7:00 PM', emoji:'📏', label:'JiJi (15 min)'},
     {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
     {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'8:30 PM', emoji:'🚿', label:'Shower'},
     {time:'10:30 PM', emoji:'💤', label:'Bedtime'},
   ],
-  5: [ // Friday - free day!
-    {time:'3:45 PM', emoji:'🏫', label:'Picked up from school'},
-    {time:'3:45 PM', emoji:'🎮', label:'Free time! No homework 🎉'},
+  5: [ // Friday - short work then weekend!
+    {time:'3:15 PM', emoji:'🏫', label:'Picked up from school'},
+    {time:'4:00 PM', emoji:'🏠', label:'Home & break (1 hr)'},
+    {time:'5:00 PM', emoji:'🇪🇸', label:'Spanish workbook (15 min)'},
+    {time:'5:15 PM', emoji:'🎮', label:'Break (15 min)'},
+    {time:'5:30 PM', emoji:'📏', label:'JiJi (15 min)'},
+    {time:'5:45 PM', emoji:'🎉', label:'Weekend starts — free time!'},
+    {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
+    {time:'8:00 PM', emoji:'🎮', label:'Free time'},
+    {time:'12:00 AM', emoji:'💤', label:'Bedtime — no school tomorrow! 🎉'},
+  ],
+  6: [ // Saturday
+    {time:'11:00 AM', emoji:'🇪🇸', label:'Spanish workbook (15 min)'},
+    {time:'11:15 AM', emoji:'🎮', label:'Free time — enjoy your day!'},
+    {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
+    {time:'8:00 PM', emoji:'🎮', label:'Free time'},
+    {time:'12:00 AM', emoji:'💤', label:'Bedtime'},
+  ],
+  0: [ // Sunday
+    {time:'11:00 AM', emoji:'🇪🇸', label:'Spanish workbook (15 min)'},
+    {time:'11:15 AM', emoji:'🎮', label:'Free time — almost the weekend!'},
     {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
     {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'8:30 PM', emoji:'🚿', label:'Shower'},
-    {time:'12:00 AM', emoji:'💤', label:'Bedtime — no school tomorrow! 🎉'},
+    {time:'10:30 PM', emoji:'💤', label:'Bedtime'},
   ],
 };
 
@@ -1351,12 +1399,22 @@ const TUESDAY_BLOCKS = [
   {id:'tb4', label:'Work Block 4', time:'6:00 PM', stars:5},
 ];
 const TUESDAY_TASKS = [
-  {id:'t4', emoji:'📚', name:'Extra homework (30 min)', stars:3},
+  {id:'t4', emoji:'📚', name:'Extra homework / workbook practice (30 min)', stars:3},
 ];
 
 const MONDAY_BLOCKS = [
   {id:'mb1', label:'Work Block 1', time:'6:15 PM', stars:5},
   {id:'mb2', label:'Work Block 2', time:'7:00 PM', stars:5},
+];
+
+const WEDNESDAY_BLOCKS = [
+  {id:'wb1', label:'Work Block', time:'7:00 PM', stars:5},
+];
+const THURSDAY_BLOCKS = [
+  {id:'thb1', label:'Work Block', time:'7:00 PM', stars:5},
+];
+const FRIDAY_BLOCKS = [
+  {id:'fb1', label:'Work Block', time:'5:30 PM', stars:5},
 ];
 
 // Ocean facts
@@ -1445,6 +1503,11 @@ var PET_SPECIES = {
   dolphin: {emoji:'🐬', species:'Dolphin', food:'🐟 Mackerel',foodCost:1, personality:'speedy and clever'},
   shark:   {emoji:'🦈', species:'Shark',   food:'🐟 Tuna',    foodCost:2, personality:'powerful and focused'},
   turtle:  {emoji:'🐢', species:'Turtle',  food:'🪸 Seagrass', foodCost:1, personality:'wise and patient'},
+  narwhal:    {emoji:'🦄', species:'Narwhal',     food:'🐟 Arctic Cod', foodCost:1, personality:'mysterious and magical'},
+  sea_turtle: {emoji:'🐢', species:'Sea Turtle',  food:'🪸 Seagrass',  foodCost:1, personality:'ancient and serene'},
+  octopus:    {emoji:'🐙', species:'Octopus',     food:'🦀 Crab',       foodCost:1, personality:'crafty and clever'},
+  hammerhead: {emoji:'🦈', species:'Hammerhead',  food:'🐟 Tuna',       foodCost:2, personality:'sharp and decisive'},
+  giant_squid:{emoji:'🦑', species:'Giant Squid', food:'🐟 Deep Fish',  foodCost:2, personality:'legendary and powerful'},
 };
 
 const PET_BIRTHDAYS = {
@@ -1575,6 +1638,16 @@ function initState(){
   if(!S.overrideReminders)S.overrideReminders=[];
   if(!S.emailSettings)S.emailSettings={};
   if(!S.pin)S.pin='1234';
+  if(!S.wednesdayDone)S.wednesdayDone={};
+  if(!S.thursdayDone)S.thursdayDone={};
+  if(!S.fridayDone)S.fridayDone={};
+  if(!S.saturdayDone)S.saturdayDone={};
+  if(!S.sundayDone)S.sundayDone={};
+  if(!S.spanishDone)S.spanishDone={};
+  if(!S.extraCreditDone)S.extraCreditDone={};
+  if(!S.streaks)S.streaks={};
+  if(!S.petUnlocks)S.petUnlocks={};
+  if(!S.badges)S.badges=[];
   initPods();
 }
 
@@ -1730,6 +1803,137 @@ function setGreeting(){
 // ═══════════════════════════════════════
 function updateStars(){renderStarsBar();renderStats();}
 
+// ═══════════════════════════════════════
+// BADGES
+// ═══════════════════════════════════════
+const BADGE_DEFS = [
+  {id:'first_morning',    emoji:'🌅', name:'Early Riser',         desc:'Completed your first morning routine'},
+  {id:'morning_7',        emoji:'🔥', name:'Week of Mornings',    desc:'7-day morning routine streak'},
+  {id:'first_reading',    emoji:'📖', name:'First Chapter',       desc:'Logged your first reading session'},
+  {id:'first_100_stars',  emoji:'💯', name:'Century Club',        desc:'Earned 100 stars total'},
+  {id:'first_500_stars',  emoji:'🌟', name:'Star Collector',      desc:'Earned 500 stars total'},
+  {id:'first_spanish',    emoji:'🇪🇸', name:'Hola, Mundo!',       desc:'Completed your first Spanish workbook'},
+  {id:'spanish_7',        emoji:'🇪🇸', name:'Spanish Week',       desc:'7-day Spanish streak'},
+  {id:'focus_5',          emoji:'🎯', name:'Focused Five',        desc:'5-day focus streak'},
+  {id:'named_pet',        emoji:'🐾', name:'Pet Namer',           desc:'Named your first pet'},
+  {id:'named_3_pets',     emoji:'🐾', name:'Zookeeper',           desc:'Named 3 pets'},
+  {id:'first_jiji',       emoji:'📏', name:'Math Explorer',       desc:'Logged your first JiJi session'},
+  {id:'jiji_10',          emoji:'📏', name:'JiJi Master',         desc:'Logged 10 JiJi sessions'},
+  {id:'all_morning',      emoji:'✨', name:'Morning Champion',    desc:'Completed all morning tasks in one day'},
+];
+
+function checkAndAwardBadges(){
+  if(!S.badges)S.badges=[];
+  var total=Math.max(S.totalStarsEarned||0,S.stars||0);
+  var newBadges=[];
+  function award(id){
+    if(S.badges.indexOf(id)===-1){S.badges.push(id);newBadges.push(id);}
+  }
+  // Stars milestones
+  if(total>=100)award('first_100_stars');
+  if(total>=500)award('first_500_stars');
+  // Morning streak
+  if(calcStreak('morning')>=7)award('morning_7');
+  // Spanish streak
+  if(calcStreak('spanish')>=7)award('spanish_7');
+  if(S.spanishDone&&Object.keys(S.spanishDone).length>=1)award('first_spanish');
+  // Focus streak
+  if(calcStreak('focus')>=5)award('focus_5');
+  // Reading
+  if(S.readingLog&&S.readingLog.length>=1)award('first_reading');
+  // JiJi
+  if(S.jijiSessions&&S.jijiSessions.length>=1)award('first_jiji');
+  if(S.jijiSessions&&S.jijiSessions.length>=10)award('jiji_10');
+  // Pets named
+  var namedCount=(S.petUnlocks?Object.keys(S.petUnlocks).length:0)+(S.pods?S.pods.filter(function(p){return p.name;}).length:0);
+  if(namedCount>=1)award('named_pet');
+  if(namedCount>=3)award('named_3_pets');
+  // Morning routine bonus
+  if(S.morningBonus)award('first_morning');
+  // Morning all tasks
+  var today=new Date().toDateString();
+  var allMorning=MORNING_TASKS.every(function(t){return S.morningDone&&S.morningDone[t.id+'_'+today];});
+  if(allMorning)award('all_morning');
+  if(newBadges.length>0){save();renderBadges();}
+}
+
+function renderBadges(){
+  var el=document.getElementById('badgeCollection');
+  if(!el)return;
+  var earned=S.badges||[];
+  if(earned.length===0){
+    el.innerHTML='<div style="text-align:center;padding:16px;color:var(--dim);font-size:.75rem">No badges yet — keep going! 🌊</div>';
+    return;
+  }
+  var html='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px">';
+  BADGE_DEFS.forEach(function(b){
+    var has=earned.indexOf(b.id)>-1;
+    html+='<div style="background:'+(has?'rgba(41,182,246,.12)':'rgba(0,0,0,.04)')+';border:1.5px solid '+(has?'rgba(41,182,246,.3)':'var(--border)')+';border-radius:12px;padding:8px 10px;text-align:center;min-width:70px;opacity:'+(has?1:0.4)+';">'
+      +'<div style="font-size:1.4rem">'+b.emoji+'</div>'
+      +'<div style="font-size:.6rem;font-weight:700;color:'+(has?'var(--accent)':'var(--dim)')+';margin-top:2px">'+b.name+'</div>'
+      +'<div style="font-size:.55rem;color:var(--dim);margin-top:1px">'+b.desc+'</div>'
+      +'</div>';
+  });
+  html+='</div>';
+  el.innerHTML=html;
+}
+
+// Pet unlock check - call when rank changes
+function checkPetUnlocks(){
+  var total=Math.max(S.totalStarsEarned||0,S.stars||0);
+  if(!S.petUnlocks)S.petUnlocks={};
+  var unlockMap={
+    350:{species:'sea_turtle', name:'Sea Turtle'},
+    500:{species:'octopus', name:'Octopus'},
+    750:{species:'hammerhead', name:'Hammerhead Shark'},
+    1000:{species:'giant_squid', name:'Giant Squid'},
+  };
+  [350,500,750,1000].forEach(function(threshold){
+    if(total>=threshold){
+      var u=unlockMap[threshold];
+      if(!S.petUnlocks[u.species]){
+        S.petUnlocks[u.species]={unlocked:true, unlockedAt:Date.now()};
+        save();
+        showPetUnlockModal(u.species, u.name);
+      }
+    }
+  });
+}
+
+function showPetUnlockModal(species, speciesName){
+  var overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+  overlay.innerHTML='<div style="background:var(--surface);border-radius:24px;padding:24px;max-width:340px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.4)">'
+    +'<div style="font-size:3rem;margin-bottom:8px;animation:float 2s ease-in-out infinite">'+getPetSvg(species,80)+'</div>'
+    +'<div style="font-family:\'Fredoka One\',cursive;font-size:1.3rem;color:var(--accent);margin-bottom:4px">🎉 A New Friend Appeared!</div>'
+    +'<div style="font-size:.8rem;color:var(--dim);margin-bottom:16px">You unlocked a '+speciesName+'! Give them a name:</div>'
+    +'<input id="newPetName" type="text" placeholder="What\'s their name?" style="width:100%;padding:10px 14px;border-radius:12px;border:2px solid var(--border);font-size:.95rem;font-family:Nunito,sans-serif;background:var(--bg);color:var(--text);margin-bottom:8px">'
+    +'<div style="font-size:.72rem;color:var(--dim);margin-bottom:12px">Birthday (optional):</div>'
+    +'<input id="newPetBirthday" type="date" style="width:100%;padding:8px 12px;border-radius:12px;border:2px solid var(--border);font-size:.85rem;font-family:Nunito,sans-serif;background:var(--bg);color:var(--text);margin-bottom:16px">'
+    +'<button onclick="confirmNewPet(\''+species+'\')" style="width:100%;padding:12px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:.95rem;font-weight:800;font-family:\'Fredoka One\',cursive;cursor:pointer">Welcome them to the pod! 🐋</button>'
+    +'</div>';
+  document.body.appendChild(overlay);
+  window._petUnlockOverlay=overlay;
+  setTimeout(function(){var inp=document.getElementById('newPetName');if(inp)inp.focus();},100);
+}
+
+function confirmNewPet(species){
+  var nameEl=document.getElementById('newPetName');
+  var bdayEl=document.getElementById('newPetBirthday');
+  var name=(nameEl?nameEl.value.trim():'')|| 'Unknown';
+  var birthday=bdayEl?bdayEl.value:'';
+  if(!S.petUnlocks)S.petUnlocks={};
+  S.petUnlocks[species]={unlocked:true, name:name, birthday:birthday, unlockedAt:Date.now()};
+  // Add to pod
+  if(!S.pods)S.pods=[];
+  S.pods.push({species:species, name:name, birthday:birthday, level:1, happiness:100, hunger:0, xp:0});
+  save();
+  if(window._petUnlockOverlay){document.body.removeChild(window._petUnlockOverlay);window._petUnlockOverlay=null;}
+  renderStats();
+  checkAndAwardBadges();
+}
+window.confirmNewPet=confirmNewPet;
+
 function getWeekStart(){
   var d=new Date();
   var day=d.getDay(); // 0=Sun
@@ -1751,10 +1955,14 @@ function getWeeklyStars(){
 
 function addStars(amount){
   S.stars=(S.stars||0)+amount;
-  S.totalStarsEarned=(S.totalStarsEarned||0)+amount;
+  if(amount>0){
+    S.totalStarsEarned=(S.totalStarsEarned||0)+amount;
+    S.weeklyStarsEarned=(S.weeklyStarsEarned||0)+amount;
+  }
   // Make sure week is initialized
   getWeeklyStars();
-  S.weeklyStarsEarned=(S.weeklyStarsEarned||0)+amount;
+  checkPetUnlocks();
+  checkAndAwardBadges();
 }
 
 function renderStarsBar(){
@@ -1765,23 +1973,32 @@ function renderStarsBar(){
   var pct=Math.min(100,Math.round(weeklyEarned/goal*100));
   var rank=getOceanRank(total);
   var el=document.getElementById('starsCount');
-  if(el)el.textContent='⭐ '+spendable;
+  if(el)el.innerHTML='⭐ '+spendable+'<span style="font-size:.7rem;font-weight:600;opacity:.65;margin-left:6px">to spend</span>';
   var meta=document.getElementById('starsMeta');
-  if(meta)meta.innerHTML=weeklyEarned+' / '+goal+' this week<br>'+rank.badge+' '+rank.title;
+  if(meta)meta.innerHTML=weeklyEarned+' / '+goal+' this week<br>'+rank.badge+' '+rank.title+'<br><span style="opacity:.6;font-size:.62rem">'+total+' earned total</span>';
   var fill=document.getElementById('progressFill');
   if(fill)fill.style.width=pct+'%';
 }
 
 function renderStats(){
-  var streak=getStreak();
   var total=Math.max(S.totalStarsEarned||0,S.stars||0);
   var rank=getOceanRank(total);
   var nextRank=getNextRank(total);
-  var sc=document.getElementById('streakCount');if(sc)sc.textContent=streak;
   var rb=document.getElementById('rankBadge');if(rb)rb.textContent=rank.badge;
   var rt=document.getElementById('rankTitle');if(rt)rt.textContent=rank.title;
   var rn=document.getElementById('rankNext');
-  if(rn)rn.textContent=nextRank?'Next: '+nextRank.badge+' at '+nextRank.min+'⭐':'MAX RANK! 👑';
+  if(rn)rn.textContent=nextRank?'Next: '+nextRank.badge+' '+nextRank.title+' at '+nextRank.min+'⭐':'MAX RANK! 👑';
+  // Update streak cards
+  var streaks=S.streaks||{};
+  var today=getDateKey(new Date());
+  var sf=document.getElementById('streakFocus');if(sf)sf.textContent=calcStreak('focus');
+  var sr=document.getElementById('streakReading');if(sr)sr.textContent=calcStreak('reading');
+  var ss=document.getElementById('streakSpanish');if(ss)ss.textContent=calcStreak('spanish');
+  var sm=document.getElementById('streakMorning');if(sm)sm.textContent=calcStreak('morning');
+  // Pet unlock hint
+  renderPetUnlockHint(total, nextRank);
+  // Badges
+  renderBadges();
 }
 
 function getOceanRank(total){
@@ -1797,19 +2014,68 @@ function getNextRank(total){
 // STREAK
 // ═══════════════════════════════════════
 function getStreak(){
+  // Legacy - morning+bedtime streak
+  return calcStreak('morning');
+}
+
+function calcStreak(type){
+  if(!S.streaks)S.streaks={};
+  var today=getDateKey(new Date());
   var streak=0;
-  var today=new Date();
-  for(var i=0;i<60;i++){
-    var d=new Date(today);d.setDate(today.getDate()-i);
-    var dow=d.getDay();
-    if(dow===0||dow===6)continue;
-    var ds=d.toDateString();
-    var didMorning=!!S['morningBonus_'+ds];
-    var didNight=!!S['nightBonus_'+ds];
-    if(didMorning&&didNight)streak++;
+  for(var i=0;i<90;i++){
+    var d=new Date();d.setDate(d.getDate()-i);
+    var dk=getDateKey(d);
+    var didIt=false;
+    if(type==='morning'){
+      var ds=d.toDateString();
+      didIt=!!S['morningBonus_'+ds];
+    } else if(type==='reading'){
+      didIt=!!(S.readingLog&&S.readingLog.some(function(r){return getDateKey(new Date(r.ts||r.date))===dk;}));
+    } else if(type==='spanish'){
+      didIt=!!(S.spanishDone&&S.spanishDone[dk]);
+    } else if(type==='focus'){
+      // Check if any work block was done on this day
+      var ds=d.toDateString();
+      var dow=d.getDay();
+      if(dow===1)didIt=!!(S.mondayDone&&Object.keys(S.mondayDone).some(function(k){return k.endsWith('_'+ds);}));
+      else if(dow===2)didIt=!!(S.tuesdayDone&&Object.keys(S.tuesdayDone).some(function(k){return k.endsWith('_'+ds);}));
+      else if(dow===3)didIt=!!(S.wednesdayDone&&Object.keys(S.wednesdayDone).some(function(k){return k.endsWith('_'+ds);}));
+      else if(dow===4)didIt=!!(S.thursdayDone&&Object.keys(S.thursdayDone).some(function(k){return k.endsWith('_'+ds);}));
+      else if(dow===5)didIt=!!(S.fridayDone&&Object.keys(S.fridayDone).some(function(k){return k.endsWith('_'+ds);}));
+      else didIt=false; // weekends don't count for focus streak
+    }
+    if(didIt)streak++;
     else if(i>0)break;
   }
   return streak;
+}
+
+// Render pet unlock hint on rank card
+function renderPetUnlockHint(total, nextRank){
+  var el=document.getElementById('petUnlockHint');
+  if(!el)return;
+  // Check which rank milestones unlock pets
+  var unlockMap={
+    350:{species:'sea_turtle', name:'Sea Turtle'},
+    500:{species:'octopus', name:'Octopus'},
+    750:{species:'hammerhead', name:'Hammerhead Shark'},
+    1000:{species:'giant_squid', name:'Giant Squid'},
+  };
+  var nextUnlock=null;
+  var nextUnlockStars=null;
+  [350,500,750,1000].forEach(function(threshold){
+    if(!nextUnlock&&total<threshold){
+      nextUnlock=unlockMap[threshold];
+      nextUnlockStars=threshold;
+    }
+  });
+  if(!nextUnlock){el.innerHTML='';return;}
+  var diff=nextUnlockStars-total;
+  var hint='';
+  if(diff>50)hint='🔒 Something is waiting in the deep...';
+  else if(diff>20)hint='🌊 You can almost hear splashing...<br>'+diff+' stars to a new friend!';
+  else hint='👀 Something is peeking at you!<br>Just '+diff+' stars away!';
+  el.innerHTML='<div style="font-size:.62rem;color:var(--accent);line-height:1.3">'+hint+'</div>';
 }
 
 // ═══════════════════════════════════════
@@ -1936,12 +2202,12 @@ function renderAfterSchoolContent(el){
   // Mood
   html+=renderMoodCard();
 
-  // No school?
-  if(noSchool||dow===0||dow===6){
+  // No school banner (but don't return — still show schedule/tasks)
+  if(noSchool){
     var msg=NO_SCHOOL_DAYS[todayKey];
     html+='<div style="background:rgba(255,213,79,.1);border:1.5px solid rgba(255,213,79,.3);border-radius:16px;padding:16px;text-align:center;margin-bottom:10px">'
-      +'<div style="font-size:2.5rem;margin-bottom:6px">'+(msg?msg.emoji:'🌊')+'</div>'
-      +'<div style="font-family:\'Fredoka One\',cursive;font-size:1rem;color:var(--gold)">'+(msg?msg.msg:'No school today — enjoy your day!')+'</div>'
+      +'<div style="font-size:2.5rem;margin-bottom:6px">'+msg.emoji+'</div>'
+      +'<div style="font-family:\'Fredoka One\',cursive;font-size:1rem;color:var(--gold)">'+msg.msg+'</div>'
       +'</div>';
     el.innerHTML=html;
     return;
@@ -1960,18 +2226,36 @@ function renderAfterSchoolContent(el){
     }).join('');
   }
 
-  // JiJi button
-  html+='<div class="slabel">📏 JiJi</div>';
-  html+=renderJiJiCard(today);
-
-  // Tuesday homework tasks with escape hatch
-  if(dow===2){
-    html+=renderTuesdayTasks(today);
-  }
-
-  // Monday tasks
+  // Day-specific tasks
   if(dow===1){
+    html+=renderSpanishWorkbookTask(today);
+    html+='<div class="slabel">📏 JiJi</div>';
+    html+=renderJiJiCard(today);
     html+=renderMondayTasks(today);
+  } else if(dow===2){
+    html+='<div class="slabel">📏 JiJi</div>';
+    html+=renderJiJiCard(today);
+    html+=renderTuesdayTasks(today);
+  } else if(dow===3){
+    html+=renderSpanishWorkbookTask(today);
+    html+='<div class="slabel">📏 JiJi</div>';
+    html+=renderJiJiCard(today);
+    html+=renderWednesdayTasks(today);
+  } else if(dow===4){
+    html+=renderSpanishWorkbookTask(today);
+    html+='<div class="slabel">📏 JiJi</div>';
+    html+=renderJiJiCard(today);
+    html+=renderThursdayTasks(today);
+  } else if(dow===5){
+    html+=renderSpanishWorkbookTask(today);
+    html+='<div class="slabel">📏 JiJi</div>';
+    html+=renderJiJiCard(today);
+    html+=renderFridayTasks(today);
+    html+=renderExtraCreditSection(_extraCreditCollapsed);
+  } else if(dow===6||dow===0){
+    // Weekend — extra credit open by default
+    html+=renderSpanishWorkbookTask(today);
+    html+=renderExtraCreditSection(_extraCreditCollapsed&&_extraCreditEverToggled);
   }
 
   el.innerHTML=html;
@@ -2099,6 +2383,82 @@ function renderMondayTasks(today){
   return html;
 }
 
+function renderSpanishWorkbookTask(today){
+  if(!S.spanishDone)S.spanishDone={};
+  var todayKey=getDateKey(new Date());
+  var done=!!S.spanishDone[todayKey];
+  return'<div class="slabel">🇪🇸 Spanish Workbook</div>'
+    +'<div class="task-pill'+(done?' done':'')+'" onclick="toggleSpanishWorkbook()">'
+    +'<div class="task-check">'+(done?'✓':'')+'</div>'
+    +'<div class="task-emoji">🇪🇸</div>'
+    +'<div class="task-name">Spanish workbook (15 min)</div>'
+    +'<div class="task-stars">+5⭐</div>'
+    +'</div>';
+}
+
+function renderWednesdayTasks(today){
+  if(!S.wednesdayDone)S.wednesdayDone={};
+  var html='<div class="slabel">📚 Today\'s Work Block</div>';
+  html+=WEDNESDAY_BLOCKS.map(function(b){
+    return'<div style="font-size:.68rem;color:var(--dim);margin:6px 0 2px;font-weight:700">'+b.time+' — '+b.label+'</div>'
+      +renderWorkBlock(b.id,today,'wednesdayDone');
+  }).join('');
+  return html;
+}
+
+function renderThursdayTasks(today){
+  if(!S.thursdayDone)S.thursdayDone={};
+  var html='<div class="slabel">📚 Today\'s Work Block</div>';
+  html+=THURSDAY_BLOCKS.map(function(b){
+    return'<div style="font-size:.68rem;color:var(--dim);margin:6px 0 2px;font-weight:700">'+b.time+' — '+b.label+'</div>'
+      +renderWorkBlock(b.id,today,'thursdayDone');
+  }).join('');
+  return html;
+}
+
+function renderFridayTasks(today){
+  if(!S.fridayDone)S.fridayDone={};
+  var html='<div class="slabel">📚 Today\'s Work Block</div>';
+  html+=FRIDAY_BLOCKS.map(function(b){
+    return'<div style="font-size:.68rem;color:var(--dim);margin:6px 0 2px;font-weight:700">'+b.time+' — '+b.label+'</div>'
+      +renderWorkBlock(b.id,today,'fridayDone');
+  }).join('');
+  return html;
+}
+
+function renderExtraCreditSection(collapsed){
+  var EXTRA_CREDIT = [
+    {id:'ec1', emoji:'✏️', name:'Spanish crossword puzzle', stars:3},
+    {id:'ec2', emoji:'🗣️', name:'Teach mommy a Spanish word + definition', stars:2},
+    {id:'ec3', emoji:'🗣️', name:'Tell daddy a Spanish word + definition + sentence', stars:4},
+    {id:'ec4', emoji:'🗣️', name:'Teach Noah a Spanish word + definition', stars:1},
+    {id:'ec5', emoji:'📖', name:'Bonus reading session (30 min)', stars:10},
+    {id:'ec6', emoji:'📺', name:'Watch a show in Spanish (20-30 min)', stars:5},
+    {id:'ec7', emoji:'🐋', name:'Review new words in English with Orcalus', stars:3},
+    {id:'ec8', emoji:'🇪🇸', name:'Review new words in Spanish with Orcalus', stars:5},
+    {id:'ec9', emoji:'✍️', name:'Write 5 sentences in Spanish', stars:10},
+  ];
+  if(!S.extraCreditDone)S.extraCreditDone={};
+  var todayKey=getDateKey(new Date());
+  var html='<div class="slabel" style="display:flex;justify-content:space-between;align-items:center">'
+    +'<span>⭐ Extra Credit</span>'
+    +(collapsed?'<span style="font-size:.7rem;cursor:pointer;color:var(--accent)" onclick="toggleExtraCredit()">Show ▼</span>':'<span style="font-size:.7rem;cursor:pointer;color:var(--accent)" onclick="toggleExtraCredit()">Hide ▲</span>')
+    +'</div>';
+  if(!collapsed){
+    html+='<div style="font-size:.72rem;color:var(--dim);margin-bottom:8px">Bonus stars for going above and beyond! 🌟</div>';
+    EXTRA_CREDIT.forEach(function(t){
+      var done=!!S.extraCreditDone[t.id+'_'+todayKey];
+      html+='<div class="task-pill'+(done?' done':'')+'" onclick="toggleExtraCredit_task(\''+t.id+'\')">'
+        +'<div class="task-check">'+(done?'✓':'')+'</div>'
+        +'<div class="task-emoji">'+t.emoji+'</div>'
+        +'<div class="task-name">'+t.name+'</div>'
+        +'<div class="task-stars">+'+t.stars+'⭐</div>'
+        +'</div>';
+    });
+  }
+  return html;
+}
+
 // ═══════════════════════════════════════
 // SCHOOL WEEK NUMBER
 // ═══════════════════════════════════════
@@ -2179,6 +2539,50 @@ function toggleTuesdayTask(id){
     confetti();showToast(task.emoji+' +'+task.stars+' ⭐ Extra credit!');
   }
   save();updateStars();renderTimeContent();
+}
+
+function toggleSpanishWorkbook(){
+  if(!S.spanishDone)S.spanishDone={};
+  var todayKey=getDateKey(new Date());
+  var wasDone=!!S.spanishDone[todayKey];
+  S.spanishDone[todayKey]=!wasDone;
+  if(!wasDone){
+    addStars(5,'Spanish workbook ✓');
+    // Update Spanish streak
+    renderStats();
+    checkAndAwardBadges();
+  } else {
+    addStars(-5,'Spanish workbook undone');
+  }
+  save();
+  renderTimeContent();
+  renderStarsBar();
+}
+
+var _extraCreditCollapsed=true;
+var _extraCreditEverToggled=false;
+function toggleExtraCredit(){
+  _extraCreditEverToggled=true;
+  _extraCreditCollapsed=!_extraCreditCollapsed;
+  renderTimeContent();
+}
+
+function toggleExtraCredit_task(id){
+  if(!S.extraCreditDone)S.extraCreditDone={};
+  var todayKey=getDateKey(new Date());
+  var key=id+'_'+todayKey;
+  var EXTRA_CREDIT_STARS={ec1:3,ec2:2,ec3:4,ec4:1,ec5:10,ec6:5,ec7:3,ec8:5,ec9:10};
+  var wasDone=!!S.extraCreditDone[key];
+  S.extraCreditDone[key]=!wasDone;
+  if(!wasDone){
+    addStars(EXTRA_CREDIT_STARS[id]||3,'Extra credit: '+id);
+    checkAndAwardBadges();
+  } else {
+    addStars(-(EXTRA_CREDIT_STARS[id]||3),'Extra credit undone: '+id);
+  }
+  save();
+  renderTimeContent();
+  renderStarsBar();
 }
 
 function logWorkBlock(blockId, choice, doneKey){
@@ -3314,11 +3718,139 @@ function getSealSvg(s){
     +'</svg>';
 }
 
+function getNarwhalSvg(s){
+  return'<svg viewBox="0 0 130 100" style="width:'+s+'px;height:'+Math.round(s*.8)+'px;animation:float 3s ease-in-out infinite;filter:drop-shadow(0 3px 8px rgba(100,149,237,.4))">'
+    +'<ellipse cx="68" cy="58" rx="40" ry="22" fill="#6c8ebf"/>'
+    +'<ellipse cx="65" cy="65" rx="27" ry="14" fill="#c8d8f0"/>'
+    +'<ellipse cx="88" cy="48" rx="12" ry="8" fill="#c8d8f0"/>'
+    +'<circle cx="90" cy="47" r="3.5" fill="#1a1a2e"/>'
+    +'<circle cx="91" cy="46" r="1.2" fill="white"/>'
+    +'<path d="M68,35 L76,52 L60,52 Z" fill="#5a7aad"/>'
+    +'<path d="M28,58 Q18,46 14,52 Q18,62 28,64 Z" fill="#5a7aad"/>'
+    +'<path d="M28,58 Q18,65 14,61 Q18,53 28,56 Z" fill="#5a7aad"/>'
+    +'<path d="M50,68 Q38,78 34,73 Q42,65 50,65 Z" fill="#5a7aad"/>'
+    +'<path d="M62,63 Q67,66 72,63" stroke="#4a6a9d" stroke-width="1.5" fill="none" stroke-linecap="round"/>'
+    /* tusk — the signature narwhal spiral horn */
+    +'<line x1="88" y1="42" x2="128" y2="18" stroke="#e8e0c8" stroke-width="3.5" stroke-linecap="round"/>'
+    +'<line x1="88" y1="42" x2="128" y2="18" stroke="#c8b88a" stroke-width="1.2" stroke-linecap="round" stroke-dasharray="5,4"/>'
+    /* spiral lines on tusk */
+    +'<ellipse cx="70" cy="56" rx="8" ry="5" fill="#a8c0e0" opacity=".5"/>'
+    +'</svg>';
+}
+
+function getSeaTurtleSvg(s){
+  return'<svg viewBox="0 0 120 110" style="width:'+s+'px;height:'+Math.round(s*.9)+'px;animation:float 3s ease-in-out infinite;filter:drop-shadow(0 3px 8px rgba(34,139,34,.35))">'
+    +'<ellipse cx="60" cy="58" rx="28" ry="22" fill="#2d6a2d"/>'
+    +'<ellipse cx="60" cy="58" rx="22" ry="17" fill="#3a8a3a"/>'
+    /* shell pattern */
+    +'<ellipse cx="60" cy="54" rx="10" ry="8" fill="#2d6a2d" opacity=".6"/>'
+    +'<line x1="50" y1="46" x2="70" y2="70" stroke="#2d6a2d" stroke-width="1" opacity=".5"/>'
+    +'<line x1="70" y1="46" x2="50" y2="70" stroke="#2d6a2d" stroke-width="1" opacity=".5"/>'
+    /* head */
+    +'<ellipse cx="60" cy="34" rx="12" ry="10" fill="#4a7a2a"/>'
+    +'<circle cx="55" cy="31" r="3" fill="#1a1a0e"/>'
+    +'<circle cx="56" cy="30" r="1" fill="white"/>'
+    +'<circle cx="65" cy="31" r="3" fill="#1a1a0e"/>'
+    +'<circle cx="66" cy="30" r="1" fill="white"/>'
+    +'<path d="M55,38 Q60,42 65,38" stroke="#2d5a1a" stroke-width="1.5" fill="none" stroke-linecap="round"/>'
+    /* flippers */
+    +'<ellipse cx="28" cy="50" rx="14" ry="7" fill="#3a7a2a" transform="rotate(-30,28,50)"/>'
+    +'<ellipse cx="92" cy="50" rx="14" ry="7" fill="#3a7a2a" transform="rotate(30,92,50)"/>'
+    +'<ellipse cx="35" cy="76" rx="12" ry="5" fill="#3a7a2a" transform="rotate(20,35,76)"/>'
+    +'<ellipse cx="85" cy="76" rx="12" ry="5" fill="#3a7a2a" transform="rotate(-20,85,76)"/>'
+    +'</svg>';
+}
+
+function getOctopusSvg(s){
+  return'<svg viewBox="0 0 120 120" style="width:'+s+'px;height:'+s+'px;animation:float 3s ease-in-out infinite;filter:drop-shadow(0 3px 8px rgba(148,0,211,.4))">'
+    /* body/mantle */
+    +'<ellipse cx="60" cy="45" rx="28" ry="30" fill="#8b1a8b"/>'
+    +'<ellipse cx="60" cy="40" rx="22" ry="24" fill="#a020a0"/>'
+    /* eyes */
+    +'<circle cx="51" cy="38" r="6" fill="white"/>'
+    +'<circle cx="69" cy="38" r="6" fill="white"/>'
+    +'<circle cx="52" cy="38" r="3.5" fill="#1a1a2e"/>'
+    +'<circle cx="70" cy="38" r="3.5" fill="#1a1a2e"/>'
+    +'<circle cx="53" cy="37" r="1.2" fill="white"/>'
+    +'<circle cx="71" cy="37" r="1.2" fill="white"/>'
+    +'<path d="M53,48 Q60,53 67,48" stroke="#6a0a6a" stroke-width="1.5" fill="none" stroke-linecap="round"/>'
+    /* 8 tentacles with curls */
+    +'<path d="M36,62 Q26,72 28,85 Q30,92 24,96" stroke="#8b1a8b" stroke-width="5" fill="none" stroke-linecap="round"/>'
+    +'<path d="M44,68 Q36,82 38,95 Q39,102 33,104" stroke="#8b1a8b" stroke-width="5" fill="none" stroke-linecap="round"/>'
+    +'<path d="M54,72 Q50,88 54,100 Q56,107 51,108" stroke="#8b1a8b" stroke-width="5" fill="none" stroke-linecap="round"/>'
+    +'<path d="M64,72 Q66,88 64,100 Q63,107 68,108" stroke="#8b1a8b" stroke-width="5" fill="none" stroke-linecap="round"/>'
+    +'<path d="M74,68 Q80,82 78,95 Q77,102 82,104" stroke="#8b1a8b" stroke-width="5" fill="none" stroke-linecap="round"/>'
+    +'<path d="M82,62 Q90,72 88,85 Q86,92 92,96" stroke="#8b1a8b" stroke-width="5" fill="none" stroke-linecap="round"/>'
+    +'<path d="M40,64 Q28,68 22,78 Q18,86 12,88" stroke="#8b1a8b" stroke-width="5" fill="none" stroke-linecap="round"/>'
+    +'<path d="M78,64 Q90,68 96,78 Q100,86 106,88" stroke="#8b1a8b" stroke-width="5" fill="none" stroke-linecap="round"/>'
+    +'</svg>';
+}
+
+function getHammerheadSvg(s){
+  return'<svg viewBox="0 0 140 100" style="width:'+s+'px;height:'+Math.round(s*.72)+'px;animation:float 3s ease-in-out infinite;filter:drop-shadow(0 3px 8px rgba(70,70,70,.5))">'
+    /* body */
+    +'<ellipse cx="68" cy="54" rx="50" ry="18" fill="#4a4a5a"/>'
+    +'<ellipse cx="68" cy="60" rx="36" ry="11" fill="#b0b0c0"/>'
+    /* dorsal fin */
+    +'<path d="M72,36 L80,54 L64,54 Z" fill="#3a3a4a"/>'
+    /* pectoral fins */
+    +'<path d="M40,54 Q22,44 16,52 Q22,62 40,60 Z" fill="#3a3a4a"/>'
+    +'<path d="M100,54 Q116,50 120,57 Q114,64 100,58 Z" fill="#3a3a4a"/>'
+    /* tail */
+    +'<path d="M18,54 Q6,44 2,50 Q6,58 18,58 Z" fill="#3a3a4a"/>'
+    +'<path d="M18,54 Q6,62 2,57 Q6,50 18,52 Z" fill="#3a3a4a"/>'
+    /* hammerhead — the wide T-shaped head */
+    +'<rect x="96" y="44" width="36" height="20" rx="8" fill="#4a4a5a"/>'
+    /* eyes on the ends of the hammer */
+    +'<circle cx="100" cy="54" r="3.5" fill="#1a1a2e"/>'
+    +'<circle cx="101" cy="53" r="1.2" fill="white"/>'
+    +'<circle cx="128" cy="54" r="3.5" fill="#1a1a2e"/>'
+    +'<circle cx="129" cy="53" r="1.2" fill="white"/>'
+    /* mouth */
+    +'<path d="M100,60 Q114,65 128,60" stroke="#2a2a3a" stroke-width="1.5" fill="none" stroke-linecap="round"/>'
+    /* gill slits */
+    +'<line x1="92" y1="48" x2="90" y2="60" stroke="#3a3a4a" stroke-width="1.2" stroke-linecap="round"/>'
+    +'<line x1="88" y1="48" x2="86" y2="60" stroke="#3a3a4a" stroke-width="1.2" stroke-linecap="round"/>'
+    +'<line x1="84" y1="48" x2="82" y2="60" stroke="#3a3a4a" stroke-width="1.2" stroke-linecap="round"/>'
+    +'</svg>';
+}
+
+function getGiantSquidSvg(s){
+  return'<svg viewBox="0 0 120 130" style="width:'+s+'px;height:'+Math.round(s*1.05)+'px;animation:float 3s ease-in-out infinite;filter:drop-shadow(0 3px 10px rgba(220,20,60,.4))">'
+    /* mantle/body */
+    +'<ellipse cx="60" cy="42" rx="22" ry="32" fill="#8b0000"/>'
+    +'<ellipse cx="60" cy="38" rx="16" ry="26" fill="#c00020"/>'
+    /* fin flaps at top */
+    +'<ellipse cx="40" cy="20" rx="14" ry="8" fill="#8b0000" transform="rotate(-30,40,20)"/>'
+    +'<ellipse cx="80" cy="20" rx="14" ry="8" fill="#8b0000" transform="rotate(30,80,20)"/>'
+    /* eyes — giant squids have the biggest eyes in the animal kingdom */
+    +'<circle cx="50" cy="42" r="7" fill="#1a0010"/>'
+    +'<circle cx="70" cy="42" r="7" fill="#1a0010"/>'
+    +'<circle cx="51" cy="41" r="2.5" fill="rgba(255,255,255,.7)"/>'
+    +'<circle cx="71" cy="41" r="2.5" fill="rgba(255,255,255,.7)"/>'
+    /* 8 arms */
+    +'<path d="M44,68 Q34,80 36,96 Q37,104 30,108" stroke="#8b0000" stroke-width="4.5" fill="none" stroke-linecap="round"/>'
+    +'<path d="M50,72 Q42,86 44,100 Q45,108 39,110" stroke="#8b0000" stroke-width="4" fill="none" stroke-linecap="round"/>'
+    +'<path d="M58,74 Q54,90 56,104 Q57,112 52,114" stroke="#8b0000" stroke-width="4" fill="none" stroke-linecap="round"/>'
+    +'<path d="M65,74 Q66,90 64,104 Q63,112 68,114" stroke="#8b0000" stroke-width="4" fill="none" stroke-linecap="round"/>'
+    +'<path d="M72,72 Q78,86 76,100 Q75,108 81,110" stroke="#8b0000" stroke-width="4" fill="none" stroke-linecap="round"/>'
+    +'<path d="M78,68 Q86,80 84,96 Q83,104 89,108" stroke="#8b0000" stroke-width="4.5" fill="none" stroke-linecap="round"/>'
+    /* 2 long tentacles */
+    +'<path d="M47,70 Q30,90 26,112 Q24,122 18,126" stroke="#6b0000" stroke-width="3.5" fill="none" stroke-linecap="round"/>'
+    +'<path d="M75,70 Q90,90 94,112 Q96,122 102,126" stroke="#6b0000" stroke-width="3.5" fill="none" stroke-linecap="round"/>'
+    +'</svg>';
+}
+
 function getPetSvg(species,size){
   if(species==='orca')return getOrcaSvg(size);
   if(species==='orcalus')return getOrcalusSvg(size);
   if(species==='axolotl')return getAxolotlSvg(size);
   if(species==='seal')return getSealSvg(size);
+  if(species==='narwhal')return getNarwhalSvg(size);
+  if(species==='sea_turtle')return getSeaTurtleSvg(size);
+  if(species==='octopus')return getOctopusSvg(size);
+  if(species==='hammerhead')return getHammerheadSvg(size);
+  if(species==='giant_squid')return getGiantSquidSvg(size);
   var map={dolphin:'🐬',shark:'🦈',turtle:'🐢'};
   return'<div style="font-size:3.5rem;animation:float 3s ease-in-out infinite">'+(map[species]||'🐾')+'</div>';
 }
@@ -3362,6 +3894,9 @@ window.showPanel=showPanel;
 window.toggleMorningTask=toggleMorningTask;
 window.toggleBedtimeTask=toggleBedtimeTask;
 window.toggleTuesdayTask=toggleTuesdayTask;
+window.toggleSpanishWorkbook=toggleSpanishWorkbook;
+window.toggleExtraCredit_task=toggleExtraCredit_task;
+window.toggleExtraCredit=toggleExtraCredit;
 window.logWorkBlock=logWorkBlock;
 window.adminLogJiJi=adminLogJiJi;
 window.setMood=setMood;
