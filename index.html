@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.2.0">
+<meta name="version" content="3.2.1">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.2.0';
+  var v='3.2.1';
   if(window.location.href.indexOf('v=')===-1){
     window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
   }
@@ -2428,6 +2428,7 @@ function renderFridayTasks(today){
 
 function renderExtraCreditSection(collapsed){
   var EXTRA_CREDIT = [
+    {id:'ec0', emoji:'🇪🇸', name:'Extra Spanish workbook session (15 min)', stars:5},
     {id:'ec1', emoji:'✏️', name:'Spanish crossword puzzle', stars:3},
     {id:'ec2', emoji:'🗣️', name:'Teach mommy a Spanish word + definition', stars:2},
     {id:'ec3', emoji:'🗣️', name:'Tell daddy a Spanish word + definition + sentence', stars:4},
@@ -2571,7 +2572,7 @@ function toggleExtraCredit_task(id){
   if(!S.extraCreditDone)S.extraCreditDone={};
   var todayKey=getDateKey(new Date());
   var key=id+'_'+todayKey;
-  var EXTRA_CREDIT_STARS={ec1:3,ec2:2,ec3:4,ec4:1,ec5:10,ec6:5,ec7:3,ec8:5,ec9:10};
+  var EXTRA_CREDIT_STARS={ec0:5,ec1:3,ec2:2,ec3:4,ec4:1,ec5:10,ec6:5,ec7:3,ec8:5,ec9:10};
   var wasDone=!!S.extraCreditDone[key];
   S.extraCreditDone[key]=!wasDone;
   if(!wasDone){
