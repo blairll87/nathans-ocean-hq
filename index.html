@@ -1883,12 +1883,12 @@ function checkPetUnlocks(){
   var total=Math.max(S.totalStarsEarned||0,S.stars||0);
   if(!S.petUnlocks)S.petUnlocks={};
   var unlockMap={
-    350:{species:'sea_turtle', name:'Sea Turtle'},
-    500:{species:'octopus', name:'Octopus'},
+    550:{species:'sea_turtle', name:'Sea Turtle'},
+    600:{species:'octopus', name:'Octopus'},
     750:{species:'hammerhead', name:'Hammerhead Shark'},
     1000:{species:'giant_squid', name:'Giant Squid'},
   };
-  [350,500,750,1000].forEach(function(threshold){
+  [550,600,750,1000].forEach(function(threshold){
     if(total>=threshold){
       var u=unlockMap[threshold];
       if(!S.petUnlocks[u.species]){
@@ -2056,14 +2056,14 @@ function renderPetUnlockHint(total, nextRank){
   if(!el)return;
   // Check which rank milestones unlock pets
   var unlockMap={
-    350:{species:'sea_turtle', name:'Sea Turtle'},
-    500:{species:'octopus', name:'Octopus'},
+    550:{species:'sea_turtle', name:'Sea Turtle'},
+    600:{species:'octopus', name:'Octopus'},
     750:{species:'hammerhead', name:'Hammerhead Shark'},
     1000:{species:'giant_squid', name:'Giant Squid'},
   };
   var nextUnlock=null;
   var nextUnlockStars=null;
-  [350,500,750,1000].forEach(function(threshold){
+  [550,600,750,1000].forEach(function(threshold){
     if(!nextUnlock&&total<threshold){
       nextUnlock=unlockMap[threshold];
       nextUnlockStars=threshold;
@@ -2709,7 +2709,8 @@ function renderPetTabs(){
 }
 
 function getPetEmoji(species){
-  var map={orca:'🐋',orcalus:'🐋',axolotl:'🦎',seal:'🦦',dolphin:'🐬',shark:'🦈',turtle:'🐢'};
+  var map={orca:'🐋',orcalus:'🐋',axolotl:'🦎',seal:'🦦',dolphin:'🐬',shark:'🦈',turtle:'🐢',
+           narwhal:'🦄',sea_turtle:'🐢',octopus:'🐙',hammerhead:'🦈',giant_squid:'🦑'};
   return map[species]||'🐾';
 }
 
