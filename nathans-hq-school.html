@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.3.1">
+<meta name="version" content="3.3.2">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.3.1';
+  var v='3.3.2';
   var url=window.location.href;
   var m=url.match(/[?&]v=([^&]*)/);
   if(!m||m[1]!==v){
@@ -790,6 +790,18 @@ body.theme-night {
 
   <!-- ─── HOME PANEL ─── -->
   <div id="panel-home">
+    <!-- Games teaser banner — tapping scrolls to games below -->
+    <div onclick="document.getElementById('gamesSectionAnchor').scrollIntoView({behavior:'smooth',block:'start'})" style="background:linear-gradient(135deg,#0077a8,#29b6f6);border-radius:14px;padding:10px 14px;margin-top:4px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:1.4rem">🎮</div>
+        <div>
+          <div style="font-family:'Fredoka One',cursive;font-size:.88rem;color:#fff">Play Games, Earn Stars!</div>
+          <div style="font-size:.65rem;color:rgba(255,255,255,.8)">Vocab Flip · Trivia · Memory · Scramble</div>
+        </div>
+      </div>
+      <div style="font-size:.8rem;color:rgba(255,255,255,.9);font-family:'Fredoka One',cursive">Tap ↓</div>
+    </div>
+
     <!-- Ocean fact FIRST - sets the tone! -->
     <div class="fact-card" id="factCard" style="margin-top:4px">
       <div class="fact-eyebrow">🔬 Today's Ocean Fact</div>
@@ -830,9 +842,10 @@ body.theme-night {
     <!-- Bedtime recap (shows after 8:30pm) -->
     <div id="bedtimeRecap"></div>
 
-    <!-- Games banner + section -->
+    <!-- Games section -->
+    <div id="gamesSectionAnchor" style="scroll-margin-top:8px"></div>
     <div style="background:linear-gradient(135deg,#0077a8,#29b6f6);border-radius:16px;padding:14px 16px;margin-bottom:10px;margin-top:4px;text-align:center">
-      <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#fff;margin-bottom:2px">🎮 Play Games, Earn Stars!</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#fff;margin-bottom:2px">🎮 Games — Earn Stars!</div>
       <div style="font-size:.72rem;color:rgba(255,255,255,.85)">Each game has a daily star limit — come back tomorrow for more!</div>
     </div>
     <div id="gamesSection"></div>
@@ -1020,7 +1033,7 @@ body.theme-night {
 </div><!-- end scroll -->
 
 <!-- version footer -->
-<div style="text-align:center;padding:6px 0 10px;font-size:.62rem;color:var(--dimmer);letter-spacing:.04em">v3.3.1</div>
+<div style="text-align:center;padding:6px 0 10px;font-size:.62rem;color:var(--dimmer);letter-spacing:.04em">v3.3.2</div>
 
 <!-- ═══════════════════════ BOTTOM NAV ═══════════════════════ -->
 <div class="bottom-nav">
