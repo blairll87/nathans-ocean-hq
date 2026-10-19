@@ -6,12 +6,12 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.3.0">
+<meta name="version" content="3.3.1">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.3.0';
+  var v='3.3.1';
   var url=window.location.href;
   var m=url.match(/[?&]v=([^&]*)/);
   if(!m||m[1]!==v){
@@ -1020,7 +1020,7 @@ body.theme-night {
 </div><!-- end scroll -->
 
 <!-- version footer -->
-<div style="text-align:center;padding:6px 0 10px;font-size:.62rem;color:var(--dimmer);letter-spacing:.04em">v3.3.0</div>
+<div style="text-align:center;padding:6px 0 10px;font-size:.62rem;color:var(--dimmer);letter-spacing:.04em">v3.3.1</div>
 
 <!-- ═══════════════════════ BOTTOM NAV ═══════════════════════ -->
 <div class="bottom-nav">
@@ -2545,11 +2545,12 @@ function renderGamesSection(){
   var dailyCap=20;
   var remaining=Math.max(0,dailyCap-gameStars);
 
-  if(!_triviaState.active&&!_memoryState.active&&!_vocabState.active){
+  if(!_triviaState.active&&!_memoryState.active&&!_vocabState.active&&!_scrambleState.active){
     el.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">'
       +renderGameCard('vocab','📚','Vocab Flip','Flip your dictionary cards!',remaining>0)
       +renderGameCard('trivia','🌊','Ocean Trivia','Answer questions, earn stars!',remaining>0)
       +renderGameCard('memory','🧩','Memory Match','Match ocean animals!',remaining>0)
+      +renderGameCard('scramble','🔤','Word Scramble','Unscramble ocean words!',remaining>0)
       +'</div>'
       +(remaining<=0?'<div style="text-align:center;font-size:.72rem;color:var(--dim);padding:4px 0">Daily star limit reached ('+dailyCap+'⭐) — come back tomorrow! 🌟</div>':'<div style="text-align:center;font-size:.7rem;color:var(--dim)">'+remaining+' stars left today</div>');
   }
@@ -2566,6 +2567,7 @@ window.startGame=function(id){
   if(id==='trivia')startTrivia();
   else if(id==='memory')startMemory();
   else if(id==='vocab')startVocab();
+  else if(id==='scramble')startScramble();
 };
 
 // --- TRIVIA ---
@@ -2772,8 +2774,123 @@ window.vocabAnswer=function(knew){
   s.current++;s.flipped=false;
   renderVocabCard();
 };
+// --- WORD SCRAMBLE ---
+var SCRAMBLE_WORDS = [
+  {word:'OCEAN',hint:'The big body of salt water'},
+  {word:'SHARK',hint:'Apex predator with lots of teeth'},
+  {word:'CORAL',hint:'Animals that build colorful reefs'},
+  {word:'WHALE',hint:'Biggest animal on Earth'},
+  {word:'DOLPHIN',hint:'Super smart and loves to jump'},
+  {word:'OCTOPUS',hint:'Eight arms, three hearts, one brain'},
+  {word:'JELLYFISH',hint:'No brain, no bones, all sting'},
+  {word:'SEAHORSE',hint:'The male one has the babies!'},
+  {word:'PENGUIN',hint:'A bird that swims but can\'t fly'},
+  {word:'STARFISH',hint:'Can regrow its own arms'},
+  {word:'LOBSTER',hint:'Big red claws, lives on the bottom'},
+  {word:'SEAWEED',hint:'Plant of the ocean'},
+  {word:'TSUNAMI',hint:'Giant wave caused by earthquakes'},
+  {word:'CURRENT',hint:'A river inside the ocean'},
+  {word:'PLANKTON',hint:'Tiny creatures that feed everything'},
+  {word:'NARWHAL',hint:'The unicorn of the sea'},
+  {word:'MANATEE',hint:'Slow and gentle sea cow'},
+  {word:'SWORDFISH',hint:'Has a very long pointy nose'},
+  {word:'BARNACLE',hint:'Sticks to rocks and ships'},
+  {word:'TIDEPOOL',hint:'Where ocean meets the shore'},
+  {word:'BLOWHOLE',hint:'How whales breathe at the surface'},
+  {word:'TENTACLE',hint:'Long grabby arm of an octopus'},
+  {word:'BIOLUMINESCENCE',hint:'Animals that glow in the dark'},
+  {word:'PREDATOR',hint:'An animal that hunts other animals'},
+  {word:'MIGRATION',hint:'Long journey animals make every year'},
+];
+
+var _scrambleState={active:false};
+
+function scrambleWord(word){
+  var arr=word.split('');
+  for(var i=arr.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t;}
+  // Make sure it's actually scrambled
+  if(arr.join('')===word&&word.length>1)return scrambleWord(word);
+  return arr.join('');
+}
+
+function startScramble(){
+  var remaining=Math.max(0,20-getGameStarsToday());
+  if(remaining<=0){showToast('Daily star limit reached! Come back tomorrow 🌟');return;}
+  var pool=SCRAMBLE_WORDS.slice();
+  for(var i=pool.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=pool[i];pool[i]=pool[j];pool[j]=t;}
+  _scrambleState={active:true,words:pool.slice(0,6),current:0,score:0,input:'',wrong:0,scrambled:''};
+  _scrambleState.scrambled=scrambleWord(_scrambleState.words[0].word);
+  renderScramble();
+}
+
+function renderScramble(){
+  var el=document.getElementById('gamesSection');
+  if(!el)return;
+  var s=_scrambleState;
+  if(s.current>=s.words.length){
+    var earned=Math.min(s.score*2,Math.max(0,20-getGameStarsToday()+s.score*2));
+    addGameStars(s.score*2);
+    _scrambleState.active=false;
+    el.innerHTML='<div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:20px;text-align:center">'
+      +'<div style="font-size:2.5rem;margin-bottom:8px">'+(s.score>=4?'🏆':s.score>=2?'🌟':'🔤')+'</div>'
+      +'<div style="font-family:\'Fredoka One\',cursive;font-size:1.1rem;color:var(--accent);margin-bottom:6px">'+s.score+' / '+s.words.length+' unscrambled!</div>'
+      +'<div style="font-size:.8rem;color:var(--dim);margin-bottom:16px">+'+s.score*2+'⭐ earned!</div>'
+      +'<button onclick="endGame()" style="font-family:\'Fredoka One\',cursive;font-size:.9rem;padding:10px 24px;border-radius:12px;border:none;background:var(--accent);color:#fff;cursor:pointer">Done! 🌊</button>'
+      +'</div>';
+    if(s.score===s.words.length)confetti();
+    return;
+  }
+  var w=s.words[s.current];
+  var letters=s.scrambled.split('');
+  el.innerHTML='<div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
+    +'<div style="font-family:\'Fredoka One\',cursive;font-size:.85rem;color:var(--accent)">🔤 Word Scramble</div>'
+    +'<div style="font-size:.72rem;color:var(--dim)">Word '+(s.current+1)+' of '+s.words.length+'</div>'
+    +'</div>'
+    +'<div style="text-align:center;margin-bottom:10px">'
+    +'<div style="display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin-bottom:8px">'
+    +letters.map(function(l){
+      return'<div style="width:32px;height:36px;background:linear-gradient(135deg,rgba(41,182,246,.15),rgba(0,119,168,.08));border:2px solid rgba(41,182,246,.3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:\'Fredoka One\',cursive;font-size:1.1rem;color:var(--accent)">'+l+'</div>';
+    }).join('')
+    +'</div>'
+    +'<div style="font-size:.72rem;color:var(--dim);font-style:italic">💡 '+w.hint+'</div>'
+    +'</div>'
+    +(s.wrong>=2?'<div style="text-align:center;font-size:.78rem;color:var(--dim);margin-bottom:8px;letter-spacing:.15em">'+w.word.split('').map(function(l,i){return i===0?l:'_';}).join(' ')+'</div>':'')
+    +'<input id="scrambleInput" type="text" placeholder="Type your answer..." value="'+s.input+'" oninput="scrambleType(this.value)" onkeydown="if(event.key===\'Enter\')checkScramble()" style="width:100%;box-sizing:border-box;font-family:\'Fredoka One\',cursive;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--card);color:var(--text);margin-bottom:10px;text-transform:uppercase;letter-spacing:.1em" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+    +'<button onclick="checkScramble()" style="font-family:\'Fredoka One\',cursive;font-size:.9rem;padding:11px;border-radius:12px;border:none;background:var(--accent);color:#fff;cursor:pointer">✅ Submit</button>'
+    +'<button onclick="skipScramble()" style="font-family:\'Fredoka One\',cursive;font-size:.9rem;padding:11px;border-radius:12px;border:none;background:rgba(0,0,0,.06);color:var(--dim);cursor:pointer">⏭ Skip</button>'
+    +'</div>'
+    +'<button onclick="endGame()" style="margin-top:8px;font-family:\'Fredoka One\',cursive;font-size:.75rem;padding:6px 14px;border-radius:10px;border:none;background:rgba(0,0,0,.06);color:var(--dim);cursor:pointer">Quit</button>'
+    +'</div>';
+  setTimeout(function(){var inp=document.getElementById('scrambleInput');if(inp)inp.focus();},100);
+}
+window.scrambleType=function(v){_scrambleState.input=v.toUpperCase();};
+window.checkScramble=function(){
+  var s=_scrambleState;
+  var guess=s.input.trim().toUpperCase();
+  if(!guess)return;
+  if(guess===s.words[s.current].word){
+    s.score++;s.current++;s.input='';s.wrong=0;
+    if(s.current<s.words.length)s.scrambled=scrambleWord(s.words[s.current].word);
+    showToast('Correct! +2⭐ 🎉');
+    renderScramble();
+  } else {
+    s.wrong++;
+    showToast(s.wrong>=2?'Not quite — first letter shown! Try again 💡':'Not quite, try again! 🔤');
+    renderScramble();
+  }
+};
+window.skipScramble=function(){
+  var s=_scrambleState;
+  showToast('The answer was: '+s.words[s.current].word);
+  s.current++;s.input='';s.wrong=0;
+  if(s.current<s.words.length)s.scrambled=scrambleWord(s.words[s.current].word);
+  renderScramble();
+};
+
 window.endGame=function(){
-  _triviaState.active=false;_memoryState.active=false;_vocabState.active=false;
+  _triviaState.active=false;_memoryState.active=false;_vocabState.active=false;_scrambleState.active=false;
   renderGamesSection();
 };
 
