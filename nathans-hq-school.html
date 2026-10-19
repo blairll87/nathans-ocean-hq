@@ -12,8 +12,11 @@
 // Cache bust
 (function(){
   var v='3.3.0';
-  if(window.location.href.indexOf('v=')===-1){
-    window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
+  var url=window.location.href;
+  var m=url.match(/[?&]v=([^&]*)/);
+  if(!m||m[1]!==v){
+    var clean=url.replace(/([?&])v=[^&]*/,'').replace(/[?&]$/,'');
+    window.location.replace(clean+(clean.indexOf('?')>-1?'&':'?')+'v='+v);
   }
 })();
 </script>
