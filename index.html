@@ -6,14 +6,17 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="3.2.4">
+<meta name="version" content="3.4.2">
 <title>Nathan's Ocean HQ</title>
 <script>
 // Cache bust
 (function(){
-  var v='3.2.4';
-  if(window.location.href.indexOf('v=')===-1){
-    window.location.replace(window.location.href+(window.location.href.indexOf('?')>-1?'&':'?')+'v='+v);
+  var v='3.4.2';
+  var url=window.location.href;
+  var m=url.match(/[?&]v=([^&]*)/);
+  if(!m||m[1]!==v){
+    var clean=url.replace(/([?&])v=[^&]*/,'').replace(/[?&]$/,'');
+    window.location.replace(clean+(clean.indexOf('?')>-1?'&':'?')+'v='+v);
   }
 })();
 </script>
@@ -787,6 +790,18 @@ body.theme-night {
 
   <!-- ─── HOME PANEL ─── -->
   <div id="panel-home">
+    <!-- Games teaser banner — tapping scrolls to games below -->
+    <div onclick="document.getElementById('gamesSectionAnchor').scrollIntoView({behavior:'smooth',block:'start'})" style="background:linear-gradient(135deg,#0077a8,#29b6f6);border-radius:14px;padding:10px 14px;margin-top:4px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:1.4rem">🎮</div>
+        <div>
+          <div style="font-family:'Fredoka One',cursive;font-size:.88rem;color:#fff">Play Games, Earn Stars!</div>
+          <div style="font-size:.65rem;color:rgba(255,255,255,.8)">Vocab Flip · Trivia · Memory · Scramble</div>
+        </div>
+      </div>
+      <div style="font-size:.8rem;color:rgba(255,255,255,.9);font-family:'Fredoka One',cursive">Tap ↓</div>
+    </div>
+
     <!-- Ocean fact FIRST - sets the tone! -->
     <div class="fact-card" id="factCard" style="margin-top:4px">
       <div class="fact-eyebrow">🔬 Today's Ocean Fact</div>
@@ -799,35 +814,9 @@ body.theme-night {
       </div>
     </div>
 
-    <!-- Stats row -->
-    <div class="stat-row" style="grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
-      <div class="stat-card">
-        <div style="font-size:1.4rem;margin-bottom:3px">🎯</div>
-        <div class="stat-big" id="streakFocus">0</div>
-        <div class="stat-lbl">Focus Streak</div>
-        <div class="stat-sub">Complete a work block</div>
-      </div>
-      <div class="stat-card">
-        <div style="font-size:1.4rem;margin-bottom:3px">📖</div>
-        <div class="stat-big" id="streakReading">0</div>
-        <div class="stat-lbl">Reading Streak</div>
-        <div class="stat-sub">Log a reading session</div>
-      </div>
-    </div>
-    <div class="stat-row" style="grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-      <div class="stat-card">
-        <div style="font-size:1.4rem;margin-bottom:3px">🇪🇸</div>
-        <div class="stat-big" id="streakSpanish">0</div>
-        <div class="stat-lbl">Spanish Streak</div>
-        <div class="stat-sub">Do your Spanish workbook</div>
-      </div>
-      <div class="stat-card">
-        <div style="font-size:1.4rem;margin-bottom:3px">🌅</div>
-        <div class="stat-big" id="streakMorning">0</div>
-        <div class="stat-lbl">Morning Streak</div>
-        <div class="stat-sub">Finish morning routine</div>
-      </div>
-    </div>
+    <!-- Orcalus message -->
+    <div id="orcalusMessage"></div>
+
     <!-- Rank + next goal card -->
     <div class="stat-card" style="margin-bottom:6px;padding:14px 16px">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
@@ -841,11 +830,25 @@ body.theme-night {
       <div id="petUnlockHint"></div>
     </div>
 
+    <!-- Daily challenge -->
+    <div id="dailyChallenge"></div>
+
     <!-- Reminder cards -->
     <div id="reminderCards"></div>
 
     <!-- Time-based content -->
     <div id="timeContent"></div>
+
+    <!-- Bedtime recap (shows after 8:30pm) -->
+    <div id="bedtimeRecap"></div>
+
+    <!-- Games section -->
+    <div id="gamesSectionAnchor" style="scroll-margin-top:8px"></div>
+    <div style="background:linear-gradient(135deg,#0077a8,#29b6f6);border-radius:16px;padding:14px 16px;margin-bottom:10px;margin-top:4px;text-align:center">
+      <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#fff;margin-bottom:2px">🎮 Games — Earn Stars!</div>
+      <div style="font-size:.72rem;color:rgba(255,255,255,.85)">Each game has a daily star limit — come back tomorrow for more!</div>
+    </div>
+    <div id="gamesSection"></div>
   </div>
 
   <!-- ─── GOALS PANEL ─── -->
@@ -1030,7 +1033,7 @@ body.theme-night {
 </div><!-- end scroll -->
 
 <!-- version footer -->
-<div style="text-align:center;padding:6px 0 10px;font-size:.62rem;color:var(--dimmer);letter-spacing:.04em">v3.2.4</div>
+<div style="text-align:center;padding:6px 0 10px;font-size:.62rem;color:var(--dimmer);letter-spacing:.04em">v3.3.2</div>
 
 <!-- ═══════════════════════ BOTTOM NAV ═══════════════════════ -->
 <div class="bottom-nav">
@@ -1231,6 +1234,7 @@ const PROGRESS_KEYS = [
   'spanishArchive','summerBooks','summerReadingGoal','orcalusWelcomed',
   'lastReadingTitle',
   'petUnlocks','streaks','spanishDone','extraCreditDone','badges',
+  'challengeDone','gameStarsToday',
 ];
 
 // School calendar - hardcoded
@@ -1287,84 +1291,79 @@ const NO_SCHOOL_DAYS = {
 const WEEKLY_SCHEDULE = {
   1: [ // Monday
     {time:'3:15 PM', emoji:'🏫', label:'Picked up from school'},
-    {time:'3:15 PM', emoji:'🍎', label:'Snack in the car'},
-    {time:'4:15 PM', emoji:'🤸', label:'Gymnastics'},
-    {time:'5:45 PM', emoji:'🏠', label:'Home & break (45 min)'},
-    {time:'6:30 PM', emoji:'🇪🇸', label:'Spanish workbook (15 min)'},
-    {time:'6:45 PM', emoji:'🎮', label:'Break (15 min)'},
-    {time:'7:00 PM', emoji:'📏', label:'JiJi (30 min)'},
+    {time:'3:45 PM', emoji:'🏠', label:'Home & break (1 hr)'},
+    {time:'4:45 PM', emoji:'📏', label:'JiJi (30 min)'},
+    {time:'5:15 PM', emoji:'🎮', label:'Break (15 min)'},
+    {time:'5:30 PM', emoji:'🇪🇸', label:'Spanish workbook (15 min)'},
+    {time:'5:45 PM', emoji:'🎮', label:'Free time'},
     {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
     {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'8:30 PM', emoji:'🚿', label:'Shower'},
-    {time:'10:30 PM', emoji:'💤', label:'Bedtime'},
+    {time:'10:00 PM', emoji:'💤', label:'Bedtime'},
   ],
-  2: [ // Tuesday - double round day
+  2: [ // Tuesday - double JiJi day
     {time:'1:30 PM', emoji:'🏫', label:'Picked up from school (short day!)'},
-    {time:'2:00 PM', emoji:'🏠', label:'Home'},
-    {time:'2:00 PM', emoji:'🎮', label:'Break (1 hr)'},
-    {time:'3:00 PM', emoji:'📚', label:'Work Block 1 — Reading or JiJi (30 min)'},
+    {time:'2:00 PM', emoji:'🏠', label:'Home & break (1 hr)'},
+    {time:'3:00 PM', emoji:'📏', label:'JiJi (30 min)'},
     {time:'3:30 PM', emoji:'🎮', label:'Break (15 min)'},
-    {time:'3:45 PM', emoji:'📚', label:'Work Block 2 — Reading or JiJi (30 min)'},
-    {time:'4:15 PM', emoji:'🎮', label:'Break (1 hr)'},
-    {time:'5:15 PM', emoji:'📚', label:'Work Block 3 — Reading or JiJi (30 min)'},
-    {time:'5:45 PM', emoji:'🎮', label:'Break (15 min)'},
-    {time:'6:00 PM', emoji:'📚', label:'Work Block 4 — Reading or JiJi (30 min)'},
-    {time:'6:30 PM', emoji:'🎮', label:'Break (15 min)'},
-    {time:'6:45 PM', emoji:'📚', label:'Extra homework / workbook practice (30 min)'},
+    {time:'3:45 PM', emoji:'📏', label:'JiJi (30 min)'},
+    {time:'4:15 PM', emoji:'🎮', label:'Break (15 min)'},
+    {time:'4:30 PM', emoji:'🇪🇸', label:'Spanish workbook (15 min)'},
+    {time:'4:45 PM', emoji:'🎮', label:'Free time'},
     {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
     {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'8:30 PM', emoji:'🚿', label:'Shower'},
-    {time:'10:30 PM', emoji:'💤', label:'Bedtime'},
+    {time:'10:00 PM', emoji:'💤', label:'Bedtime'},
   ],
   3: [ // Wednesday - tutoring day
-    {time:'4:15 PM', emoji:'📝', label:'Tutoring with Ms. Tanya (reading + JiJi)'},
+    {time:'4:15 PM', emoji:'📝', label:'Tutoring with Ms. Tanya (reading)'},
     {time:'5:15 PM', emoji:'🚗', label:'Picked up from tutoring'},
-    {time:'5:45 PM', emoji:'🏠', label:'Home & break (45 min)'},
-    {time:'6:30 PM', emoji:'🇪🇸', label:'Spanish workbook (15 min)'},
-    {time:'6:45 PM', emoji:'🎮', label:'Break (15 min)'},
-    {time:'7:00 PM', emoji:'📏', label:'JiJi (15 min)'},
+    {time:'5:45 PM', emoji:'🏠', label:'Home & break (30 min)'},
+    {time:'6:15 PM', emoji:'📏', label:'JiJi (30 min)'},
+    {time:'6:45 PM', emoji:'🎮', label:'Free time'},
     {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
     {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'8:30 PM', emoji:'🚿', label:'Shower'},
-    {time:'10:30 PM', emoji:'💤', label:'Bedtime'},
+    {time:'10:00 PM', emoji:'💤', label:'Bedtime'},
   ],
   4: [ // Thursday - tutoring day
-    {time:'4:15 PM', emoji:'📝', label:'Tutoring with Ms. Tanya (reading + JiJi)'},
+    {time:'4:15 PM', emoji:'📝', label:'Tutoring with Ms. Tanya (reading)'},
     {time:'5:15 PM', emoji:'🚗', label:'Picked up from tutoring'},
-    {time:'5:45 PM', emoji:'🏠', label:'Home & break (45 min)'},
-    {time:'6:30 PM', emoji:'🇪🇸', label:'Spanish workbook (15 min)'},
-    {time:'6:45 PM', emoji:'🎮', label:'Break (15 min)'},
-    {time:'7:00 PM', emoji:'📏', label:'JiJi (15 min)'},
+    {time:'5:45 PM', emoji:'🏠', label:'Home & break (30 min)'},
+    {time:'6:15 PM', emoji:'📏', label:'JiJi (30 min)'},
+    {time:'6:45 PM', emoji:'🎮', label:'Free time'},
     {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
     {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'8:30 PM', emoji:'🚿', label:'Shower'},
-    {time:'10:30 PM', emoji:'💤', label:'Bedtime'},
+    {time:'10:00 PM', emoji:'💤', label:'Bedtime'},
   ],
-  5: [ // Friday - short work then weekend!
+  5: [ // Friday
     {time:'3:15 PM', emoji:'🏫', label:'Picked up from school'},
     {time:'4:00 PM', emoji:'🏠', label:'Home & break (1 hr)'},
-    {time:'5:00 PM', emoji:'🇪🇸', label:'Spanish workbook (15 min)'},
-    {time:'5:15 PM', emoji:'🎮', label:'Break (15 min)'},
-    {time:'5:30 PM', emoji:'📏', label:'JiJi (15 min)'},
-    {time:'5:45 PM', emoji:'🎉', label:'Weekend starts — free time!'},
+    {time:'5:00 PM', emoji:'📖', label:'Reading (30 min)'},
+    {time:'5:30 PM', emoji:'🎮', label:'Break (15 min)'},
+    {time:'5:45 PM', emoji:'🇪🇸', label:'Spanish workbook (15 min)'},
+    {time:'6:00 PM', emoji:'🎮', label:'Free time'},
     {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
     {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'12:00 AM', emoji:'💤', label:'Bedtime — no school tomorrow! 🎉'},
   ],
   6: [ // Saturday
-    {time:'11:00 AM', emoji:'🇪🇸', label:'Spanish workbook (15 min)'},
-    {time:'11:15 AM', emoji:'🎮', label:'Free time — enjoy your day!'},
+    {time:'11:00 AM', emoji:'📖', label:'Reading (30 min)'},
+    {time:'11:30 AM', emoji:'🇪🇸', label:'Spanish workbook (15 min)'},
+    {time:'11:45 AM', emoji:'🎮', label:'Free time — enjoy your day!'},
     {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
     {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'12:00 AM', emoji:'💤', label:'Bedtime'},
   ],
   0: [ // Sunday
-    {time:'11:00 AM', emoji:'🇪🇸', label:'Spanish workbook (15 min)'},
-    {time:'11:15 AM', emoji:'🎮', label:'Free time — enjoy your Sunday!'},
+    {time:'11:00 AM', emoji:'📖', label:'Reading (30 min)'},
+    {time:'11:30 AM', emoji:'🇪🇸', label:'Spanish workbook (15 min)'},
+    {time:'11:45 AM', emoji:'🎮', label:'Free time — enjoy your Sunday!'},
     {time:'7:30 PM', emoji:'🍔', label:'Dinner'},
     {time:'8:00 PM', emoji:'🎮', label:'Free time'},
     {time:'8:30 PM', emoji:'🚿', label:'Shower'},
-    {time:'10:30 PM', emoji:'💤', label:'Bedtime'},
+    {time:'10:00 PM', emoji:'💤', label:'Bedtime'},
   ],
 };
 
@@ -1396,31 +1395,22 @@ const BEDTIME_TASKS = [
   {id:'n9', emoji:'💤', name:'Lights out — good night! 🌟', stars:2},
 ];
 
-// Tuesday homework tasks
-// Work blocks — each slot Nathan picks Reading or JiJi
+// Work blocks — assigned tasks (no choice)
+// type: 'jiji' | 'reading' | 'both'
 const TUESDAY_BLOCKS = [
-  {id:'tb1', label:'Work Block 1', time:'3:00 PM', stars:5},
-  {id:'tb2', label:'Work Block 2', time:'3:45 PM', stars:5},
-  {id:'tb3', label:'Work Block 3', time:'5:15 PM', stars:5},
-  {id:'tb4', label:'Work Block 4', time:'6:00 PM', stars:5},
-];
-const TUESDAY_TASKS = [
-  {id:'t4', emoji:'📚', name:'Extra homework / workbook practice (30 min)', stars:3},
+  {id:'tb1', label:'Block 1 — JiJi', time:'3:00 PM', stars:5, type:'jiji', duration:'30 min'},
+  {id:'tb2', label:'Block 2 — JiJi', time:'3:45 PM', stars:5, type:'jiji', duration:'30 min'},
 ];
 
 const MONDAY_BLOCKS = [
-  {id:'mb1', label:'Work Block 1', time:'6:15 PM', stars:5},
-  {id:'mb2', label:'Work Block 2', time:'7:00 PM', stars:5},
+  {id:'mb1', label:'JiJi', time:'4:45 PM', stars:5, type:'jiji', duration:'30 min'},
 ];
 
 const WEDNESDAY_BLOCKS = [
-  {id:'wb1', label:'Work Block', time:'7:00 PM', stars:5},
+  {id:'wb1', label:'JiJi', time:'6:15 PM', stars:5, type:'jiji', duration:'35 min'},
 ];
 const THURSDAY_BLOCKS = [
-  {id:'thb1', label:'Work Block', time:'7:00 PM', stars:5},
-];
-const FRIDAY_BLOCKS = [
-  {id:'fb1', label:'Work Block', time:'5:30 PM', stars:5},
+  {id:'thb1', label:'JiJi', time:'6:15 PM', stars:5, type:'jiji', duration:'35 min'},
 ];
 
 // Ocean facts
@@ -1607,6 +1597,10 @@ function onLoad(){
   setGreeting();
   renderStarsBar();
   renderStats();
+  renderOrcalusMessage();
+  renderDailyChallenge();
+  renderGamesSection();
+  renderBedtimeRecap();
   renderTimeContent();
   renderFactCard();
   renderReminderCards();
@@ -2177,38 +2171,8 @@ function renderTimeContent(){
 }
 
 function renderMorningContent(el){
-  var today=new Date().toDateString();
-  if(!S.morningDone)S.morningDone={};
-  var doneCount=MORNING_TASKS.filter(function(t){return S.morningDone[t.id+'_'+today];}).length;
-  var pct=Math.round(doneCount/MORNING_TASKS.length*100);
-  var allDone=doneCount===MORNING_TASKS.length;
-
-  var html='<div class="slabel">☀️ Morning Checklist</div>';
-
-  // Mood check-in
-  html+=renderMoodCard();
-
-  // Progress
-  html+='<div class="comp-bar"><div class="comp-track"><div class="comp-fill" style="width:'+pct+'%"></div></div><div class="comp-pct">'+doneCount+' / '+MORNING_TASKS.length+'</div></div>';
-
-  if(allDone){
-    html+='<div style="background:rgba(16,185,129,.1);border:1.5px solid rgba(16,185,129,.3);border-radius:14px;padding:12px;text-align:center;margin-bottom:10px">'
-      +'<div style="font-size:1.5rem;margin-bottom:4px">🎉</div>'
-      +'<div style="font-family:\'Fredoka One\',cursive;font-size:.9rem;color:#10b981">Morning routine complete! Crush it today!</div>'
-      +'</div>';
-  }
-
-  html+=MORNING_TASKS.map(function(t){
-    var done=!!S.morningDone[t.id+'_'+today];
-    return'<div class="task-pill'+(done?' done':'')+'" onclick="toggleMorningTask(\''+t.id+'\')">'
-      +'<div class="task-check">'+(done?'✓':'')+'</div>'
-      +'<div class="task-emoji">'+t.emoji+'</div>'
-      +'<div class="task-name">'+t.name+'</div>'
-      +'<div class="task-stars">+'+t.stars+'⭐</div>'
-      +'</div>';
-  }).join('');
-
-  el.innerHTML=html;
+  // Morning routine removed — show schedule directly
+  renderAfterSchoolContent(el);
 }
 
 function renderAfterSchoolContent(el){
@@ -2233,9 +2197,6 @@ function renderAfterSchoolContent(el){
       return'<div class="week-dot'+(d===dow?' today':d<dow?' past':'')+'"></div>';
     }).join('')+'</div>'
     +'</div>';
-
-  // Mood
-  html+=renderMoodCard();
 
   // No school banner (but don't return — still show schedule/tasks)
   if(noSchool){
@@ -2297,38 +2258,9 @@ function renderAfterSchoolContent(el){
 }
 
 function renderBedtimeContent(el){
-  var today=new Date().toDateString();
-  if(!S.nightDone)S.nightDone={};
-  var doneCount=BEDTIME_TASKS.filter(function(t){return S.nightDone[t.id+'_'+today];}).length;
-  var pct=Math.round(doneCount/BEDTIME_TASKS.length*100);
-  var allDone=doneCount===BEDTIME_TASKS.length;
-
-  var html='<div class="slabel">🌙 Bedtime Checklist</div>';
-
-  // Mood
-  html+=renderMoodCard();
-
-  // Progress
-  html+='<div class="comp-bar"><div class="comp-track"><div class="comp-fill" style="width:'+pct+'%"></div></div><div class="comp-pct">'+doneCount+' / '+BEDTIME_TASKS.length+'</div></div>';
-
-  if(allDone){
-    html+='<div style="background:rgba(41,182,246,.1);border:1.5px solid rgba(41,182,246,.3);border-radius:14px;padding:12px;text-align:center;margin-bottom:10px">'
-      +'<div style="font-size:1.5rem;margin-bottom:4px">🌟</div>'
-      +'<div style="font-family:\'Fredoka One\',cursive;font-size:.9rem;color:var(--accent)">Bedtime routine complete! Sweet dreams, Nathan!</div>'
-      +'</div>';
-  }
-
-  html+=BEDTIME_TASKS.map(function(t){
-    var done=!!S.nightDone[t.id+'_'+today];
-    return'<div class="task-pill'+(done?' done':'')+'" onclick="toggleBedtimeTask(\''+t.id+'\')">'
-      +'<div class="task-check">'+(done?'✓':'')+'</div>'
-      +'<div class="task-emoji">'+t.emoji+'</div>'
-      +'<div class="task-name">'+t.name+'</div>'
-      +'<div class="task-stars">+'+t.stars+'⭐</div>'
-      +'</div>';
-  }).join('');
-
-  el.innerHTML=html;
+  // Bedtime routine removed — show schedule + recap instead
+  renderAfterSchoolContent(el);
+  renderBedtimeRecap();
 }
 
 function renderMoodCard(){
@@ -2354,6 +2286,613 @@ function renderMoodCard(){
     +'</div>';
 }
 
+// ═══════════════════════════════════════
+// ORCALUS DAILY MESSAGE
+// ═══════════════════════════════════════
+var ORCALUS_MESSAGES = [
+  {emoji:'🐋', msg:"Good morning, Nathan! I saved you the best wave. Catch it today! 🌊"},
+  {emoji:'🐋', msg:"Did you know? Orcas can swim 100 miles a day. You can definitely finish your homework. 💪"},
+  {emoji:'🌟', msg:"Hey! I found a shiny starfish and I'm saving it for you. Keep being awesome!"},
+  {emoji:'🐋', msg:"I practiced my jumps this morning. What are YOU going to practice today? 🤸"},
+  {emoji:'🌊', msg:"The ocean is 36,000 feet deep. That's how deep your brain goes! Use it today!"},
+  {emoji:'🐋', msg:"I taught three dolphins a new trick today. What's something new YOU learned?"},
+  {emoji:'⭐', msg:"Every star you earn goes into the ocean sky. It's getting really bright up there! ✨"},
+  {emoji:'🐋', msg:"I swam past a whale shark today — he said hi and also said to eat your snack 🍎"},
+  {emoji:'🌊', msg:"The current is strong today. That just means surf's up — ride it, Nathan!"},
+  {emoji:'🐋', msg:"Fun fact: I remember everyone I've ever met. And you're my favorite human 🫶"},
+  {emoji:'🐙', msg:"An octopus has three hearts. I think one of mine is saved just for you! 💙"},
+  {emoji:'🐋', msg:"I made a new friend today — a narwhal named Cosmo. He wants to meet you someday! 🦄"},
+  {emoji:'🌟', msg:"You came back! I knew you would. The ocean is better when you're here."},
+  {emoji:'🐋', msg:"I heard a rumor that kids who do their Spanish homework grow up to talk to dolphins 🐬"},
+  {emoji:'🌊', msg:"It rained in the ocean today. (Okay that doesn't make sense but pretend it does.) Great day ahead!"},
+  {emoji:'🐋', msg:"I've been working on my flips. How many stars can YOU earn today? Let's race!"},
+  {emoji:'⭐', msg:"I counted every star you've ever earned. Nathan, that's a LOT of stars. I'm impressed!"},
+  {emoji:'🐋', msg:"Splash says hi. He's been doing his puzzles all morning and wanted me to tell you 📏"},
+  {emoji:'🌊', msg:"Deep breath. You've got this. The ocean is rooting for you today 💙"},
+  {emoji:'🐋', msg:"I found a message in a bottle today. It said 'Nathan is going to have a great day.' True story! 🍾"},
+  {emoji:'🐙', msg:"Octopuses are the best problem solvers in the ocean. I think you two have a lot in common 🧠"},
+  {emoji:'🐋', msg:"Every morning I do three big jumps to start the day. Today's jumps were for YOU! 🎉"},
+  {emoji:'🌟', msg:"Some days the ocean is choppy. That's okay — even the waves work hard. So can you!"},
+  {emoji:'🐋', msg:"I've been learning Spanish too. Did you know 'orca' in Spanish is... still orca? We're famous 🇪🇸"},
+  {emoji:'🌊', msg:"The deep ocean is full of creatures nobody's discovered yet. Kind of like your potential! 🔭"},
+  {emoji:'🐋', msg:"I saved you the best spot at the reef. It has your name on it — literally, the fish spelled it out 🐠"},
+  {emoji:'⭐', msg:"Stars come from the ocean — they fall from the sky and we keep them safe. Fact? No. Cool? Yes."},
+  {emoji:'🐋', msg:"I heard JiJi talking to me through the water. She said 10 minutes gets you started 📏"},
+  {emoji:'🌊', msg:"Fun game: every task you finish is one wave closer to shore. Ready to surf? 🏄"},
+  {emoji:'🐋', msg:"I saw a sea turtle doing his homework this morning. You two would get along so well 🐢"},
+];
+
+function renderOrcalusMessage(){
+  var el=document.getElementById('orcalusMessage');
+  if(!el)return;
+  var dayIndex=Math.floor(Date.now()/86400000)%ORCALUS_MESSAGES.length;
+  var m=ORCALUS_MESSAGES[dayIndex];
+  el.innerHTML='<div style="background:linear-gradient(135deg,rgba(41,182,246,.12),rgba(0,119,168,.08));border:1.5px solid rgba(41,182,246,.25);border-radius:16px;padding:12px 14px;margin-bottom:10px;display:flex;gap:10px;align-items:flex-start">'
+    +'<div style="font-size:1.8rem;flex-shrink:0">'+m.emoji+'</div>'
+    +'<div>'
+    +'<div style="font-family:\'Fredoka One\',cursive;font-size:.78rem;color:var(--accent);margin-bottom:3px">Orcalus says...</div>'
+    +'<div style="font-size:.8rem;color:var(--text);line-height:1.5">'+m.msg+'</div>'
+    +'</div></div>';
+}
+
+// ═══════════════════════════════════════
+// DAILY CHALLENGE
+// ═══════════════════════════════════════
+var DAILY_CHALLENGES = [
+  {emoji:'🇪🇸', text:'Say 3 Spanish words out loud — any words you know!', stars:3},
+  {emoji:'🌊', text:'Name 5 ocean animals as fast as you can!', stars:2},
+  {emoji:'🏃', text:'Do 10 jumping jacks right now!', stars:2},
+  {emoji:'📖', text:'Tell someone (mom, dad, or Noah) one thing you read about recently.', stars:3},
+  {emoji:'🧠', text:'Name 3 things you learned at school this week.', stars:3},
+  {emoji:'🇪🇸', text:'Say "good morning," "thank you," and "how are you?" in Spanish.', stars:3},
+  {emoji:'🎯', text:'Set ONE goal for today and say it out loud!', stars:2},
+  {emoji:'🐋', text:'Tell Orcalus (out loud!) your favorite ocean animal and why.', stars:2},
+  {emoji:'🌟', text:'Give someone in your house a compliment!', stars:3},
+  {emoji:'🇪🇸', text:'Count from 1 to 20 in Spanish!', stars:4},
+  {emoji:'📏', text:'Do 5 minutes of JiJi — just 5 minutes to start!', stars:3},
+  {emoji:'💧', text:'Drink a full glass of water right now. Go!', stars:1},
+  {emoji:'🧩', text:'Name 3 characters from a book you\'re reading.', stars:2},
+  {emoji:'🦈', text:'Tell someone one shark fact. (It can be made up — but try to make it real!)', stars:2},
+  {emoji:'🇪🇸', text:'Write 3 Spanish words on a piece of paper. Any words!', stars:4},
+  {emoji:'🎉', text:'Do your best dance move. Right now. Nobody\'s judging (Orcalus is).', stars:2},
+  {emoji:'🌊', text:'Name all 5 oceans in the world! (Pacific, Atlantic, Indian, Arctic, Southern)', stars:3},
+  {emoji:'📚', text:'Read for 5 minutes — just 5! You can keep going if you want.', stars:3},
+  {emoji:'🧠', text:'What\'s one word you know in Spanish that your friends probably don\'t?', stars:2},
+  {emoji:'🐢', text:'Move in slow motion for 30 seconds. That\'s the turtle challenge.', stars:2},
+  {emoji:'🇪🇸', text:'Spell your name in Spanish! (Pro tip: it\'s the same, just say the letters differently.)', stars:2},
+  {emoji:'🎯', text:'Think of one thing you want to get better at. Tell someone!', stars:3},
+  {emoji:'🌟', text:'Write or say 3 things you\'re good at.', stars:3},
+  {emoji:'🐙', text:'How many arms does an octopus have? How many hearts? Name both to earn stars!', stars:2},
+  {emoji:'📖', text:'Read the back cover of any book you haven\'t read. Does it sound interesting?', stars:2},
+  {emoji:'🇪🇸', text:'Say the days of the week in Spanish! (lunes, martes, miércoles...)', stars:4},
+  {emoji:'🧩', text:'Tell someone the plot of a movie or show in just 3 sentences.', stars:2},
+  {emoji:'💪', text:'Hold a plank for 20 seconds. Orcalus will be timing you 🐋', stars:3},
+  {emoji:'🌊', text:'What\'s deeper: the Mariana Trench or the Grand Canyon? (Answer: Mariana Trench!)', stars:1},
+  {emoji:'🇪🇸', text:'Name 5 animals in Spanish. (perro, gato, pez, tiburón, ballena!)', stars:4},
+];
+
+function renderDailyChallenge(){
+  var el=document.getElementById('dailyChallenge');
+  if(!el)return;
+  var todayKey=getDateKey(new Date());
+  var dayIndex=Math.floor(Date.now()/86400000)%DAILY_CHALLENGES.length;
+  var c=DAILY_CHALLENGES[dayIndex];
+  var done=!!(S.challengeDone&&S.challengeDone[todayKey]);
+  el.innerHTML='<div style="background:linear-gradient(135deg,rgba(245,124,0,.1),rgba(255,143,0,.06));border:1.5px solid rgba(245,124,0,.25);border-radius:16px;padding:14px 16px;margin-bottom:10px">'
+    +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">'
+    +'<div style="font-family:\'Fredoka One\',cursive;font-size:.85rem;color:var(--accent)">⚡ Daily Challenge</div>'
+    +'<div style="font-size:.65rem;color:var(--dim);background:rgba(0,0,0,.06);border-radius:8px;padding:2px 6px">+'+c.stars+'⭐</div>'
+    +'</div>'
+    +'<div style="display:flex;gap:10px;align-items:flex-start">'
+    +'<div style="font-size:1.6rem;flex-shrink:0">'+c.emoji+'</div>'
+    +'<div style="font-size:.82rem;color:var(--text);line-height:1.5;flex:1">'+c.text+'</div>'
+    +'</div>'
+    +(done
+      ?'<div style="margin-top:10px;text-align:center;font-family:\'Fredoka One\',cursive;font-size:.85rem;color:#10b981">✅ Challenge complete! Come back tomorrow!</div>'
+      :'<button onclick="completeChallenge()" style="margin-top:10px;width:100%;font-family:\'Fredoka One\',cursive;font-size:.85rem;padding:10px;border-radius:12px;border:none;background:var(--accent);color:#fff;cursor:pointer">✅ I did it! +'+c.stars+'⭐</button>')
+    +'</div>';
+}
+window.completeChallenge=function(){
+  var todayKey=getDateKey(new Date());
+  if(S.challengeDone&&S.challengeDone[todayKey])return;
+  if(!S.challengeDone)S.challengeDone={};
+  S.challengeDone[todayKey]=true;
+  var dayIndex=Math.floor(Date.now()/86400000)%DAILY_CHALLENGES.length;
+  addStars(DAILY_CHALLENGES[dayIndex].stars);
+  save();
+  renderDailyChallenge();
+  showToast('Challenge complete! +'+DAILY_CHALLENGES[dayIndex].stars+'⭐ 🎉');
+  confetti();
+};
+
+// ═══════════════════════════════════════
+// BEDTIME RECAP
+// ═══════════════════════════════════════
+function renderBedtimeRecap(){
+  var el=document.getElementById('bedtimeRecap');
+  if(!el)return;
+  var h=new Date().getHours();
+  if(h<20&&h>=6){el.innerHTML='';return;} // only after 8pm
+  var today=new Date().toDateString();
+  var todayKey=getDateKey(new Date());
+  var items=[];
+  // Spanish workbook
+  if(S.spanishDone&&S.spanishDone[todayKey])items.push({emoji:'🇪🇸',text:'Spanish workbook ✓',stars:5});
+  // Daily challenge
+  if(S.challengeDone&&S.challengeDone[todayKey]){var ci=Math.floor(Date.now()/86400000)%DAILY_CHALLENGES.length;items.push({emoji:'⚡',text:'Daily challenge ✓',stars:DAILY_CHALLENGES[ci].stars});}
+  // Work blocks
+  var doneBlocks=0;
+  ['mondayDone','tuesdayDone','wednesdayDone','thursdayDone','fridayDone'].forEach(function(k){
+    if(S[k])Object.keys(S[k]).forEach(function(key){if(key.endsWith('_'+today))doneBlocks++;});
+  });
+  if(doneBlocks>0)items.push({emoji:'🎯',text:doneBlocks+' work block'+(doneBlocks>1?'s':'')+' completed',stars:doneBlocks*5});
+  // Reading
+  var todayReads=(S.readingLog||[]).filter(function(r){return new Date(r.ts||r.date).toDateString()===today;});
+  todayReads.forEach(function(r){items.push({emoji:'📖',text:'Read: '+r.title,stars:r.totalStars||5});});
+  // Games
+  var gameStars=(S.gameStarsToday&&S.gameStarsToday[todayKey])||0;
+  if(gameStars>0)items.push({emoji:'🎮',text:'Games played',stars:gameStars});
+  // Extra credit
+  if(S.extraCreditDone){
+    var ecToday=Object.keys(S.extraCreditDone).filter(function(k){return k.endsWith('_'+todayKey);});
+    if(ecToday.length>0)items.push({emoji:'🌟',text:ecToday.length+' extra credit activit'+(ecToday.length>1?'ies':'y'),stars:ecToday.length*3});
+  }
+
+  if(items.length===0){
+    el.innerHTML='<div style="background:linear-gradient(135deg,rgba(99,102,241,.1),rgba(139,92,246,.06));border:1.5px solid rgba(99,102,241,.2);border-radius:16px;padding:14px 16px;margin-top:8px;text-align:center">'
+      +'<div style="font-size:1.8rem;margin-bottom:6px">🌙</div>'
+      +'<div style="font-family:\'Fredoka One\',cursive;font-size:.9rem;color:#7c3aed">Time to wind down, Nathan!</div>'
+      +'<div style="font-size:.75rem;color:var(--dim);margin-top:4px">Tomorrow\'s a new day — Orcalus will be waiting! 🐋</div>'
+      +'</div>';
+    return;
+  }
+  var totalRecapStars=items.reduce(function(a,b){return a+(b.stars||0);},0);
+  el.innerHTML='<div style="background:linear-gradient(135deg,rgba(99,102,241,.1),rgba(139,92,246,.06));border:1.5px solid rgba(99,102,241,.2);border-radius:16px;padding:14px 16px;margin-top:8px">'
+    +'<div style="font-family:\'Fredoka One\',cursive;font-size:.95rem;color:#7c3aed;margin-bottom:10px">🌙 What You Did Today</div>'
+    +items.map(function(it){
+      return'<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(0,0,0,.05)">'
+        +'<div style="display:flex;gap:8px;align-items:center"><span style="font-size:1.1rem">'+it.emoji+'</span><span style="font-size:.8rem;color:var(--text)">'+it.text+'</span></div>'
+        +'<div style="font-size:.75rem;color:var(--gold);font-weight:700">+'+it.stars+'⭐</div>'
+        +'</div>';
+    }).join('')
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:6px">'
+    +'<div style="font-family:\'Fredoka One\',cursive;font-size:.85rem;color:var(--text)">Today\'s total</div>'
+    +'<div style="font-family:\'Fredoka One\',cursive;font-size:1rem;color:var(--gold)">'+totalRecapStars+' ⭐</div>'
+    +'</div>'
+    +'<div style="text-align:center;margin-top:10px;font-size:.75rem;color:var(--dim)">Sweet dreams, Nathan! Orcalus is proud of you 🐋</div>'
+    +'</div>';
+}
+
+// ═══════════════════════════════════════
+// GAMES
+// ═══════════════════════════════════════
+var OCEAN_TRIVIA = [
+  {q:"How many arms does an octopus have?",a:"8",choices:["6","8","10","12"]},
+  {q:"What is the largest ocean on Earth?",a:"Pacific",choices:["Atlantic","Indian","Pacific","Arctic"]},
+  {q:"What do whales use to communicate?",a:"Songs",choices:["Barks","Songs","Clicks only","Visual signals"]},
+  {q:"How many hearts does an octopus have?",a:"3",choices:["1","2","3","4"]},
+  {q:"What is a group of fish called?",a:"A school",choices:["A pack","A herd","A school","A flock"]},
+  {q:"Which animal is the fastest in the ocean?",a:"Sailfish",choices:["Blue whale","Sailfish","Dolphin","Great white shark"]},
+  {q:"What covers more than 70% of Earth's surface?",a:"Ocean",choices:["Land","Ice","Ocean","Forests"]},
+  {q:"How deep is the Mariana Trench (roughly)?",a:"36,000 feet",choices:["5,000 feet","12,000 feet","36,000 feet","100,000 feet"]},
+  {q:"What do sea otters do to stay warm?",a:"Hold hands while sleeping",choices:["Bury in sand","Hold hands while sleeping","Swim in circles","Eat constantly"]},
+  {q:"What is the smallest ocean?",a:"Arctic",choices:["Southern","Indian","Arctic","Atlantic"]},
+  {q:"How do sharks sense prey in the water?",a:"Electrical signals",choices:["Smell only","Sight","Electrical signals","Echolocation"]},
+  {q:"What color is an octopus's blood?",a:"Blue",choices:["Red","Blue","Green","Clear"]},
+  {q:"How long can a blue whale's heart be?",a:"About 5 feet across",choices:["1 foot","3 feet","About 5 feet across","10 feet"]},
+  {q:"What is bioluminescence?",a:"Animals that glow in the dark",choices:["Animals that change color","Animals that glow in the dark","Animals that breathe underwater","Animals that move sideways"]},
+  {q:"How many species of sharks exist?",a:"Over 500",choices:["About 20","About 100","Over 500","About 10"]},
+  {q:"What do clownfish (like Nemo) live in?",a:"Sea anemones",choices:["Coral","Sea anemones","Seaweed","Sponges"]},
+  {q:"How do dolphins sleep?",a:"One brain half at a time",choices:["Not at all","On the ocean floor","One brain half at a time","Floating on the surface"]},
+  {q:"What is the largest animal ever to live on Earth?",a:"Blue whale",choices:["T-Rex","African elephant","Blue whale","Giant squid"]},
+  {q:"How do sea turtles navigate the ocean?",a:"Earth's magnetic field",choices:["The stars","Water temperature","Earth's magnetic field","Following other turtles"]},
+  {q:"What percentage of the ocean is unexplored?",a:"About 80%",choices:["About 10%","About 30%","About 50%","About 80%"]},
+  {q:"What is a narwhal's 'horn' actually?",a:"A tooth",choices:["A bone","A horn","A tooth","A spike made of shell"]},
+  {q:"How long can a sperm whale hold its breath?",a:"Up to 90 minutes",choices:["5 minutes","15 minutes","45 minutes","Up to 90 minutes"]},
+  {q:"What is the Great Barrier Reef?",a:"The world's largest coral reef",choices:["An underwater mountain","The world's largest coral reef","A type of ocean current","An island chain"]},
+  {q:"Which fish can inflate itself like a balloon?",a:"Pufferfish",choices:["Clownfish","Swordfish","Pufferfish","Anglerfish"]},
+  {q:"How do hammerhead sharks use their unusual heads?",a:"To detect prey hiding in sand",choices:["To headbutt enemies","To swim faster","To detect prey hiding in sand","To attract mates"]},
+  {q:"What do orcas (killer whales) actually eat?",a:"Fish, seals, and other marine animals",choices:["Only small fish","Only plankton","Fish, seals, and other marine animals","Only squid"]},
+  {q:"How old can a sea turtle live to be?",a:"Over 100 years",choices:["About 10 years","About 30 years","About 60 years","Over 100 years"]},
+  {q:"What is the name of the deepest part of the ocean?",a:"Mariana Trench",choices:["Bermuda Triangle","Pacific Rift","Mariana Trench","Atlantic Deep"]},
+  {q:"How do anglerfish attract prey in the dark deep sea?",a:"A glowing lure on their head",choices:["Bright colors","Making noise","A glowing lure on their head","Releasing scent"]},
+  {q:"Which ocean animal has the longest migration?",a:"Arctic tern (a seabird)",choices:["Blue whale","Humpback whale","Leatherback turtle","Arctic tern (a seabird)"]},
+  {q:"What is plankton?",a:"Tiny organisms that float in the ocean",choices:["Baby fish","Tiny organisms that float in the ocean","Ocean plants only","A type of coral"]},
+  {q:"How many tentacles does a jellyfish have?",a:"It varies by species",choices:["Always 8","Always 4","Always 100","It varies by species"]},
+  {q:"What do manta rays eat?",a:"Plankton and tiny fish",choices:["Sharks","Coral","Plankton and tiny fish","Sea turtles"]},
+  {q:"How do seahorses move through water?",a:"A tiny dorsal fin that beats fast",choices:["Their tails","Side fins","A tiny dorsal fin that beats fast","Jet propulsion"]},
+  {q:"Which shark is the largest fish in the ocean?",a:"Whale shark",choices:["Great white","Hammerhead","Whale shark","Tiger shark"]},
+  {q:"What is the ocean's 'midnight zone'?",a:"1000–4000 meters deep, totally dark",choices:["The surface at night","1000–4000 meters deep, totally dark","Where bioluminescent fish live","The Arctic Ocean at winter"]},
+  {q:"How do sea otters use tools?",a:"Smash shellfish open with rocks",choices:["Dig with sticks","Smash shellfish open with rocks","Cut seaweed","Build nests with stones"]},
+  {q:"What is the name for a male seahorse giving birth?",a:"Seahorses — males carry the babies",choices:["This never happens","A sea birth","Seahorses — males carry the babies","A reverse pregnancy"]},
+  {q:"How do dolphins use echolocation?",a:"Make clicks that bounce off objects",choices:["Listen to ocean sounds","See through murky water","Make clicks that bounce off objects","Feel vibrations with their skin"]},
+  {q:"What colors can most sharks NOT see?",a:"Red — sharks are partly colorblind",choices:["Blue and green","Yellow and orange","Red — sharks are partly colorblind","All colors equally well"]},
+  {q:"What covers the ocean floor in the deepest parts?",a:"Soft sediment (ooze)",choices:["Hard rock everywhere","Sand","Soft sediment (ooze)","Coral"]},
+  {q:"How fast can a sailfish swim?",a:"Up to 68 mph",choices:["20 mph","40 mph","Up to 68 mph","90 mph"]},
+  {q:"What does a starfish do if it loses an arm?",a:"Regrows it",choices:["Dies","Swims slower","Regrows it","Finds a new arm on the ocean floor"]},
+  {q:"How long is the blue whale's tongue?",a:"About the weight of an elephant",choices:["5 pounds","50 pounds","About the weight of an elephant","Blue whales don't have tongues"]},
+  {q:"Which fish can climb trees?",a:"Mudskipper",choices:["Flying fish","Mudskipper","Pufferfish","Archerfish"]},
+  {q:"What is the ocean's 'sunlight zone'?",a:"The top 200 meters where light reaches",choices:["Any warm patch of water","Only the tropics","The top 200 meters where light reaches","Anywhere with bioluminescence"]},
+  {q:"How long can some jellyfish live?",a:"Possibly forever (Turritopsis)",choices:["1 day","1 week","1 year","Possibly forever (Turritopsis)"]},
+  {q:"What is a pod?",a:"A group of whales or dolphins",choices:["A type of seaweed","A group of whales or dolphins","A baby seal","A underwater cave"]},
+  {q:"How do flying fish 'fly'?",a:"Glide with enlarged pectoral fins",choices:["Actual wings","Magic","Glide with enlarged pectoral fins","Jump on air bubbles"]},
+  {q:"What is the largest species of shark?",a:"Whale shark",choices:["Great white","Megalodon (extinct)","Whale shark","Basking shark"]},
+];
+
+var _triviaState={active:false,q:null,answered:false};
+var _memoryState={active:false,cards:[],flipped:[],matched:[],first:null,waiting:false};
+var _vocabState={active:false,words:[],current:0,flipped:false,correct:0,total:0};
+
+function getGameStarsToday(){
+  var todayKey=getDateKey(new Date());
+  if(!S.gameStarsToday)S.gameStarsToday={};
+  return S.gameStarsToday[todayKey]||0;
+}
+function addGameStars(n){
+  var todayKey=getDateKey(new Date());
+  if(!S.gameStarsToday)S.gameStarsToday={};
+  S.gameStarsToday[todayKey]=(S.gameStarsToday[todayKey]||0)+n;
+  addStars(n);
+  save();
+}
+
+function renderGamesSection(){
+  var el=document.getElementById('gamesSection');
+  if(!el)return;
+  var todayKey=getDateKey(new Date());
+  var gameStars=getGameStarsToday();
+  var dailyCap=20;
+  var remaining=Math.max(0,dailyCap-gameStars);
+
+  if(!_triviaState.active&&!_memoryState.active&&!_vocabState.active&&!_scrambleState.active){
+    el.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">'
+      +renderGameCard('vocab','📚','Vocab Flip','Flip your dictionary cards!',remaining>0)
+      +renderGameCard('trivia','🌊','Ocean Trivia','Answer questions, earn stars!',remaining>0)
+      +renderGameCard('memory','🧩','Memory Match','Match ocean animals!',remaining>0)
+      +renderGameCard('scramble','🔤','Word Scramble','Unscramble ocean words!',remaining>0)
+      +'</div>'
+      +(remaining<=0?'<div style="text-align:center;font-size:.72rem;color:var(--dim);padding:4px 0">Daily star limit reached ('+dailyCap+'⭐) — come back tomorrow! 🌟</div>':'<div style="text-align:center;font-size:.7rem;color:var(--dim)">'+remaining+' stars left today</div>');
+  }
+}
+
+function renderGameCard(id,emoji,name,desc,enabled){
+  return'<div onclick="'+(enabled?'startGame(\''+id+'\')':'')+'\" style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:14px 12px;text-align:center;cursor:'+(enabled?'pointer':'default')+';opacity:'+(enabled?'1':'.5')+'">'
+    +'<div style="font-size:2rem;margin-bottom:6px">'+emoji+'</div>'
+    +'<div style="font-family:\'Fredoka One\',cursive;font-size:.85rem;color:var(--accent)">'+name+'</div>'
+    +'<div style="font-size:.65rem;color:var(--dim);margin-top:3px">'+desc+'</div>'
+    +'</div>';
+}
+window.startGame=function(id){
+  if(id==='trivia')startTrivia();
+  else if(id==='memory')startMemory();
+  else if(id==='vocab')startVocab();
+  else if(id==='scramble')startScramble();
+};
+
+// --- TRIVIA ---
+function startTrivia(){
+  var remaining=Math.max(0,20-getGameStarsToday());
+  if(remaining<=0){showToast('Daily star limit reached! Come back tomorrow 🌟');return;}
+  var pool=OCEAN_TRIVIA.slice();
+  // shuffle
+  for(var i=pool.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=pool[i];pool[i]=pool[j];pool[j]=tmp;}
+  _triviaState={active:true,questions:pool,index:0,score:0,total:Math.min(5,pool.length),answered:false};
+  renderTriviaQuestion();
+}
+function renderTriviaQuestion(){
+  var el=document.getElementById('gamesSection');
+  if(!el)return;
+  var s=_triviaState;
+  if(s.index>=s.total){
+    // End screen
+    var earned=s.score*2;
+    var capped=Math.min(earned,Math.max(0,20-getGameStarsToday()+earned));
+    el.innerHTML='<div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:20px;text-align:center">'
+      +'<div style="font-size:2.5rem;margin-bottom:8px">'+(s.score>=4?'🏆':s.score>=2?'🌟':'🐋')+'</div>'
+      +'<div style="font-family:\'Fredoka One\',cursive;font-size:1.1rem;color:var(--accent);margin-bottom:6px">'+s.score+' / '+s.total+' correct!</div>'
+      +'<div style="font-size:.8rem;color:var(--dim);margin-bottom:16px">You earned +'+earned+'⭐ for this round</div>'
+      +'<button onclick="endGame()" style="font-family:\'Fredoka One\',cursive;font-size:.9rem;padding:10px 24px;border-radius:12px;border:none;background:var(--accent);color:#fff;cursor:pointer">Done! 🌊</button>'
+      +'</div>';
+    addGameStars(earned);
+    if(s.score===s.total)confetti();
+    _triviaState.active=false;
+    return;
+  }
+  var q=s.questions[s.index];
+  // Shuffle choices
+  var choices=q.choices.slice();
+  for(var i=choices.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=choices[i];choices[i]=choices[j];choices[j]=tmp;}
+  el.innerHTML='<div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
+    +'<div style="font-family:\'Fredoka One\',cursive;font-size:.8rem;color:var(--accent)">🌊 Ocean Trivia</div>'
+    +'<div style="font-size:.72rem;color:var(--dim)">Question '+(s.index+1)+' of '+s.total+'</div>'
+    +'</div>'
+    +'<div style="font-size:.88rem;color:var(--text);font-weight:700;margin-bottom:14px;line-height:1.4">'+q.q+'</div>'
+    +choices.map(function(c){
+      return'<button onclick="answerTrivia(\''+c.replace(/'/g,"\\'")+'\')" style="display:block;width:100%;text-align:left;font-family:\'Nunito\',sans-serif;font-size:.82rem;padding:10px 14px;margin-bottom:7px;border-radius:12px;border:1.5px solid var(--border);background:var(--card);color:var(--text);cursor:pointer">'+c+'</button>';
+    }).join('')
+    +'<button onclick="endGame()" style="margin-top:6px;font-family:\'Fredoka One\',cursive;font-size:.75rem;padding:6px 14px;border-radius:10px;border:none;background:rgba(0,0,0,.06);color:var(--dim);cursor:pointer">Quit</button>'
+    +'</div>';
+}
+window.answerTrivia=function(choice){
+  var s=_triviaState;
+  var q=s.questions[s.index];
+  var correct=choice===q.a;
+  if(correct)s.score++;
+  s.index++;
+  // Flash feedback
+  var el=document.getElementById('gamesSection');
+  if(el){
+    var fb=document.createElement('div');
+    fb.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:3rem;z-index:9999;pointer-events:none;animation:fadeOut .8s forwards';
+    fb.textContent=correct?'✅':'❌';
+    document.body.appendChild(fb);
+    setTimeout(function(){fb.remove();renderTriviaQuestion();},600);
+  }
+};
+
+// --- MEMORY MATCH ---
+var MEMORY_PAIRS=[
+  {a:'🐋',b:'Orca'},   {a:'🐬',b:'Dolphin'}, {a:'🦈',b:'Shark'},
+  {a:'🐙',b:'Octopus'},{a:'🐢',b:'Turtle'},   {a:'🦑',b:'Squid'},
+  {a:'🦀',b:'Crab'},   {a:'🐠',b:'Clownfish'},{a:'🦞',b:'Lobster'},
+  {a:'🪸',b:'Coral'},  {a:'🐡',b:'Pufferfish'},{a:'🦭',b:'Seal'},
+];
+function startMemory(){
+  var remaining=Math.max(0,20-getGameStarsToday());
+  if(remaining<=0){showToast('Daily star limit reached! Come back tomorrow 🌟');return;}
+  var pairs=MEMORY_PAIRS.slice(0,6); // 6 pairs = 12 cards
+  var cards=[];
+  pairs.forEach(function(p,i){
+    cards.push({id:i*2,pairId:i,type:'emoji',val:p.a});
+    cards.push({id:i*2+1,pairId:i,type:'text',val:p.b});
+  });
+  // shuffle
+  for(var i=cards.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=cards[i];cards[i]=cards[j];cards[j]=tmp;}
+  _memoryState={active:true,cards:cards,flipped:[],matched:[],first:null,waiting:false,score:0};
+  renderMemoryBoard();
+}
+function renderMemoryBoard(){
+  var el=document.getElementById('gamesSection');
+  if(!el)return;
+  var s=_memoryState;
+  var matched=s.matched.length/2;
+  var total=s.cards.length/2;
+  el.innerHTML='<div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:14px">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
+    +'<div style="font-family:\'Fredoka One\',cursive;font-size:.85rem;color:var(--accent)">🧩 Memory Match</div>'
+    +'<div style="font-size:.72rem;color:var(--dim)">'+matched+' / '+total+' matched</div>'
+    +'</div>'
+    +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px">'
+    +s.cards.map(function(c){
+      var isFlipped=s.flipped.indexOf(c.id)>-1||s.matched.indexOf(c.id)>-1;
+      var isMatched=s.matched.indexOf(c.id)>-1;
+      return'<div onclick="flipMemoryCard('+c.id+')" style="aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:'+(c.type==='emoji'?'1.5rem':'.7rem')+';font-weight:700;cursor:'+(isFlipped?'default':'pointer')+';background:'+(isMatched?'rgba(16,185,129,.15)':isFlipped?'rgba(41,182,246,.15)':'var(--border)')+';border:2px solid '+(isMatched?'#10b981':isFlipped?'var(--accent)':'var(--border)')+';color:var(--text);text-align:center;padding:2px;transition:all .2s">'+(isFlipped?c.val:'🌊')+'</div>';
+    }).join('')
+    +'</div>'
+    +'<button onclick="endGame()" style="font-family:\'Fredoka One\',cursive;font-size:.75rem;padding:6px 14px;border-radius:10px;border:none;background:rgba(0,0,0,.06);color:var(--dim);cursor:pointer">Quit</button>'
+    +'</div>';
+}
+window.flipMemoryCard=function(id){
+  var s=_memoryState;
+  if(s.waiting)return;
+  if(s.flipped.indexOf(id)>-1||s.matched.indexOf(id)>-1)return;
+  s.flipped.push(id);
+  if(s.flipped.length===1){s.first=id;renderMemoryBoard();return;}
+  // Two flipped
+  var c1=s.cards.find(function(c){return c.id===s.first;});
+  var c2=s.cards.find(function(c){return c.id===id;});
+  renderMemoryBoard();
+  if(c1.pairId===c2.pairId){
+    // Match!
+    s.matched.push(c1.id);s.matched.push(c2.id);
+    s.flipped=[];s.first=null;
+    if(s.matched.length===s.cards.length){
+      // All matched!
+      setTimeout(function(){
+        var earned=Math.min(6,Math.max(0,20-getGameStarsToday()));
+        addGameStars(earned);
+        _memoryState.active=false;
+        var el=document.getElementById('gamesSection');
+        if(el)el.innerHTML='<div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:20px;text-align:center">'
+          +'<div style="font-size:2.5rem;margin-bottom:8px">🏆</div>'
+          +'<div style="font-family:\'Fredoka One\',cursive;font-size:1.1rem;color:var(--accent);margin-bottom:6px">All matched! Amazing!</div>'
+          +'<div style="font-size:.8rem;color:var(--dim);margin-bottom:16px">+'+earned+'⭐ earned!</div>'
+          +'<button onclick="endGame()" style="font-family:\'Fredoka One\',cursive;font-size:.9rem;padding:10px 24px;border-radius:12px;border:none;background:var(--accent);color:#fff;cursor:pointer">Done! 🌊</button>'
+          +'</div>';
+        confetti();
+      },400);
+    } else {
+      setTimeout(function(){renderMemoryBoard();},200);
+    }
+  } else {
+    s.waiting=true;
+    setTimeout(function(){s.flipped=[];s.first=null;s.waiting=false;renderMemoryBoard();},900);
+  }
+};
+
+// --- VOCAB FLIP ---
+function startVocab(){
+  var remaining=Math.max(0,20-getGameStarsToday());
+  if(remaining<=0){showToast('Daily star limit reached! Come back tomorrow 🌟');return;}
+  var words=[];
+  (S.dictionary||[]).forEach(function(w){
+    if(w.word&&w.definition)words.push({word:w.word,def:w.definition,lang:w.lang||'english'});
+  });
+  if(words.length<3){showToast('Add more words to your dictionary first! 📚 (need at least 3)');return;}
+  // shuffle
+  for(var i=words.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=words[i];words[i]=words[j];words[j]=tmp;}
+  _vocabState={active:true,words:words.slice(0,Math.min(10,words.length)),current:0,flipped:false,correct:0,total:0};
+  renderVocabCard();
+}
+function renderVocabCard(){
+  var el=document.getElementById('gamesSection');
+  if(!el)return;
+  var s=_vocabState;
+  if(s.current>=s.words.length){
+    var earned=Math.min(s.correct,Math.max(0,20-getGameStarsToday()+s.correct));
+    _vocabState.active=false;
+    el.innerHTML='<div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:20px;text-align:center">'
+      +'<div style="font-size:2.5rem;margin-bottom:8px">'+(s.correct>=s.words.length*0.8?'🏆':'📚')+'</div>'
+      +'<div style="font-family:\'Fredoka One\',cursive;font-size:1.1rem;color:var(--accent);margin-bottom:6px">'+s.correct+' / '+s.words.length+' you knew!</div>'
+      +'<div style="font-size:.8rem;color:var(--dim);margin-bottom:16px">+'+s.correct+'⭐ earned!</div>'
+      +'<button onclick="endGame()" style="font-family:\'Fredoka One\',cursive;font-size:.9rem;padding:10px 24px;border-radius:12px;border:none;background:var(--accent);color:#fff;cursor:pointer">Done! 🌊</button>'
+      +'</div>';
+    addGameStars(s.correct);
+    if(s.correct===s.words.length)confetti();
+    return;
+  }
+  var w=s.words[s.current];
+  var langLabel=w.lang==='spanish'?'🇪🇸 Spanish':'📘 English';
+  el.innerHTML='<div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
+    +'<div style="font-family:\'Fredoka One\',cursive;font-size:.85rem;color:var(--accent)">📚 Vocab Flip</div>'
+    +'<div style="font-size:.72rem;color:var(--dim)">Card '+(s.current+1)+' of '+s.words.length+'</div>'
+    +'</div>'
+    +'<div style="font-size:.68rem;color:var(--dim);margin-bottom:6px">'+langLabel+'</div>'
+    +(!s.flipped
+      ?'<div onclick="flipVocab()" style="background:linear-gradient(135deg,rgba(41,182,246,.1),rgba(0,119,168,.06));border:2px dashed rgba(41,182,246,.3);border-radius:14px;padding:24px 16px;text-align:center;cursor:pointer;margin-bottom:12px">'
+        +'<div style="font-family:\'Fredoka One\',cursive;font-size:1.4rem;color:var(--accent);margin-bottom:8px">'+w.word+'</div>'
+        +'<div style="font-size:.72rem;color:var(--dim)">Tap to flip and see the definition</div>'
+        +'</div>'
+      :'<div style="background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(5,150,105,.04));border:2px solid rgba(16,185,129,.3);border-radius:14px;padding:20px 16px;text-align:center;margin-bottom:12px">'
+        +'<div style="font-family:\'Fredoka One\',cursive;font-size:1.2rem;color:var(--accent);margin-bottom:6px">'+w.word+'</div>'
+        +'<div style="font-size:.82rem;color:var(--text);line-height:1.5">'+w.def+'</div>'
+        +'</div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">'
+        +'<button onclick="vocabAnswer(true)" style="font-family:\'Fredoka One\',cursive;font-size:.85rem;padding:12px;border-radius:12px;border:none;background:rgba(16,185,129,.15);color:#10b981;cursor:pointer">✅ Got it! +1⭐</button>'
+        +'<button onclick="vocabAnswer(false)" style="font-family:\'Fredoka One\',cursive;font-size:.85rem;padding:12px;border-radius:12px;border:none;background:rgba(239,68,68,.1);color:#ef4444;cursor:pointer">❌ Not yet</button>'
+        +'</div>')
+    +'<button onclick="endGame()" style="font-family:\'Fredoka One\',cursive;font-size:.75rem;padding:6px 14px;border-radius:10px;border:none;background:rgba(0,0,0,.06);color:var(--dim);cursor:pointer">Quit</button>'
+    +'</div>';
+}
+window.flipVocab=function(){_vocabState.flipped=true;renderVocabCard();};
+window.vocabAnswer=function(knew){
+  var s=_vocabState;
+  if(knew)s.correct++;
+  s.current++;s.flipped=false;
+  renderVocabCard();
+};
+// --- WORD SCRAMBLE ---
+var SCRAMBLE_WORDS = [
+  {word:'OCEAN',hint:'The big body of salt water'},
+  {word:'SHARK',hint:'Apex predator with lots of teeth'},
+  {word:'CORAL',hint:'Animals that build colorful reefs'},
+  {word:'WHALE',hint:'Biggest animal on Earth'},
+  {word:'DOLPHIN',hint:'Super smart and loves to jump'},
+  {word:'OCTOPUS',hint:'Eight arms, three hearts, one brain'},
+  {word:'JELLYFISH',hint:'No brain, no bones, all sting'},
+  {word:'SEAHORSE',hint:'The male one has the babies!'},
+  {word:'PENGUIN',hint:'A bird that swims but can\'t fly'},
+  {word:'STARFISH',hint:'Can regrow its own arms'},
+  {word:'LOBSTER',hint:'Big red claws, lives on the bottom'},
+  {word:'SEAWEED',hint:'Plant of the ocean'},
+  {word:'TSUNAMI',hint:'Giant wave caused by earthquakes'},
+  {word:'CURRENT',hint:'A river inside the ocean'},
+  {word:'PLANKTON',hint:'Tiny creatures that feed everything'},
+  {word:'NARWHAL',hint:'The unicorn of the sea'},
+  {word:'MANATEE',hint:'Slow and gentle sea cow'},
+  {word:'SWORDFISH',hint:'Has a very long pointy nose'},
+  {word:'BARNACLE',hint:'Sticks to rocks and ships'},
+  {word:'TIDEPOOL',hint:'Where ocean meets the shore'},
+  {word:'BLOWHOLE',hint:'How whales breathe at the surface'},
+  {word:'TENTACLE',hint:'Long grabby arm of an octopus'},
+  {word:'BIOLUMINESCENCE',hint:'Animals that glow in the dark'},
+  {word:'PREDATOR',hint:'An animal that hunts other animals'},
+  {word:'MIGRATION',hint:'Long journey animals make every year'},
+];
+
+var _scrambleState={active:false};
+
+function scrambleWord(word){
+  var arr=word.split('');
+  for(var i=arr.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t;}
+  // Make sure it's actually scrambled
+  if(arr.join('')===word&&word.length>1)return scrambleWord(word);
+  return arr.join('');
+}
+
+function startScramble(){
+  var remaining=Math.max(0,20-getGameStarsToday());
+  if(remaining<=0){showToast('Daily star limit reached! Come back tomorrow 🌟');return;}
+  var pool=SCRAMBLE_WORDS.slice();
+  for(var i=pool.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=pool[i];pool[i]=pool[j];pool[j]=t;}
+  _scrambleState={active:true,words:pool.slice(0,6),current:0,score:0,input:'',wrong:0,scrambled:''};
+  _scrambleState.scrambled=scrambleWord(_scrambleState.words[0].word);
+  renderScramble();
+}
+
+function renderScramble(){
+  var el=document.getElementById('gamesSection');
+  if(!el)return;
+  var s=_scrambleState;
+  if(s.current>=s.words.length){
+    var earned=Math.min(s.score*2,Math.max(0,20-getGameStarsToday()+s.score*2));
+    addGameStars(s.score*2);
+    _scrambleState.active=false;
+    el.innerHTML='<div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:20px;text-align:center">'
+      +'<div style="font-size:2.5rem;margin-bottom:8px">'+(s.score>=4?'🏆':s.score>=2?'🌟':'🔤')+'</div>'
+      +'<div style="font-family:\'Fredoka One\',cursive;font-size:1.1rem;color:var(--accent);margin-bottom:6px">'+s.score+' / '+s.words.length+' unscrambled!</div>'
+      +'<div style="font-size:.8rem;color:var(--dim);margin-bottom:16px">+'+s.score*2+'⭐ earned!</div>'
+      +'<button onclick="endGame()" style="font-family:\'Fredoka One\',cursive;font-size:.9rem;padding:10px 24px;border-radius:12px;border:none;background:var(--accent);color:#fff;cursor:pointer">Done! 🌊</button>'
+      +'</div>';
+    if(s.score===s.words.length)confetti();
+    return;
+  }
+  var w=s.words[s.current];
+  var letters=s.scrambled.split('');
+  el.innerHTML='<div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
+    +'<div style="font-family:\'Fredoka One\',cursive;font-size:.85rem;color:var(--accent)">🔤 Word Scramble</div>'
+    +'<div style="font-size:.72rem;color:var(--dim)">Word '+(s.current+1)+' of '+s.words.length+'</div>'
+    +'</div>'
+    +'<div style="text-align:center;margin-bottom:10px">'
+    +'<div style="display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin-bottom:8px">'
+    +letters.map(function(l){
+      return'<div style="width:32px;height:36px;background:linear-gradient(135deg,rgba(41,182,246,.15),rgba(0,119,168,.08));border:2px solid rgba(41,182,246,.3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:\'Fredoka One\',cursive;font-size:1.1rem;color:var(--accent)">'+l+'</div>';
+    }).join('')
+    +'</div>'
+    +'<div style="font-size:.72rem;color:var(--dim);font-style:italic">💡 '+w.hint+'</div>'
+    +'</div>'
+    +(s.wrong>=2?'<div style="text-align:center;font-size:.78rem;color:var(--dim);margin-bottom:8px;letter-spacing:.15em">'+w.word.split('').map(function(l,i){return i===0?l:'_';}).join(' ')+'</div>':'')
+    +'<input id="scrambleInput" type="text" placeholder="Type your answer..." value="'+s.input+'" oninput="scrambleType(this.value)" onkeydown="if(event.key===\'Enter\')checkScramble()" style="width:100%;box-sizing:border-box;font-family:\'Fredoka One\',cursive;font-size:1rem;padding:10px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--card);color:var(--text);margin-bottom:10px;text-transform:uppercase;letter-spacing:.1em" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+    +'<button onclick="checkScramble()" style="font-family:\'Fredoka One\',cursive;font-size:.9rem;padding:11px;border-radius:12px;border:none;background:var(--accent);color:#fff;cursor:pointer">✅ Submit</button>'
+    +'<button onclick="skipScramble()" style="font-family:\'Fredoka One\',cursive;font-size:.9rem;padding:11px;border-radius:12px;border:none;background:rgba(0,0,0,.06);color:var(--dim);cursor:pointer">⏭ Skip</button>'
+    +'</div>'
+    +'<button onclick="endGame()" style="margin-top:8px;font-family:\'Fredoka One\',cursive;font-size:.75rem;padding:6px 14px;border-radius:10px;border:none;background:rgba(0,0,0,.06);color:var(--dim);cursor:pointer">Quit</button>'
+    +'</div>';
+  setTimeout(function(){var inp=document.getElementById('scrambleInput');if(inp)inp.focus();},100);
+}
+window.scrambleType=function(v){_scrambleState.input=v.toUpperCase();};
+window.checkScramble=function(){
+  var s=_scrambleState;
+  var guess=s.input.trim().toUpperCase();
+  if(!guess)return;
+  if(guess===s.words[s.current].word){
+    s.score++;s.current++;s.input='';s.wrong=0;
+    if(s.current<s.words.length)s.scrambled=scrambleWord(s.words[s.current].word);
+    showToast('Correct! +2⭐ 🎉');
+    renderScramble();
+  } else {
+    s.wrong++;
+    showToast(s.wrong>=2?'Not quite — first letter shown! Try again 💡':'Not quite, try again! 🔤');
+    renderScramble();
+  }
+};
+window.skipScramble=function(){
+  var s=_scrambleState;
+  showToast('The answer was: '+s.words[s.current].word);
+  s.current++;s.input='';s.wrong=0;
+  if(s.current<s.words.length)s.scrambled=scrambleWord(s.words[s.current].word);
+  renderScramble();
+};
+
+window.endGame=function(){
+  _triviaState.active=false;_memoryState.active=false;_vocabState.active=false;_scrambleState.active=false;
+  renderGamesSection();
+};
+
 function renderJiJiCard(today){
   var done=!!(S.jijiSessions&&S.jijiSessions.some(function(s){return s.date===today;}));
   return'<div class="jiji-card">'
@@ -2367,44 +2906,28 @@ function renderJiJiCard(today){
     +'</div>';
 }
 
-function renderWorkBlock(blockId, today, doneKey){
+function renderWorkBlock(block, today, doneKey){
   if(!S[doneKey])S[doneKey]={};
-  var choice=S[doneKey][blockId+'_'+today]; // 'reading' or 'jiji' or undefined
-  var done=!!choice;
-  return'<div class="task-pill'+(done?' done':'')+'" style="flex-direction:column;align-items:flex-start;gap:6px;padding:12px 14px">'
-    +'<div style="font-size:.72rem;font-weight:700;color:'+(done?'var(--green)':'var(--dim)')+';">'+(done?(choice==='reading'?'📖 Reading done ✓':'📏 JiJi done ✓'):'Choose what you did:'  )+'</div>'
-    +'<div style="display:flex;gap:8px;width:100%">'
-    +'<button onclick="logWorkBlock(\''+blockId+'\',\'reading\',\''+doneKey+'\')" style="flex:1;padding:8px;border-radius:10px;border:2px solid '+(choice==='reading'?'#43a047':'#90caf9')+';background:'+(choice==='reading'?'#c8e6c9':'#e3f2fd')+';color:#1a237e;font-size:.8rem;font-weight:700;cursor:pointer">📖 Reading</button>'
-    +'<button onclick="logWorkBlock(\''+blockId+'\',\'jiji\',\''+doneKey+'\')" style="flex:1;padding:8px;border-radius:10px;border:2px solid '+(choice==='jiji'?'#43a047':'#ffcc80')+';background:'+(choice==='jiji'?'#c8e6c9':'#fff3e0')+';color:#1a237e;font-size:.8rem;font-weight:700;cursor:pointer">📏 JiJi</button>'
-    +'</div>'
-    +'<div style="font-size:.65rem;color:var(--dim)">+5 ⭐ when done</div>'
+  var blockId=block.id;
+  var done=!!S[doneKey][blockId+'_'+today];
+  var typeLabel = block.type==='jiji' ? '📏 JiJi' : block.type==='reading' ? '📖 Reading' : '📏 JiJi + 📖 Reading';
+  var doneLabel = block.type==='jiji' ? '📏 JiJi done ✓' : block.type==='reading' ? '📖 Reading done ✓' : '📏📖 Both done ✓';
+  return'<div class="task-pill'+(done?' done':'')+'" onclick="logAssignedBlock(\''+blockId+'\',\''+doneKey+'\')" style="cursor:pointer">'
+    +'<div class="task-check">'+(done?'✓':'')+'</div>'
+    +'<div class="task-emoji">'+(block.type==='jiji'?'📏':block.type==='reading'?'📖':'📏')+'</div>'
+    +'<div class="task-name">'+(done?doneLabel:typeLabel)+' <span style="font-size:.7rem;color:var(--dim)">'+block.duration+'</span></div>'
+    +'<div class="task-stars">+5⭐</div>'
     +'</div>';
 }
 
 function renderTuesdayTasks(today){
   if(!S.tuesdayDone)S.tuesdayDone={};
-  var blocksLogged=TUESDAY_BLOCKS.filter(function(b){return S.tuesdayDone[b.id+'_'+today];}).length;
-
   var html='<div class="slabel">📚 Today\'s Work Blocks</div>';
-  html+='<div class="escape-banner">Complete any 2 of 4 blocks for full stars! 3 = bonus! 4 = maximum! 🌟</div>';
-
+  html+='<div class="escape-banner">Complete all 3 blocks for max stars! 🌟</div>';
   html+=TUESDAY_BLOCKS.map(function(b){
     return'<div style="font-size:.68rem;color:var(--dim);margin:6px 0 2px;font-weight:700">'+b.time+' — '+b.label+'</div>'
-      +renderWorkBlock(b.id,today,'tuesdayDone');
+      +renderWorkBlock(b,today,'tuesdayDone');
   }).join('');
-
-  // Extra homework task
-  html+='<div style="font-size:.68rem;color:var(--dim);margin:10px 0 2px;font-weight:700">6:45 PM — Optional</div>';
-  TUESDAY_TASKS.forEach(function(t){
-    var done=!!S.tuesdayDone[t.id+'_'+today];
-    html+='<div class="task-pill'+(done?' done':'')+'" onclick="toggleTuesdayTask(\''+t.id+'\')">'
-      +'<div class="task-check">'+(done?'✓':'')+'</div>'
-      +'<div class="task-emoji">'+t.emoji+'</div>'
-      +'<div class="task-name">'+t.name+'</div>'
-      +'<div class="task-stars">+'+t.stars+'⭐</div>'
-      +'</div>';
-  });
-
   return html;
 }
 
@@ -2413,7 +2936,7 @@ function renderMondayTasks(today){
   var html='<div class="slabel">📚 Today\'s Work Blocks</div>';
   html+=MONDAY_BLOCKS.map(function(b){
     return'<div style="font-size:.68rem;color:var(--dim);margin:6px 0 2px;font-weight:700">'+b.time+' — '+b.label+'</div>'
-      +renderWorkBlock(b.id,today,'mondayDone');
+      +renderWorkBlock(b,today,'mondayDone');
   }).join('');
   return html;
 }
@@ -2436,7 +2959,7 @@ function renderWednesdayTasks(today){
   var html='<div class="slabel">📚 Today\'s Work Block</div>';
   html+=WEDNESDAY_BLOCKS.map(function(b){
     return'<div style="font-size:.68rem;color:var(--dim);margin:6px 0 2px;font-weight:700">'+b.time+' — '+b.label+'</div>'
-      +renderWorkBlock(b.id,today,'wednesdayDone');
+      +renderWorkBlock(b,today,'wednesdayDone');
   }).join('');
   return html;
 }
@@ -2446,19 +2969,14 @@ function renderThursdayTasks(today){
   var html='<div class="slabel">📚 Today\'s Work Block</div>';
   html+=THURSDAY_BLOCKS.map(function(b){
     return'<div style="font-size:.68rem;color:var(--dim);margin:6px 0 2px;font-weight:700">'+b.time+' — '+b.label+'</div>'
-      +renderWorkBlock(b.id,today,'thursdayDone');
+      +renderWorkBlock(b,today,'thursdayDone');
   }).join('');
   return html;
 }
 
 function renderFridayTasks(today){
-  if(!S.fridayDone)S.fridayDone={};
-  var html='<div class="slabel">📚 Today\'s Work Block</div>';
-  html+=FRIDAY_BLOCKS.map(function(b){
-    return'<div style="font-size:.68rem;color:var(--dim);margin:6px 0 2px;font-weight:700">'+b.time+' — '+b.label+'</div>'
-      +renderWorkBlock(b.id,today,'fridayDone');
-  }).join('');
-  return html;
+  // No work blocks on Friday
+  return '';
 }
 
 function renderExtraCreditSection(collapsed){
@@ -2621,34 +3139,26 @@ function toggleExtraCredit_task(id){
   renderStarsBar();
 }
 
-function logWorkBlock(blockId, choice, doneKey){
+function logAssignedBlock(blockId, doneKey){
   var today=new Date().toDateString();
   if(!S[doneKey])S[doneKey]={};
   var key=blockId+'_'+today;
-  var alreadyDone=!!S[doneKey][key];
-  // Toggle off if tapping same choice again
-  if(S[doneKey][key]===choice){
+  if(S[doneKey][key]){
+    // Toggle off
     delete S[doneKey][key];
     S.stars=Math.max(0,(S.stars||0)-5);
     save();updateStars();renderTimeContent();return;
   }
-  // If switching choice, no star change; if new, award stars
-  if(!alreadyDone){addStars(5);confetti();showToast((choice==='reading'?'📖':'📏')+' +5 ⭐ Nice work!');}
-  S[doneKey][key]=choice;
-  // Tuesday block bonus milestones
+  S[doneKey][key]=true;
+  addStars(5);confetti();showToast('✓ +5 ⭐ Nice work!');
+  // Tuesday all-blocks bonus
   if(doneKey==='tuesdayDone'){
-    var blocksLogged=TUESDAY_BLOCKS.filter(function(b){return S.tuesdayDone[b.id+'_'+today];}).length;
-    if(blocksLogged===2)setTimeout(function(){showToast('🌟 2 blocks done — full stars earned!');confetti();},600);
-    if(blocksLogged===3)setTimeout(function(){showToast('🔥 3 blocks — bonus! +5 ⭐');addStars(5);updateStars();save();},800);
-    if(blocksLogged===4)setTimeout(function(){showToast('🏆 ALL 4 blocks! Maximum! +10 ⭐');addStars(10);updateStars();save();confetti();confetti();confetti();},800);
-  }
-  // Monday both done bonus
-  if(doneKey==='mondayDone'){
-    var mbDone=MONDAY_BLOCKS.filter(function(b){return S.mondayDone[b.id+'_'+today];}).length;
-    if(mbDone===2)setTimeout(function(){showToast('🏆 Both blocks done! +5 bonus ⭐');addStars(5);updateStars();save();confetti();confetti();},600);
+    var tDone=TUESDAY_BLOCKS.filter(function(b){return S.tuesdayDone[b.id+'_'+today];}).length;
+    if(tDone===2)setTimeout(function(){showToast('🏆 Both JiJi blocks done! +10 bonus ⭐');addStars(10);updateStars();save();confetti();confetti();confetti();},800);
   }
   save();updateStars();renderTimeContent();
 }
+function logWorkBlock(blockId, choice, doneKey){ logAssignedBlock(blockId, doneKey); }
 
 // ═══════════════════════════════════════
 // MOOD
@@ -3935,6 +4445,7 @@ window.toggleSpanishWorkbook=toggleSpanishWorkbook;
 window.toggleExtraCredit_task=toggleExtraCredit_task;
 window.toggleExtraCredit=toggleExtraCredit;
 window.logWorkBlock=logWorkBlock;
+window.logAssignedBlock=logAssignedBlock;
 window.adminLogJiJi=adminLogJiJi;
 window.setMood=setMood;
 window.logFact=logFact;
