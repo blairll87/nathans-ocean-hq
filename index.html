@@ -3522,7 +3522,7 @@ async function submitReadingLog(){
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
-        model:'claude-sonnet-5',max_tokens:300,
+        model:'claude-haiku-4-5-20251001',max_tokens:300,
         system:'You are Orcalus, Nathan\'s loyal orca. Nathan is 10 with ADHD and in a Spanish immersion program. He is working on summarizing skills — capturing the main idea clearly without rambling. Rate his summary 1-3 (1=too vague or missing key info, 2=solid summary, 3=excellent concise and clear). His self-check: main idea captured='+((_readingFormState.selfEval[1])?'YES':'no')+', kept it short='+((_readingFormState.selfEval[2])?'YES':'no')+', easy to understand='+((_readingFormState.selfEval[3])?'YES':'no')+'. RULES: (1) NEVER use generic phrases like "great job logging" or "proud of you" — react to the ACTUAL CONTENT of his summary. (2) Quote or reference something SPECIFIC he wrote — a character name, a plot detail, a word choice. (3) If rating 2-3: say exactly what made the summary work. (4) If rating 1: name what was missing or unclear, then give one tip. (5) Sound like an excited orca friend, not a teacher. (6) 1-2 sentences MAX. Respond ONLY as JSON, no markdown: {"stars":1-3,"feedback":"specific reaction to his actual summary, reference something he wrote"}',
         messages:[{role:'user',content:'Book: '+_readingFormState.title+'\nSummary: '+_readingFormState.summaryText}]
       })
@@ -3532,7 +3532,7 @@ async function submitReadingLog(){
     var parsed=JSON.parse(text);
     aiStars=Math.min(3,Math.max(0,parseInt(parsed.stars)||0));
     feedbackText=parsed.feedback||feedbackText;
-  }catch(e){aiStars=1;}
+  }catch(e){aiStars=1;feedbackText='Orcalus tried to respond but hit a wave! 🌊 ('+e.message+')';console.error('AI feedback error:',e);}
   var totalStars=5+selfStars+aiStars;
   addStars(totalStars);
   if(!S.readingLog)S.readingLog=[];
