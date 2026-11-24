@@ -3528,11 +3528,16 @@ async function submitReadingLog(){
       })
     });
     var data=await resp.json();
+    console.log('AI raw response:',JSON.stringify(data));
+    if(data.error){throw new Error('API error: '+data.error.message);}
     var text=data.content[0].text.replace(/```json|```/g,'').trim();
-    var parsed=JSON.parse(text);
+    // Try to extract JSON even if model added extra text
+    var jsonMatch=text.match(/\{[\s\S]*\}/);
+    if(!jsonMatch){throw new Error('No JSON in response: '+text.substring(0,100));}
+    var parsed=JSON.parse(jsonMatch[0]);
     aiStars=Math.min(3,Math.max(0,parseInt(parsed.stars)||0));
     feedbackText=parsed.feedback||feedbackText;
-  }catch(e){aiStars=1;feedbackText='Orcalus tried to respond but hit a wave! 🌊 ('+e.message+')';console.error('AI feedback error:',e);}
+  }catch(e){aiStars=1;feedbackText='Orcalus hit a wave! 🌊 ('+e.message+')';console.error('AI feedback error:',e);}
   var totalStars=5+selfStars+aiStars;
   addStars(totalStars);
   if(!S.readingLog)S.readingLog=[];
